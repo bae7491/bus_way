@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "244868715842",
+    "project_id": "buswayproject-71ee1",
+    "storage_bucket": "buswayproject-71ee1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:244868715842:android:968f2dbf65f1fb8eaba4db",
+        "android_client_info": {
+          "package_name": "com.example.bus_way"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDa8VWAUqYK_2jYHp2PfzvYydf-BBeJg2o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
