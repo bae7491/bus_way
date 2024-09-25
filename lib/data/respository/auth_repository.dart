@@ -28,4 +28,14 @@ class AuthRepository {
   Future<void> signOut() async {
     await remoteAuthDataSource.signOut();
   }
+
+  // 자동 로그인 상태 저장
+  Future<void> setAutoLogin(bool autoLogin) async {
+    await remoteAuthDataSource.setAutoLogin(autoLogin);
+  }
+
+  // 자동 로그인 상태 가져오기
+  Future<bool> getAutoLogin() async {
+    return await remoteAuthDataSource.getAutoLogin();
+  }
 }

@@ -11,6 +11,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RemoteAuthDataSource with ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -45,6 +46,21 @@ class RemoteAuthDataSource with ChangeNotifier {
 
   // 3. 로그아웃 요청
   Future<void> signOut() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('autoLogin', false);
     await _firebaseAuth.signOut();
+  }
+
+  // 4. 자동 로그인 상태 저장
+  Future<void> setAutoLogin(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('autoLogin', value);
+  }
+
+  // 5. 자동 로그인 상태 가져오기
+  Future<bool> getAutoLogin() async {
+    User? currentUser = _firebaseAuth.currentUser;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('autoLogin') ?? false;
   }
 }

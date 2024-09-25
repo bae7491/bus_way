@@ -9,6 +9,7 @@ class MainView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mainPageViewModel = Provider.of<MainPageViewModel>(context);
+    
     return Scaffold(
       body: Center(
         child: Column(
@@ -23,12 +24,14 @@ class MainView extends StatelessWidget {
               onPressed: () async {
                 await mainPageViewModel.signOut();
 
-                // 로그인 화면으로 이동 및 모든 페이지 제거
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginView()),
-                  (route) => false, // 스택에 남아 있는 모든 화면을 제거
-                );
+                if (context.mounted) {
+                  // 로그인 화면으로 이동 및 모든 페이지 제거
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginView()),
+                    (route) => false, // 스택에 남아 있는 모든 화면을 제거
+                  );
+                }
               },
               child: const Text('Logout'),
             ),

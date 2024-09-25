@@ -11,12 +11,6 @@ class MainPageViewModel with ChangeNotifier{
   String? get errorMessage => _errorMessage;
 
   Future<void> signOut() async {
-    try {
-      await authRepository.signOut();
-    } catch (e) {
-      _errorMessage = e.toString();
-    } finally {
-      notifyListeners();
-    }
+    await authRepository.signOut();
   }
 }

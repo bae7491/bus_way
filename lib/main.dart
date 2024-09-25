@@ -1,8 +1,8 @@
+import 'package:bus_way/ui/auth/auth_check.dart';
 import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'ui/auth/login/login_view.dart';
 import 'ui/auth/login/login_viewmodel.dart';
 import 'ui/auth/signup/signup_viewmodel.dart';
 
@@ -33,7 +33,11 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        home: LoginView(),
+        debugShowCheckedModeBanner: false,
+        home: const AuthCheck(), // AuthCheck 위젯을 따로 분리
+        theme: ThemeData(
+          scaffoldBackgroundColor: Colors.white,
+        ),
       ),
     );
   }
