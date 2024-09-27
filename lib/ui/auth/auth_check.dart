@@ -33,7 +33,8 @@ class AuthCheck extends StatelessWidget {
         // print('firebaseAuth.instance/autoLogin ${loginViewModel.autoLogin}');
 
         // 로그인된 사용자 확인 후, 자동 로그인 여부에 따라 화면 전환
-        if (FirebaseAuth.instance.currentUser != null && loginViewModel.autoLogin) {
+        if (FirebaseAuth.instance.currentUser != null &&
+            loginViewModel.autoLogin) {
           return const MainView();
         } else {
           return const LoginView();

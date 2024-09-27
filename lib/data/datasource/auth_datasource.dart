@@ -20,27 +20,47 @@ class RemoteAuthDataSource with ChangeNotifier {
   Future<User?> loginWithEmail(String email, String password) async {
     try {
       final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email, 
+        email: email,
         password: password,
       );
       return userCredential.user;
-    } catch (e) {
-      debugPrint('Login Error: $e');
-      rethrow; // 오류 재전달
+    } on FirebaseAuthException catch (e) {
+      String message = '';
+      if (e.code == 'invalid-credential') {
+        message = '등록되지 않은 아이디이거나 아이디 또는 비밀번호를 잘못 입력했습니다.';
+      } else if (e.code == 'invalid-email') {
+        message = '이메일 형식을 다시 확인해 주세요.';
+      } else if (e.code == 'wrong-password') {
+        message = '비밀번호를 다시 확인해 주세요.';
+      } else if (e.code == 'channel-error') {
+        message = '아이디 혹은 비밀번호를 입력해 주세요.';
+      } else if (e.code == 'too-many-requests') {
+        message = '일시적인 오류로 로그인을 할 수 없습니다.\n잠시 후 다시 시도해주세요.';
+      } else {
+        message = '알 수 없는 에러가 발생했습니다.';
+      }
+      throw Exception(message);
     }
   }
 
   // 2. firebase에 회원가입 요청
   Future<User?> signUpWithEmail(String email, String password) async {
     try {
+      debugPrint('email: $email, password: $password');
       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email, 
+        email: email,
         password: password,
       );
       return userCredential.user;
-    } catch (e) {
-      debugPrint('SignUp Error: $e');
-      rethrow;
+    } on FirebaseAuthException catch (e) {
+      debugPrint('signUp exception: ${e.code}');
+      String message = '';
+      if (e.code == 'email-already-in-use') {
+        message = '이미 존재하는 이메일입니다.';
+      } else {
+        message = '알 수 없는 에러가 발생했습니다.';
+      }
+      throw Exception(message);
     }
   }
 
@@ -59,7 +79,6 @@ class RemoteAuthDataSource with ChangeNotifier {
 
   // 5. 자동 로그인 상태 가져오기
   Future<bool> getAutoLogin() async {
-    User? currentUser = _firebaseAuth.currentUser;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool('autoLogin') ?? false;
   }

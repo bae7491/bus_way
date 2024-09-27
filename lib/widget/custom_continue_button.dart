@@ -4,13 +4,11 @@ class CustomContinueButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
 
-  const CustomContinueButton (
-    {
-      super.key,
-      required this.text,
-      required this.onPressed,
-    }
-  );
+  const CustomContinueButton({
+    super.key,
+    required this.onPressed,
+    required this.text,
+  });
 
   @override
   Widget build(BuildContext context) {
