@@ -10,8 +10,13 @@
     2. notifyListeners 추가 후, 이를 통해 데이터에 업데이트가 있다는 것을 ViewModel이 참조하고 있는 View에 알림.
 */
 
+import 'package:bus_way/ui/auth/signup/signup_email_view.dart';
+import 'package:bus_way/ui/auth/signup/signup_viewmodel.dart';
+import 'package:bus_way/ui/mainpage/mainpage_view.dart';
+import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
-import '../../../data/model/user_model.dart';
+import 'package:provider/provider.dart';
+import '../../../data/model/firebase_user_model.dart';
 import '../../../data/respository/auth_repository.dart';
 
 class LoginViewModel with ChangeNotifier {
@@ -20,13 +25,13 @@ class LoginViewModel with ChangeNotifier {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  UserModel? _user;
+  FirebaseUserModel? _firebaseUser; // firebase에서 로그인에 사용하는 유저 정보 모델
   String? _errorMessage;
   bool _isLoading = false;
   bool _passwordVisible = false;
   bool _autoLogin = false;
 
-  UserModel? get user => _user;
+  FirebaseUserModel? get firebaseUser => _firebaseUser;
   String? get errorMessage => _errorMessage;
   bool get isLoading => _isLoading;
   bool get passwordVisible => _passwordVisible;
@@ -51,15 +56,22 @@ class LoginViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
-      _user = await authRepository.login(email, password);
+      _firebaseUser = await authRepository.login(email, password);
       _autoLogin = autoLogin;
       await setAutoLogin(autoLogin);
     } catch (e) {
       _errorMessage = e.toString().replaceFirst('Exception: ', '');
     } finally {
+      print('login email: ${_firebaseUser?.email}');
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  // 자동 로그인 끄기 로직
+  void autoLoginOff() {
+    _autoLogin = false;
+    notifyListeners();
   }
 
   // 비밀번호 textField 보이기/숨기기 토글 로직
@@ -79,5 +91,35 @@ class LoginViewModel with ChangeNotifier {
   Future<void> loadAutoLogin() async {
     _autoLogin = await authRepository.getAutoLogin();
     notifyListeners();
+  }
+
+  // 로그인
+  void loginNavigate(BuildContext context) {
+    Navigator.of(context).pushAndRemoveUntil(
+      const NavigatorAnimation(
+        destination: MainView(),
+      ).createRoute(SlideDirection.bottomToTop),
+      (Route<dynamic> route) => false,
+    );
+    emailController.clear();
+    passwordController.clear();
+  }
+
+  // 회원가입
+  void signUpNavigate(BuildContext context) {
+    Navigator.of(context)
+        .push(
+      const NavigatorAnimation(
+        destination: SignUpEmailView(),
+      ).createRoute(SlideDirection.bottomToTop),
+    )
+        .then((_) {
+      emailController.clear();
+      passwordController.clear();
+    });
+    final signUpViewModel =
+        Provider.of<SignUpViewModel>(context, listen: false);
+    signUpViewModel.emailController.clear();
+    signUpViewModel.updateEmailBtn();
   }
 }

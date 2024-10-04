@@ -1,13 +1,16 @@
+import 'package:bus_way/theme/colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomContinueButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
+  final Color color;
 
   const CustomContinueButton({
     super.key,
     required this.onPressed,
     required this.text,
+    this.color = orchid,
   });
 
   @override
@@ -15,8 +18,7 @@ class CustomContinueButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        // TODO: 버튼 내부 색상 변경해야함.
-        backgroundColor: Colors.grey,
+        backgroundColor: color,
         foregroundColor: Colors.white,
         minimumSize: const Size.fromHeight(64),
         shape: RoundedRectangleBorder(

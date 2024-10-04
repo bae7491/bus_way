@@ -6,22 +6,39 @@
     2. 요청한 데이터의 응답을 login_viewmodel로 전달.
 */
 
-import '../datasource/auth_datasource.dart';
-import '../model/user_model.dart';
+import 'package:bus_way/data/datasource/auth_local_datasource.dart';
+import 'package:bus_way/data/model/signup_user_model.dart';
+
+import '../datasource/auth_remote_datasource.dart';
+import '../model/firebase_user_model.dart';
 
 class AuthRepository {
-  RemoteAuthDataSource remoteAuthDataSource = RemoteAuthDataSource();
+  final AuthRemoteDataSource remoteAuthDataSource = AuthRemoteDataSource();
+  final AuthLocalDatasource localAuthDataSource = AuthLocalDatasource();
 
   // 로그인
-  Future<UserModel?> login(String email, String password) async {
+  Future<FirebaseUserModel?> login(String email, String password) async {
     await remoteAuthDataSource.loginWithEmail(email, password);
-    return UserModel(email: email, password: password);
+    return FirebaseUserModel(email: email, password: password);
   }
 
   // 회원가입
-  Future<UserModel?> signUp(String email, String password) async {
+  Future<FirebaseUserModel?> signUpWithEmail(
+      String email, String password) async {
     await remoteAuthDataSource.signUpWithEmail(email, password);
-    return UserModel(email: email, password: password);
+    return FirebaseUserModel(email: email, password: password);
+  }
+
+  // DB(mySQL)에 유저 정보 저장
+  Future<void> saveUserInfo(SignUpUserModel signUpUser) async {
+    await localAuthDataSource.saveUserInfo(signUpUser);
+  }
+
+  // 중복 체크 값 검사
+  Future<bool> checkUserUnique(
+      String email, String phoneNumber, String nickName) async {
+    return await localAuthDataSource.checkUserUnique(
+        email, phoneNumber, nickName);
   }
 
   // 로그아웃

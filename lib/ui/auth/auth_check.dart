@@ -14,29 +14,21 @@ class AuthCheck extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<LoginViewModel>(
       builder: (context, loginViewModel, child) {
-        // TODO: FirbaseAuth 인증 상태 재확인 필요.
+        // 자동 로그인 여부 확인
+        final firebaseUser = FirebaseAuth.instance.currentUser;
+        final isAutoLoginChecked = loginViewModel.autoLogin;
 
-        // 현재 Firebase로 로그인된 User의 상태 확인 가능
-        // print('firebaseAuth.instance.currentuser: ${FirebaseAuth.instance.currentUser}');
+        // 자동 로그인 체크가 해제된 경우 로그아웃
+        if (firebaseUser != null && !isAutoLoginChecked) {
+          // 자동 로그인 체크 해제된 경우 로그아웃
+          FirebaseAuth.instance.signOut();
+        }
 
-        // Firebase로 로그인한 User의 토큰 확인 가능 (getIdTokenResult(true): 로그인 토큰 재갱신)
-        // FirebaseAuth.instance.currentUser!.getIdTokenResult().then((value) {
-        //   print('firebaseAuth.instance.getIdTokenResult: $value');
-        // });
-
-        // 현재 인증 상태 확인
-        // FirebaseAuth.instance.authStateChanges().listen((User? user) {
-        //   print('firebaseAuth.instance.authStateChanges ${user}');
-        // });
-
-        // 자동 로그인 체크박스 여부 (true: 켜짐 / false: 꺼짐)
-        // print('firebaseAuth.instance/autoLogin ${loginViewModel.autoLogin}');
-
-        // 로그인된 사용자 확인 후, 자동 로그인 여부에 따라 화면 전환
-        if (FirebaseAuth.instance.currentUser != null &&
-            loginViewModel.autoLogin) {
+        // 자동 로그인 체크가 되어 있을 때
+        if (firebaseUser != null && isAutoLoginChecked) {
           return const MainView();
         } else {
+          // 자동 로그인이 해제되었거나 사용자가 없을 때
           return const LoginView();
         }
       },

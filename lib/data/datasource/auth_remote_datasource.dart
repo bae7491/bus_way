@@ -13,7 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class RemoteAuthDataSource with ChangeNotifier {
+class AuthRemoteDataSource with ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   // 1. firebase에 저장된 E-mail 정보로 로그인 요청
@@ -33,7 +33,7 @@ class RemoteAuthDataSource with ChangeNotifier {
       } else if (e.code == 'wrong-password') {
         message = '비밀번호를 다시 확인해 주세요.';
       } else if (e.code == 'channel-error') {
-        message = '아이디 혹은 비밀번호를 입력해 주세요.';
+        message = '아이디 혹은 비밀번호를 입력해주세요.';
       } else if (e.code == 'too-many-requests') {
         message = '일시적인 오류로 로그인을 할 수 없습니다.\n잠시 후 다시 시도해주세요.';
       } else {

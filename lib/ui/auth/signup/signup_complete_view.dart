@@ -10,53 +10,50 @@ class SignUpCompleteView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => SignUpViewModel(),
-      child: Consumer<SignUpViewModel>(
-        builder: (context, signUpViewModel, child) {
-          return Scaffold(
-            resizeToAvoidBottomInset: true,
-            body: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 22.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(height: 185),
-                        Text(
-                          '회원가입 완료!',
-                          style: TextStyle(
-                              fontSize: 32, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 35),
-                        Text(
-                          '로그인 화면으로 돌아갑니다.',
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
+    return Consumer<SignUpViewModel>(
+      builder: (context, signUpViewModel, child) {
+        return Scaffold(
+          resizeToAvoidBottomInset: true,
+          body: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 22.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(height: 185),
+                      Text(
+                        '회원가입 완료!',
+                        style: TextStyle(
+                            fontSize: 32, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 35),
+                      Text(
+                        '로그인 화면으로 돌아갑니다.',
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
-                  const Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.all(22.0),
-                    child: CustomContinueButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                              const NavigatorAnimation(destination: LoginView())
-                                  .createRoute(SlideDirection.bottomToTop));
-                        },
-                        text: '돌아가기'),
-                  ),
-                ],
-              ),
+                ),
+                const Spacer(),
+                Padding(
+                  padding: const EdgeInsets.all(22.0),
+                  child: CustomContinueButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            const NavigatorAnimation(destination: LoginView())
+                                .createRoute(SlideDirection.bottomToTop));
+                      },
+                      text: '돌아가기'),
+                ),
+              ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
