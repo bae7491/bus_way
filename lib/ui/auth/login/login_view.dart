@@ -2,6 +2,7 @@ import 'package:bus_way/theme/colors.dart';
 import 'package:bus_way/ui/auth/reset_password/reset_password_view.dart';
 import 'package:bus_way/widget/custom_continue_button.dart';
 import 'package:bus_way/widget/custom_text_field.dart';
+import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'login_viewmodel.dart';
@@ -108,14 +109,8 @@ class LoginView extends StatelessWidget {
                               ),
                               const Spacer(),
                               GestureDetector(
-                                onTap: () async {
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ResetPasswordView(),
-                                    ),
-                                  );
+                                onTap: () {
+                                  loginViewModel.resetPasswordNavigate(context);
                                 },
                                 child: Container(
                                   decoration: const BoxDecoration(

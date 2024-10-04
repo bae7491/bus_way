@@ -82,4 +82,9 @@ class AuthRemoteDataSource with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool('autoLogin') ?? false;
   }
+
+  // 6. 비밀번호 재설정 인증 메일 보내기
+  Future<void> resetPassword(String email) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
 }

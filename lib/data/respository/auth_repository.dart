@@ -55,4 +55,9 @@ class AuthRepository {
   Future<bool> getAutoLogin() async {
     return await remoteAuthDataSource.getAutoLogin();
   }
+
+  // 비밀번호 재설정 이메일 인증 보내기
+  Future<void> resetPassword(String email) async {
+    await remoteAuthDataSource.resetPassword(email);
+  }
 }

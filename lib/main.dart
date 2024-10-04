@@ -1,4 +1,5 @@
 import 'package:bus_way/ui/auth/auth_check.dart';
+import 'package:bus_way/ui/auth/reset_password/reset_password_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,10 @@ class MyApp extends StatelessWidget {
         // 회원가입
         ChangeNotifierProvider(
           create: (_) => SignUpViewModel(),
+        ),
+        // 비밀번호 재설정
+        ChangeNotifierProvider(
+          create: (_) => ResetPasswordViewModel(),
         ),
         // 메인페이지
         ChangeNotifierProvider(

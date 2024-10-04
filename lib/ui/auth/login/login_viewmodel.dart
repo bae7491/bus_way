@@ -10,6 +10,8 @@
     2. notifyListeners 추가 후, 이를 통해 데이터에 업데이트가 있다는 것을 ViewModel이 참조하고 있는 View에 알림.
 */
 
+import 'package:bus_way/ui/auth/reset_password/reset_password_view.dart';
+import 'package:bus_way/ui/auth/reset_password/reset_password_viewmodel.dart';
 import 'package:bus_way/ui/auth/signup/signup_email_view.dart';
 import 'package:bus_way/ui/auth/signup/signup_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mainpage_view.dart';
@@ -62,7 +64,6 @@ class LoginViewModel with ChangeNotifier {
     } catch (e) {
       _errorMessage = e.toString().replaceFirst('Exception: ', '');
     } finally {
-      print('login email: ${_firebaseUser?.email}');
       _isLoading = false;
       notifyListeners();
     }
@@ -91,6 +92,20 @@ class LoginViewModel with ChangeNotifier {
   Future<void> loadAutoLogin() async {
     _autoLogin = await authRepository.getAutoLogin();
     notifyListeners();
+  }
+
+  // 비밀번호 재설정
+  void resetPasswordNavigate(BuildContext context) {
+    Navigator.of(context)
+        .push(const NavigatorAnimation(destination: ResetPasswordView())
+            .createRoute(SlideDirection.bottomToTop))
+        .then((_) {
+      emailController.clear();
+      passwordController.clear();
+    });
+    final resetPasswordViewModel =
+        Provider.of<ResetPasswordViewModel>(context, listen: false);
+    resetPasswordViewModel.emailController.clear();
   }
 
   // 로그인
