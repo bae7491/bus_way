@@ -85,6 +85,28 @@ class AuthRemoteDataSource with ChangeNotifier {
 
   // 6. 비밀번호 재설정 인증 메일 보내기
   Future<void> resetPassword(String email) async {
-    await _firebaseAuth.sendPasswordResetEmail(email: email);
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      String message = '';
+      if (e.code == 'invalid-email') {
+        message = '이메일 형식을 다시 확인해주세요.';
+      } else if (e.code == 'missing-android-pkg-name') {
+        message = 'Android 앱 설치가 필요할 경우, Android 패키지 이름을 제공해야 합니다.';
+      } else if (e.code == 'missing-continue-uri') {
+        message = '알맞는 연결 URL을 제공해야 합니다.';
+      } else if (e.code == 'missing-ios-bundle-id') {
+        message = 'App Store ID가 제공된 경우, iOS 번들 ID를 제공해야 합니다.';
+      } else if (e.code == 'invalid-continue-uri') {
+        message = '알맞는 URL 문자열이어야 합니다.';
+      } else if (e.code == 'unauthorized-continue-uri') {
+        message = '연결 URL의 도메인이 허용 목록에 포함되어 있지 않습니다.';
+      } else if (e.code == 'user-not-found') {
+        message = '해당 이메일 주소와 일치하는 사용자를 찾을 수 없습니다.';
+      } else {
+        message = '알 수 없는 에러가 발생했습니다.';
+      }
+      throw Exception(message);
+    }
   }
 }
