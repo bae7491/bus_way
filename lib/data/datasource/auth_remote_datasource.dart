@@ -109,4 +109,30 @@ class AuthRemoteDataSource with ChangeNotifier {
       throw Exception(message);
     }
   }
+
+  // 7. 이메일 인증 메일 보내기
+  Future<void> verifyEmail() async {
+    try {
+      await _firebaseAuth.currentUser!.sendEmailVerification();
+    } catch (e) {
+      String message = '알 수 없는 에러가 발생했습니다.';
+      throw Exception(message);
+    }
+  }
+
+  // 8. 이메일 인증 정보 확인
+  Future<bool> checkVerifyEmail() async {
+    final user = _firebaseAuth.currentUser;
+
+    if (user != null) {
+      // 사용자 정보를 새로고침
+      await user.reload();
+      final updatedUser = _firebaseAuth.currentUser;
+
+      // 이메일 인증 여부 반환
+      return updatedUser!.emailVerified;
+    } else {
+      return false; // 로그아웃 상태일 때 처리
+    }
+  }
 }

@@ -14,6 +14,7 @@ import 'package:bus_way/ui/auth/reset_password/reset_password_view.dart';
 import 'package:bus_way/ui/auth/reset_password/reset_password_viewmodel.dart';
 import 'package:bus_way/ui/auth/signup/signup_email_view.dart';
 import 'package:bus_way/ui/auth/signup/signup_viewmodel.dart';
+import 'package:bus_way/ui/auth/verify_email/verify_email_view.dart';
 import 'package:bus_way/ui/mainpage/mainpage_view.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
@@ -51,16 +52,38 @@ class LoginViewModel with ChangeNotifier {
     super.dispose();
   }
 
-  // 로그인 상태 관리 로직
+  // 로그인 로직
   Future<void> login(String email, String password) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      _firebaseUser = await authRepository.login(email, password);
-      _autoLogin = autoLogin;
-      await setAutoLogin(autoLogin);
+      final user = await authRepository.login(email, password);
+      if (user != null) {
+        _firebaseUser = FirebaseUserModel(
+            email: email,
+            password: password,
+            emailVerified: user.emailVerified);
+        _autoLogin = autoLogin;
+        await setAutoLogin(autoLogin);
+      }
+    } catch (e) {
+      _errorMessage = e.toString().replaceFirst('Exception: ', '');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // 이메일 인증 메일 전송 로직
+  Future<void> verifyEmail() async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      await authRepository.verifyEmail();
     } catch (e) {
       _errorMessage = e.toString().replaceFirst('Exception: ', '');
     } finally {
@@ -108,16 +131,32 @@ class LoginViewModel with ChangeNotifier {
     resetPasswordViewModel.emailController.clear();
   }
 
-  // 로그인
+  // 로그인 성공 후 이동 로직
   void loginNavigate(BuildContext context) {
-    Navigator.of(context).pushAndRemoveUntil(
-      const NavigatorAnimation(
-        destination: MainView(),
-      ).createRoute(SlideDirection.bottomToTop),
-      (Route<dynamic> route) => false,
-    );
-    emailController.clear();
-    passwordController.clear();
+    if (_firebaseUser != null && _firebaseUser!.emailVerified!) {
+      // 인증 시, 메인화면으로 이동
+      Navigator.of(context).pushAndRemoveUntil(
+        const NavigatorAnimation(
+          destination: MainView(),
+        ).createRoute(SlideDirection.bottomToTop),
+        (Route<dynamic> route) => false,
+      );
+      emailController.clear();
+      passwordController.clear();
+    } else {
+      // 미인증 시, 이메일 인증 화면으로 이동
+      verifyEmail().then(
+        (value) {
+          if (context.mounted) {
+            Navigator.of(context).push(
+              const NavigatorAnimation(
+                destination: VerifyEmailView(),
+              ).createRoute(SlideDirection.bottomToTop),
+            );
+          }
+        },
+      );
+    }
   }
 
   // 회원가입

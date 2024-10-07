@@ -4,7 +4,6 @@ import 'package:bus_way/widget/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'login_viewmodel.dart';
-import '../../mainpage/mainpage_view.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -60,12 +59,7 @@ class LoginView extends StatelessWidget {
                               if (loginViewModel.errorMessage == null &&
                                   loginViewModel.firebaseUser != null &&
                                   context.mounted) {
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const MainView()),
-                                  (route) => false,
-                                );
+                                loginViewModel.loginNavigate(context);
                               }
                             },
                             hintText: "비밀번호를 입력하세요",

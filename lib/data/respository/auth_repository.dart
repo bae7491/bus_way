@@ -8,25 +8,24 @@
 
 import 'package:bus_way/data/datasource/auth_local_datasource.dart';
 import 'package:bus_way/data/model/signup_user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../datasource/auth_remote_datasource.dart';
-import '../model/firebase_user_model.dart';
 
 class AuthRepository {
   final AuthRemoteDataSource remoteAuthDataSource = AuthRemoteDataSource();
   final AuthLocalDatasource localAuthDataSource = AuthLocalDatasource();
 
   // 로그인
-  Future<FirebaseUserModel?> login(String email, String password) async {
-    await remoteAuthDataSource.loginWithEmail(email, password);
-    return FirebaseUserModel(email: email, password: password);
+  Future<User?> login(String email, String password) async {
+    final user = await remoteAuthDataSource.loginWithEmail(email, password);
+    return user;
   }
 
   // 회원가입
-  Future<FirebaseUserModel?> signUpWithEmail(
-      String email, String password) async {
-    await remoteAuthDataSource.signUpWithEmail(email, password);
-    return FirebaseUserModel(email: email, password: password);
+  Future<User?> signUpWithEmail(String email, String password) async {
+    final user = await remoteAuthDataSource.signUpWithEmail(email, password);
+    return user;
   }
 
   // DB(mySQL)에 유저 정보 저장
@@ -59,5 +58,15 @@ class AuthRepository {
   // 비밀번호 재설정 이메일 인증 보내기
   Future<void> resetPassword(String email) async {
     await remoteAuthDataSource.resetPassword(email);
+  }
+
+  // 이메일 인증 메일 보내기
+  Future<void> verifyEmail() async {
+    return await remoteAuthDataSource.verifyEmail();
+  }
+
+  // 이메일 인증 확인
+  Future<bool> checkVerifyEmail() async {
+    return await remoteAuthDataSource.checkVerifyEmail();
   }
 }

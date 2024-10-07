@@ -1,5 +1,6 @@
 import 'package:bus_way/ui/auth/auth_check.dart';
 import 'package:bus_way/ui/auth/reset_password/reset_password_viewmodel.dart';
+import 'package:bus_way/ui/auth/verify_email/verify_email_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,10 @@ class MyApp extends StatelessWidget {
         // 비밀번호 재설정
         ChangeNotifierProvider(
           create: (_) => ResetPasswordViewModel(),
+        ),
+        // 이메일 인증
+        ChangeNotifierProvider(
+          create: (_) => VerifyEmailViewmodel(),
         ),
         // 메인페이지
         ChangeNotifierProvider(

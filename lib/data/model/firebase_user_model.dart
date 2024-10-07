@@ -4,9 +4,11 @@
 class FirebaseUserModel {
   String? email;
   String? password;
+  bool? emailVerified;
 
   FirebaseUserModel({
     required this.email,
     required this.password,
+    required this.emailVerified,
   });
 }

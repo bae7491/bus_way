@@ -114,10 +114,15 @@ class SignUpViewModel with ChangeNotifier {
       // 중복값이 없었으면,
       if (isUnique) {
         // Firebase로 회원가입 진행
-        _firebaseUser = await authRepository.signUpWithEmail(email, password);
-
-        // DB에 값 저장
-        await authRepository.saveUserInfo(_signUpUser);
+        final user = await authRepository.signUpWithEmail(email, password);
+        if (user != null) {
+          _firebaseUser = FirebaseUserModel(
+              email: email,
+              password: password,
+              emailVerified: user.emailVerified);
+          // DB에 값 저장
+          await authRepository.saveUserInfo(_signUpUser);
+        }
       }
     } catch (e) {
       _errorMessage = e.toString().replaceFirst('Exception: ', '');
@@ -315,7 +320,6 @@ class SignUpViewModel with ChangeNotifier {
                 .createRoute(SlideDirection.rightToLeft),
             (route) => false);
       } else if (_errorMessage != null && context.mounted) {
-        print('errorMessage: $_errorMessage');
         ScaffoldMessenger.of(context).showSnackBar(
           CustomSnackbar(content: Text(_errorMessage!)),
         );
