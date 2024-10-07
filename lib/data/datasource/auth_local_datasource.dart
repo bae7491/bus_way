@@ -117,4 +117,54 @@ class AuthLocalDatasource with ChangeNotifier {
 
     return false;
   }
+
+  // 비밀번호 업데이트
+  Future<void> updatePassword(String email, String password) async {
+    bool isSuccess = false;
+    try {
+      var result = await http.post(
+        Uri.parse(API.updatePassword),
+        headers: {
+          'Content-Type':
+              'application/x-www-form-urlencoded', // 적절한 Content-Type 설정
+        },
+        body: {'email': email, 'password': password},
+      ).timeout(
+        const Duration(minutes: 1), // 타임아웃을 1분으로 설정
+        onTimeout: () {
+          return http.Response(
+              'Error: Request Timeout', 408); // 408은 타임아웃 상태 코드
+        },
+      );
+
+      print('result.status: ${result.statusCode}');
+
+      if (result.statusCode == 200) {
+        var updatePasswordResult = jsonDecode(result.body);
+        if (updatePasswordResult['success'] == true) {
+          isSuccess = true;
+        } else {
+          statusCode = ApiResponseStatus.unknownError;
+        }
+      } else if (result.statusCode == 400) {
+        statusCode = ApiResponseStatus.badRequest;
+      } else if (result.statusCode == 401) {
+        statusCode = ApiResponseStatus.unauthorized;
+      } else if (result.statusCode == 408) {
+        statusCode = ApiResponseStatus.requestTimeout;
+      } else if (result.statusCode == 500) {
+        statusCode = ApiResponseStatus.serverError;
+      } else {
+        statusCode = ApiResponseStatus.unknownError;
+      }
+    } catch (e) {
+      statusCode = ApiResponseStatus.unknownError;
+    } finally {
+      // 상태 코드에 따른 메시지를 던짐
+      if (!isSuccess) {
+        throw getMessageForStatusCode(
+            statusCode ?? ApiResponseStatus.unknownError);
+      }
+    }
+  }
 }

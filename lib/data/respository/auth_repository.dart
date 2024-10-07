@@ -60,6 +60,11 @@ class AuthRepository {
     await remoteAuthDataSource.resetPassword(email);
   }
 
+  // 비밀번호 업데이트
+  Future<void> updatePassword(String email, String password) async {
+    await localAuthDataSource.updatePassword(email, password);
+  }
+
   // 이메일 인증 메일 보내기
   Future<void> verifyEmail() async {
     return await remoteAuthDataSource.verifyEmail();

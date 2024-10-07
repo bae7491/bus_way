@@ -132,21 +132,35 @@ class LoginViewModel with ChangeNotifier {
   }
 
   // 로그인 성공 후 이동 로직
-  void loginNavigate(BuildContext context) {
-    if (_firebaseUser != null && _firebaseUser!.emailVerified!) {
-      // 인증 시, 메인화면으로 이동
-      Navigator.of(context).pushAndRemoveUntil(
-        const NavigatorAnimation(
-          destination: MainView(),
-        ).createRoute(SlideDirection.bottomToTop),
-        (Route<dynamic> route) => false,
-      );
-      emailController.clear();
-      passwordController.clear();
-    } else {
-      // 미인증 시, 이메일 인증 화면으로 이동
-      verifyEmail().then(
-        (value) {
+  void loginNavigate(BuildContext context) async {
+    try {
+      if (_firebaseUser != null && _firebaseUser!.emailVerified!) {
+        _isLoading = true;
+        _errorMessage = '';
+        notifyListeners();
+
+        // 변경한 비밀번호를 DB에 업데이트
+        await authRepository.updatePassword(
+          _firebaseUser!.email!,
+          _firebaseUser!.password!,
+        );
+
+        if (context.mounted) {
+          // 비밀번호 업데이트 성공 시, 메인 화면으로 이동
+          Navigator.of(context).pushAndRemoveUntil(
+            const NavigatorAnimation(
+              destination: MainView(),
+            ).createRoute(SlideDirection.bottomToTop),
+            (Route<dynamic> route) => false,
+          );
+        }
+
+        // 로그인 성공 후 이메일과 비밀번호 초기화
+        emailController.clear();
+        passwordController.clear();
+      } else {
+        // 이메일 인증이 완료되지 않은 경우
+        verifyEmail().then((value) {
           if (context.mounted) {
             Navigator.of(context).push(
               const NavigatorAnimation(
@@ -154,8 +168,15 @@ class LoginViewModel with ChangeNotifier {
               ).createRoute(SlideDirection.bottomToTop),
             );
           }
-        },
-      );
+        });
+      }
+    } catch (e) {
+      if (_errorMessage != null && context.mounted) {
+        _errorMessage = e.toString().replaceFirst('Exception: ', '');
+      }
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
