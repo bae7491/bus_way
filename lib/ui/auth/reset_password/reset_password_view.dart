@@ -65,7 +65,7 @@ class ResetPasswordView extends StatelessWidget {
                                       );
                                     },
                                     onChanged: (value) {
-                                      // resetPasswordViewModel.updateEmailBtn();
+                                      resetPasswordViewModel.updateEmailBtn();
                                     },
                                     hintText: '이메일을 입력하세요.',
                                     controller:
