@@ -13,7 +13,7 @@
 */
 
 import 'package:bus_way/data/model/signup_user_model.dart';
-import 'package:bus_way/data/respository/auth_repository.dart';
+import 'package:bus_way/data/respository/login_auth_repository.dart';
 import 'package:bus_way/ui/auth/signup/signup_complete_view.dart';
 import 'package:bus_way/ui/auth/signup/signup_moreinfo_view.dart';
 import 'package:bus_way/ui/auth/signup/signup_password_view.dart';
@@ -24,7 +24,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../../../data/model/firebase_user_model.dart';
 
 class SignUpViewModel with ChangeNotifier {
-  AuthRepository authRepository = AuthRepository();
+  LoginAuthRepository loginAuthRepository = LoginAuthRepository();
 
   // 회원가입 textField의 값을 저장하는 Controller 목록
   final emailController = TextEditingController();
@@ -108,20 +108,20 @@ class SignUpViewModel with ChangeNotifier {
     // 파이어베이스 회원가입 + 로컬 DB에 저장 같이 하는 코드 작성하기.
     try {
       // Unique 값 (email, phoneNumber) 체크 후, 회원가입 진행.
-      bool isUnique = await authRepository.checkUserUnique(
+      bool isUnique = await loginAuthRepository.checkUserUnique(
           _signUpUser.email!, _signUpUser.phoneNumber!, _signUpUser.nickName!);
 
       // 중복값이 없었으면,
       if (isUnique) {
         // Firebase로 회원가입 진행
-        final user = await authRepository.signUpWithEmail(email, password);
+        final user = await loginAuthRepository.signUpWithEmail(email, password);
         if (user != null) {
           _firebaseUser = FirebaseUserModel(
               email: email,
               password: password,
               emailVerified: user.emailVerified);
           // DB에 값 저장
-          await authRepository.saveUserInfo(_signUpUser);
+          await loginAuthRepository.saveUserInfo(_signUpUser);
         }
       }
     } catch (e) {

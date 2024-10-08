@@ -1,11 +1,11 @@
-import 'package:bus_way/data/respository/auth_repository.dart';
+import 'package:bus_way/data/respository/login_auth_repository.dart';
 import 'package:bus_way/ui/mainpage/mainpage_view.dart';
 import 'package:bus_way/widget/custom_snackbar.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
 
 class VerifyEmailViewmodel with ChangeNotifier {
-  AuthRepository authRepository = AuthRepository();
+  LoginAuthRepository loginAuthRepository = LoginAuthRepository();
 
   bool _isLoading = false;
   bool _emailVerified = false;
@@ -21,16 +21,18 @@ class VerifyEmailViewmodel with ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
 
-    _emailVerified = await authRepository.checkVerifyEmail();
+    _emailVerified = await loginAuthRepository.checkVerifyEmail();
     print('이메일 인증 확인: $_emailVerified');
 
     // 메일 인증 완료 후,
     if (_emailVerified) {
       // 인증 완료 시,
       if (context.mounted) {
-        Navigator.of(context).push(
-            const NavigatorAnimation(destination: MainView())
-                .createRoute(SlideDirection.bottomToTop));
+        Navigator.of(context).pushAndRemoveUntil(
+          const NavigatorAnimation(destination: MainView())
+              .createRoute(SlideDirection.bottomToTop),
+          (Route<dynamic> route) => false,
+        );
       }
     } else {
       // 인증 미완료 시,

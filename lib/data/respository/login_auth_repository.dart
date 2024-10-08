@@ -12,7 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../datasource/auth_remote_datasource.dart';
 
-class AuthRepository {
+class LoginAuthRepository {
   final AuthRemoteDataSource remoteAuthDataSource = AuthRemoteDataSource();
   final AuthLocalDatasource localAuthDataSource = AuthLocalDatasource();
 

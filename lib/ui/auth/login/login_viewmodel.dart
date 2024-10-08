@@ -20,10 +20,10 @@ import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../data/model/firebase_user_model.dart';
-import '../../../data/respository/auth_repository.dart';
+import '../../../data/respository/login_auth_repository.dart';
 
 class LoginViewModel with ChangeNotifier {
-  AuthRepository authRepository = AuthRepository();
+  LoginAuthRepository loginAuthRepository = LoginAuthRepository();
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -59,7 +59,7 @@ class LoginViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
-      final user = await authRepository.login(email, password);
+      final user = await loginAuthRepository.login(email, password);
       if (user != null) {
         _firebaseUser = FirebaseUserModel(
             email: email,
@@ -83,7 +83,7 @@ class LoginViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
-      await authRepository.verifyEmail();
+      await loginAuthRepository.verifyEmail();
     } catch (e) {
       _errorMessage = e.toString().replaceFirst('Exception: ', '');
     } finally {
@@ -107,13 +107,13 @@ class LoginViewModel with ChangeNotifier {
   // 자동 로그인 체크 상태 관리 로직
   Future<void> setAutoLogin(bool autoLogin) async {
     _autoLogin = autoLogin;
-    await authRepository.setAutoLogin(autoLogin);
+    await loginAuthRepository.setAutoLogin(autoLogin);
     notifyListeners();
   }
 
   // 자동 로그인 상태 로드
   Future<void> loadAutoLogin() async {
-    _autoLogin = await authRepository.getAutoLogin();
+    _autoLogin = await loginAuthRepository.getAutoLogin();
     notifyListeners();
   }
 
@@ -140,7 +140,7 @@ class LoginViewModel with ChangeNotifier {
         notifyListeners();
 
         // 변경한 비밀번호를 DB에 업데이트
-        await authRepository.updatePassword(
+        await loginAuthRepository.updatePassword(
           _firebaseUser!.email!,
           _firebaseUser!.password!,
         );

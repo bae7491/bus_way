@@ -1,11 +1,11 @@
-import 'package:bus_way/data/respository/auth_repository.dart';
+import 'package:bus_way/data/respository/login_auth_repository.dart';
 import 'package:bus_way/ui/auth/reset_password/reset_password_complete_view.dart';
 import 'package:bus_way/widget/custom_snackbar.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
 
 class ResetPasswordViewModel with ChangeNotifier {
-  AuthRepository authRepository = AuthRepository();
+  LoginAuthRepository loginAuthRepository = LoginAuthRepository();
 
   final emailController = TextEditingController();
   final emailFocusNode = FocusNode();
@@ -33,7 +33,7 @@ class ResetPasswordViewModel with ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
     try {
-      await authRepository.resetPassword(emailController.text);
+      await loginAuthRepository.resetPassword(emailController.text);
     } catch (e) {
       _errorMessage = e.toString().replaceFirst('Exception: ', '');
     } finally {
@@ -79,7 +79,7 @@ class ResetPasswordViewModel with ChangeNotifier {
     }
   }
 
-  // 이메일 입력 페이지 (1번째 페이지) 버튼 활성화 여부 변경 로직
+  // 이메일 입력 시, 계속하기 버튼 활성화 여부 변경 로직
   void updateEmailBtn() {
     _isEmailActiveBtn = emailController.text.isNotEmpty;
     notifyListeners();
