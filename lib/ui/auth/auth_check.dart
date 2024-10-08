@@ -19,7 +19,7 @@ class AuthCheck extends StatelessWidget {
         final isAutoLoginChecked = loginViewModel.autoLogin;
 
         // 자동 로그인 체크가 해제된 경우 로그아웃
-        if (firebaseUser != null && !isAutoLoginChecked) {
+        if (firebaseUser == null) {
           // 자동 로그인 체크 해제된 경우 로그아웃
           FirebaseAuth.instance.signOut();
         }
