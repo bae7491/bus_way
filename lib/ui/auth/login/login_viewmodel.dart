@@ -16,6 +16,7 @@ import 'package:bus_way/ui/auth/signup/signup_email_view.dart';
 import 'package:bus_way/ui/auth/signup/signup_viewmodel.dart';
 import 'package:bus_way/ui/auth/verify_email/verify_email_view.dart';
 import 'package:bus_way/ui/mainpage/mainpage_view.dart';
+import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -98,6 +99,12 @@ class LoginViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  // 비밀번호 확인 아이콘 초기화
+  void clearPasswordVisibility() {
+    _passwordVisible = false;
+    notifyListeners();
+  }
+
   // 비밀번호 textField 보이기/숨기기 토글 로직
   void togglePasswordVisibility() {
     _passwordVisible = !_passwordVisible;
@@ -153,11 +160,14 @@ class LoginViewModel with ChangeNotifier {
             ).createRoute(SlideDirection.bottomToTop),
             (Route<dynamic> route) => false,
           );
-        }
+          final mainPageViewModel =
+              Provider.of<MainPageViewModel>(context, listen: false);
+          mainPageViewModel.resetIndex();
 
-        // 로그인 성공 후 이메일과 비밀번호 초기화
-        emailController.clear();
-        passwordController.clear();
+          // 로그인 성공 후 이메일과 비밀번호 초기화
+          emailController.clear();
+          passwordController.clear();
+        }
       } else {
         // 이메일 인증이 완료되지 않은 경우
         verifyEmail().then((value) {

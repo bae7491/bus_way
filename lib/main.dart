@@ -1,7 +1,9 @@
 import 'package:bus_way/ui/auth/auth_check.dart';
 import 'package:bus_way/ui/auth/reset_password/reset_password_viewmodel.dart';
 import 'package:bus_way/ui/auth/verify_email/verify_email_viewmodel.dart';
+import 'package:bus_way/ui/mainpage/main_map/main_map_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
+import 'package:bus_way/ui/mainpage/mypage/mypage_viewmodel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -44,6 +46,14 @@ class MyApp extends StatelessWidget {
         // 메인페이지
         ChangeNotifierProvider(
           create: (_) => MainPageViewModel(),
+        ),
+        // 메인 지도
+        ChangeNotifierProvider(
+          create: (_) => MainMapViewmodel(),
+        ),
+        // 마이페이지
+        ChangeNotifierProvider(
+          create: (_) => MypageViewmodel(),
         ),
       ],
       child: MaterialApp(
