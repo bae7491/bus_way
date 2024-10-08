@@ -4,6 +4,8 @@ import 'package:bus_way/ui/auth/verify_email/verify_email_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:provider/provider.dart';
 import 'ui/auth/login/login_viewmodel.dart';
 import 'ui/auth/signup/signup_viewmodel.dart';
@@ -11,6 +13,8 @@ import 'ui/auth/signup/signup_viewmodel.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await dotenv.load(fileName: 'assets/.env');
+  AuthRepository.initialize(appKey: dotenv.env['kakaoAppKey'] ?? '');
   runApp(const MyApp());
 }
 
