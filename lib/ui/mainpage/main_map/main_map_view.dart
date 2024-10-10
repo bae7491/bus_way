@@ -26,8 +26,7 @@ class MainMapView extends StatelessWidget {
                 },
                 markers: mainMapViewModel.markers.toList(),
                 onMarkerTap: ((markerId, latLng, zoomLevel) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('marker click:\n\n$latLng, $markerId')));
+                  // TODO: 마커를 탭했을 때, 모달 창이 나오도록 해야함.
                 }),
                 center: mainMapViewModel.center,
               ),
