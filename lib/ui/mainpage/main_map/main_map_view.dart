@@ -2,6 +2,7 @@ import 'package:bus_way/ui/mainpage/main_map/main_map_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class MainMapView extends StatelessWidget {
   const MainMapView({super.key});
@@ -23,10 +24,52 @@ class MainMapView extends StatelessWidget {
                     mainMapViewModel.moveCameraToCurrentLocation();
                   }
                 },
-                center: mainMapViewModel.center, // 준비된 좌표로 지도를 중심으로 설정
+                markers: mainMapViewModel.markers.toList(),
+                onMarkerTap: ((markerId, latLng, zoomLevel) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('marker click:\n\n$latLng, $markerId')));
+                }),
+                center: mainMapViewModel.center,
               ),
             ],
           ),
+          floatingActionButton: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FloatingActionButton(
+                onPressed: () {
+                  mainMapViewModel.moveCameraToCurrentLocation();
+                },
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                elevation: 5,
+                shape: const CircleBorder(),
+                child: const Icon(Icons.refresh),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              FloatingActionButton(
+                onPressed: () {
+                  mainMapViewModel.moveToNewLocation();
+                },
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                elevation: 5,
+                shape: const CircleBorder(),
+                child: !mainMapViewModel.isLoading
+                    ? const Icon(Icons.gps_fixed) // 기본 상태 - gps 아이콘
+                    : const SpinKitFadingCircle(
+                        color: Colors.black,
+                        size: 30,
+                      ), // 클릭 상태 - 로딩 아이콘
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         );
       },
     );

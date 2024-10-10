@@ -3,17 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bus_way/data/api/api.dart';
 
 class MainMapViewmodel with ChangeNotifier {
   LoginAuthRepository loginAuthRepository = LoginAuthRepository();
 
   KakaoMapController? _mapController;
   LatLng _center = LatLng(35.1797, 129.0746); // 초기 좌표를 부산 시청으로 설정
+  bool _isLoading = false;
   bool _isLocationReady = false;
+  final Set<Marker> _markers = {};
 
   KakaoMapController? get mapController => _mapController;
   LatLng get center => _center;
+  bool get isLoading => _isLoading;
   bool get isLocationReady => _isLocationReady;
+  Set<Marker> get markers => _markers;
 
   MainMapViewmodel() {
     // 저장된 좌표를 불러오고, 없다면 현재 위치를 가져옴
@@ -56,9 +61,6 @@ class MainMapViewmodel with ChangeNotifier {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('permissions are denied');
-      }
     }
 
     // 현재 좌표 불러오기
@@ -75,6 +77,53 @@ class MainMapViewmodel with ChangeNotifier {
   // 지도 불러오기 (만들기)
   void onMapCreated(KakaoMapController controller) {
     _mapController = controller;
+    _markers.add(Marker(
+      markerId: _markers.length.toString(),
+      latLng: LatLng(35.148712562662, 129.059111123451),
+      width: 45,
+      height: 45,
+      markerImageSrc: API.busStopImage,
+      zIndex: 4,
+    ));
+
+    _markers.add(Marker(
+      markerId: _markers.length.toString(),
+      latLng: LatLng(35.14876, 129.059),
+      width: 45,
+      height: 45,
+      markerImageSrc: API.busStopImage,
+      zIndex: 3,
+    ));
+
+    _markers.add(Marker(
+      markerId: _markers.length.toString(),
+      latLng: LatLng(35.147594148749, 129.05901261197),
+      width: 45,
+      height: 45,
+      markerImageSrc: API.busStopImage,
+      zIndex: 2,
+    ));
+
+    /// offset 을 넣는 형식
+    _markers.add(Marker(
+      markerId: _markers.length.toString(),
+      latLng: LatLng(35.14975, 129.0594),
+      width: 45,
+      height: 45,
+      markerImageSrc: API.busStopImage,
+      zIndex: 1,
+    ));
+    notifyListeners();
+  }
+
+  // 새로운 좌표로 설정 후 이동
+  Future<void> moveToNewLocation() async {
+    _isLoading = true;
+    notifyListeners();
+
+    await getLocation();
+
+    _isLoading = false;
     notifyListeners();
   }
 
