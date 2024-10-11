@@ -77,11 +77,29 @@ class MainMapViewmodel with ChangeNotifier {
   // 지도 불러오기 (만들기)
   void onMapCreated(KakaoMapController controller) {
     _mapController = controller;
+
+    // 마커 초기화
+    _markers.clear();
+
+    // 본인 위치 마커
+    _markers.add(Marker(
+      markerId: _markers.length.toString(),
+      latLng: _center,
+      width: 15,
+      height: 15,
+      offsetX: 7,
+      offsetY: 15,
+      markerImageSrc: API.myLocationImage,
+      zIndex: 1000,
+    ));
+
     _markers.add(Marker(
       markerId: _markers.length.toString(),
       latLng: LatLng(35.148712562662, 129.059111123451),
       width: 45,
       height: 45,
+      offsetX: 22,
+      offsetY: 45,
       markerImageSrc: API.busStopImage,
       zIndex: 4,
     ));
@@ -91,6 +109,8 @@ class MainMapViewmodel with ChangeNotifier {
       latLng: LatLng(35.14876, 129.059),
       width: 45,
       height: 45,
+      offsetX: 22,
+      offsetY: 45,
       markerImageSrc: API.busStopImage,
       zIndex: 3,
     ));
@@ -100,19 +120,23 @@ class MainMapViewmodel with ChangeNotifier {
       latLng: LatLng(35.147594148749, 129.05901261197),
       width: 45,
       height: 45,
+      offsetX: 22,
+      offsetY: 45,
       markerImageSrc: API.busStopImage,
       zIndex: 2,
     ));
 
-    /// offset 을 넣는 형식
     _markers.add(Marker(
       markerId: _markers.length.toString(),
       latLng: LatLng(35.14975, 129.0594),
       width: 45,
       height: 45,
+      offsetX: 22,
+      offsetY: 45,
       markerImageSrc: API.busStopImage,
       zIndex: 1,
     ));
+
     notifyListeners();
   }
 
@@ -125,6 +149,12 @@ class MainMapViewmodel with ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  // 마커 위치로 카메라 이동
+  Future<void> moveToMarkerLocation(LatLng latLng) async {
+    _mapController!.setLevel(2);
+    _mapController!.panTo(latLng);
   }
 
   // 좌표가 설정된 후 카메라 이동

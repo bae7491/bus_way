@@ -25,8 +25,15 @@ class MainMapView extends StatelessWidget {
                   }
                 },
                 onMarkerTap: ((markerId, latLng, zoomLevel) {
-                  // 마커를 탭했을 때, 모달 창 나오는 함수 불러오기
-                  showCustomModalBottomSheet(context);
+                  if (markerId != '0') {
+                    // 마커의 위치를 중심으로 카카오맵 이동
+                    mainMapViewModel.moveToMarkerLocation(latLng);
+
+                    // 마커를 탭했을 때, 모달 창 나오는 함수 불러오기
+                    showCustomModalBottomSheet(context);
+
+                    // TODO: 선택된 마커 크기 키우기
+                  }
                 }),
                 markers: mainMapViewModel.markers.toList(),
                 center: mainMapViewModel.center,
@@ -78,32 +85,38 @@ class MainMapView extends StatelessWidget {
   // 마커를 클릭하면 모달 창이 보이는 함수
   void showCustomModalBottomSheet(BuildContext context) {
     // tabBar의 높이와 전체 화면의 높이를 계산하는 변수들
-    const double tabBarHeight = 90.0; // TabBar의 높이 설정
+    const double tabBarHeight = 80.0; // TabBar의 높이 설정
     final double maxHeight =
         MediaQuery.of(context).size.height * 0.8; // 화면의 80%
 
     showModalBottomSheet<void>(
       context: context,
-      isScrollControlled: true,
+      useRootNavigator: true,
       useSafeArea: true,
+      isScrollControlled: true,
+      // showDragHandle: true,
+      barrierColor: Colors.transparent,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
       builder: (context) {
         return DraggableScrollableSheet(
           expand: false,
-          initialChildSize: 0.5,
+          initialChildSize: 0.3,
           minChildSize: 0.1,
           maxChildSize: 0.8,
           builder: (context, scrollController) {
             return Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).canvasColor,
-                borderRadius: const BorderRadius.only(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(25),
                   topRight: Radius.circular(25),
                 ),
               ),
               child: SingleChildScrollView(
                 controller: scrollController,
-                physics: const ClampingScrollPhysics(),
                 child: DefaultTabController(
                   length: 2,
                   initialIndex: 0,
@@ -121,34 +134,93 @@ class MainMapView extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       // TabBar 추가
-                      const PreferredSize(
-                        preferredSize:
-                            Size.fromHeight(tabBarHeight), // TabBar의 높이 설정
-                        child: TabBar(
-                          labelColor: Colors.black,
-                          indicatorColor: Colors.black,
-                          tabs: <Widget>[
-                            Tab(text: '버스'),
-                            Tab(text: '관광'),
-                          ],
-                        ),
+                      const TabBar(
+                        labelColor: Colors.black,
+                        indicatorColor: Colors.black,
+                        tabs: <Widget>[
+                          Tab(text: '버스'),
+                          Tab(text: '관광'),
+                        ],
                       ),
                       // TabBarView 추가
                       SizedBox(
                         height: maxHeight -
-                            tabBarHeight, // TabBar height를 제외한 나머지 공간 설정
+                            (tabBarHeight + 20), // TabBar height를 제외한 나머지 공간 설정
                         child: TabBarView(
                           children: <Widget>[
-                            // 첫 번째 탭: 버스 정류장 정보
-                            ListView.builder(
-                              itemCount: 10, // 예시 데이터
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  leading: const Icon(Icons.directions_bus),
-                                  title: Text('버스 정류장 $index'),
-                                  subtitle: Text('다음 버스 도착: ${index * 2}분'),
-                                );
-                              },
+                            Column(
+                              children: [
+                                // 정류장 이름과 새로고침 버튼을 중앙 정렬
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      // 빈 공간을 사용해 정류장 이름을 중앙으로
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: SizedBox(
+                                          width: 24, // 새로고침 버튼의 크기만큼 맞춤
+                                          child: Container(), // 빈 공간
+                                        ),
+                                      ),
+                                      // 정류장 이름을 중앙에 배치
+                                      const Text(
+                                        '정류장 이름',
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      // 새로고침 버튼을 오른쪽에 배치
+                                      IconButton(
+                                        icon: const Icon(Icons.refresh),
+                                        onPressed: () {
+                                          // TODO: 새로고침 버튼 동작 구현
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const Divider(height: 1, color: Colors.grey),
+                                Expanded(
+                                  child: ListView.builder(
+                                    itemCount: 10, // 예시 데이터
+                                    itemBuilder: (context, index) {
+                                      return const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16.0, vertical: 8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '버스번호',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text('0분 | 0정류장'),
+                                                Text('도착정보 없음'),
+                                              ],
+                                            ),
+                                            Divider(
+                                                height: 20, color: Colors.grey),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                             // 두 번째 탭: 관광 정보
                             ListView.builder(

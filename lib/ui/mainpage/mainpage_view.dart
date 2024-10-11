@@ -35,13 +35,13 @@ class MainView extends StatelessWidget {
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(
+            onTap: (int index) {
+              mainPageViewModel.updateCurrentPage(index);
+            },
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
               BottomNavigationBarItem(icon: Icon(Icons.person), label: 'MY'),
             ],
-            onTap: (int index) {
-              mainPageViewModel.updateCurrentPage(index);
-            },
             currentIndex: mainPageViewModel.index,
             fixedColor: orchid,
             backgroundColor: Colors.white,

@@ -5,8 +5,11 @@ class API {
   // ================== 이미지 관련 API
   static const hostConnectImage = '$hostConnect/images';
 
-  // 버스 정류장 이미지
+  // 버스 정류장 icon 이미지
   static const busStopImage = '$hostConnectImage/bus_stop_icon.png';
+
+  // 내 위치 icon 이미지
+  static const myLocationImage = '$hostConnectImage/my_location_icon.png';
   //==================
 
   // ================== 회원 관련 DB 요청 API
