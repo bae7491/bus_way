@@ -1,5 +1,6 @@
 import 'package:bus_way/theme/colors.dart';
 import 'package:bus_way/ui/mainpage/main_map/main_map_view.dart';
+import 'package:bus_way/ui/mainpage/main_map/main_map_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mypage/mypage_view.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,12 @@ class MainView extends StatelessWidget {
           ),
           bottomNavigationBar: BottomNavigationBar(
             onTap: (int index) {
-              mainPageViewModel.updateCurrentPage(index);
+              final mainMapViewModel =
+                  Provider.of<MainMapViewmodel>(context, listen: false);
+
+              if (mainMapViewModel.isLoading == false) {
+                mainPageViewModel.updateCurrentPage(index);
+              }
             },
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),

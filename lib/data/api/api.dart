@@ -25,5 +25,17 @@ class API {
   static const updatePassword = '$hostConnectUser/update_password.php';
   //==================
 
-  // ================== DB 요청 API
+  // ================= 공공 데이터
+  // 공공 데이터 전역 url
+  static const tagoBusStop = 'apis.data.go.kr';
+  // ================== 버스 공공 데이터 API (TAGO 버스정류소정보 API)
+  // 좌표 기반 근접(500m 이내) 정류소 목록 조회
+  static const getNearBusStop =
+      '1613000/BusSttnInfoInqireService/getCrdntPrxmtSttnList';
+  //==================
+
+  // ================== 버스 공공 데이터 API (부산 버스 공공 데이터 API)
+  // 정류소 도착 정보 조회 (정류장 ID)
+  static const getBusStopInfo = '6260000/BusanBIMS/stopArrByBstopid';
+  //==================
 }

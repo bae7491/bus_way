@@ -12,8 +12,8 @@
     signup_view.dart의 TextField에서 입력한 이메일 주소로 FirebaseAuth의 인증 메일 보내기.
 */
 
-import 'package:bus_way/data/model/signup_user_model.dart';
-import 'package:bus_way/data/respository/login_auth_repository.dart';
+import 'package:bus_way/data/model/auth_model/signup_user_model.dart';
+import 'package:bus_way/data/respository/auth_repository/login_auth_repository.dart';
 import 'package:bus_way/ui/auth/signup/signup_complete_view.dart';
 import 'package:bus_way/ui/auth/signup/signup_moreinfo_view.dart';
 import 'package:bus_way/ui/auth/signup/signup_password_view.dart';
@@ -21,7 +21,7 @@ import 'package:bus_way/widget/custom_snackbar.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import '../../../data/model/firebase_user_model.dart';
+import '../../../data/model/auth_model/firebase_user_model.dart';
 
 class SignUpViewModel with ChangeNotifier {
   LoginAuthRepository loginAuthRepository = LoginAuthRepository();

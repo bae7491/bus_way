@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:bus_way/data/api/api.dart';
 import 'package:bus_way/data/api/api_enum.dart';
-import 'package:bus_way/data/model/signup_user_model.dart';
+import 'package:bus_way/data/model/auth_model/signup_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 

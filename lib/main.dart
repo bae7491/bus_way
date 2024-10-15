@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
         ),
         // 메인 지도
         ChangeNotifierProvider(
-          create: (_) => MainMapViewmodel(),
+          create: (context) => MainMapViewmodel(context),
         ),
         // 마이페이지
         ChangeNotifierProvider(

@@ -29,3 +29,29 @@ String getMessageForStatusCode(ApiResponseStatus status) {
       return "알 수 없는 오류가 발생했습니다.";
   }
 }
+
+// 오픈 API 에러 처리
+String getApiMessageForStatusCode(String errorCode) {
+  switch (errorCode) {
+    case '1' || '01':
+      return '어플리케이션 에러입니다.';
+    case '4' || '04':
+      return 'http 에러입니다.';
+    case '12':
+      return '해당 API가 없거나 폐기된 API 입니다.';
+    case '20':
+      return '서비스 접근이 거부되었습니다.';
+    case '22':
+      return '서비스 요청 제한 회수를 초과했습니다.';
+    case '30':
+      return '서비스 키가 등록되지 않았습니다.';
+    case '31':
+      return '활용 기간이 만료 되었습니다.';
+    case '32':
+      return '등록되지 않은 IP입니다.';
+    case '99':
+      return '알 수 없는 오류가 발생했습니다.';
+    default:
+      return '알 수 없는 오류가 발생했습니다.';
+  }
+}

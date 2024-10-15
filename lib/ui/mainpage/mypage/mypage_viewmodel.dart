@@ -1,4 +1,4 @@
-import 'package:bus_way/data/respository/login_auth_repository.dart';
+import 'package:bus_way/data/respository/auth_repository/login_auth_repository.dart';
 import 'package:bus_way/ui/auth/login/login_view.dart';
 import 'package:bus_way/ui/auth/login/login_viewmodel.dart';
 import 'package:bus_way/widget/navigator_animation.dart';

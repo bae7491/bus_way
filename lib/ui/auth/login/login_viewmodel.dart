@@ -20,8 +20,8 @@ import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../data/model/firebase_user_model.dart';
-import '../../../data/respository/login_auth_repository.dart';
+import '../../../data/model/auth_model/firebase_user_model.dart';
+import '../../../data/respository/auth_repository/login_auth_repository.dart';
 
 class LoginViewModel with ChangeNotifier {
   LoginAuthRepository loginAuthRepository = LoginAuthRepository();
