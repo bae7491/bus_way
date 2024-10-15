@@ -58,6 +58,21 @@ class MainMapView extends StatelessWidget {
                 center: mainMapViewModel.center,
               ),
 
+              // 기능 동작 중일 때, 로딩 애니메이션 보이기
+              if (mainMapViewModel.isLoading)
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.grey.withOpacity(0.3),
+                    child: const Center(
+                      child: SpinKitRing(
+                        color: orchid,
+                        size: 120,
+                        lineWidth: 12.0,
+                      ), // 로딩 인디케이터
+                    ), // 회색 배경
+                  ),
+                ),
+
               // 현 지도에서 재검색
               if (!mainMapViewModel.isBottomSheetVisible)
                 Align(
@@ -106,15 +121,6 @@ class MainMapView extends StatelessWidget {
                   ),
                 ),
               ),
-              if (mainMapViewModel.isLoading)
-                Positioned.fill(
-                  child: Container(
-                    color: Colors.black.withOpacity(0.1), // 회색 배경
-                    child: const Center(
-                      child: SpinKitCircle(color: orchid), // 로딩 인디케이터
-                    ),
-                  ),
-                ),
             ],
           ),
         );

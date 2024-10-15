@@ -3,6 +3,7 @@ import 'package:bus_way/ui/auth/signup/signup_viewmodel.dart';
 import 'package:bus_way/widget/custom_continue_button.dart';
 import 'package:bus_way/widget/custom_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class SignupMoreinfoView extends StatelessWidget {
@@ -154,7 +155,11 @@ class SignupMoreinfoView extends StatelessWidget {
                     child: Container(
                       color: Colors.black.withOpacity(0.5), // 회색 배경
                       child: const Center(
-                        child: CircularProgressIndicator(), // 로딩 인디케이터
+                        child: SpinKitRing(
+                          color: orchid,
+                          size: 120,
+                          lineWidth: 12.0,
+                        ), // 로딩 인디케이터
                       ),
                     ),
                   ),

@@ -20,7 +20,6 @@ class BusStopInfoModel {
     this.lineid,
   });
 
-  // TODO: 버스 타입 & 번호 순 정렬 필요함.
   factory BusStopInfoModel.fromJson(Map<String, dynamic> json) {
     return BusStopInfoModel(
       nodenm: json['nodenm'] as String,
