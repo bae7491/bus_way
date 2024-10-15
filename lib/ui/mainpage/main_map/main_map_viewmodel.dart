@@ -260,6 +260,7 @@ class MainMapViewmodel with ChangeNotifier {
   // 마커 위치로 카메라 이동
   Future<void> moveToMarkerLocation(LatLng latLng) async {
     _mapController!.setLevel(1);
+    // 정류소와 모달의 범위를 생각해서 마커를 지도 중심보다 조금더 위쪽에 보일 수 있게 좌표 수정
     _mapController!.panTo(LatLng(latLng.latitude - 0.0004, latLng.longitude));
   }
 
@@ -270,7 +271,6 @@ class MainMapViewmodel with ChangeNotifier {
 
   // 현재 지도의 중심으로 이동
   void moveCameraToMapCenterLocation(BuildContext context) {
-    // TODO: 카카오맵의 중심 좌표를 가져와서 중심으로 이동
     _mapController!.getCenter().then((value) {
       _center = LatLng(value.latitude, value.longitude);
 
