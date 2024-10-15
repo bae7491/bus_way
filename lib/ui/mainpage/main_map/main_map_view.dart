@@ -64,9 +64,7 @@ class MainMapView extends StatelessWidget {
                   alignment: Alignment.topCenter,
                   child: Padding(
                     padding: const EdgeInsets.all(10),
-                    child:
-                        // TODO: 현재 위치로 돌아가기 (새로고침 아이콘 클릭) => 현 지도에서 재검색 (현재 지도의 중심점으로 재검색)
-                        FloatingActionButton.extended(
+                    child: FloatingActionButton.extended(
                       onPressed: () {
                         if (mainMapViewModel.isLoading == false) {
                           // 현재 지도의 중심으로 이동
