@@ -89,7 +89,8 @@ class BusTab extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: busStopInfoModel[index].bustype == '일반버스'
+                          color: busStopInfoModel[index].bustype == '일반버스' ||
+                                  busStopInfoModel[index].bustype == '심야버스(일반)'
                               ? Colors.blue
                               : Colors.red,
                         ),

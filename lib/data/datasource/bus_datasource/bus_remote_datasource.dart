@@ -104,29 +104,27 @@ class BusRemoteDatasource with ChangeNotifier {
               // 리스트일 경우
               List<dynamic> busStopList = jsonBusStop['item'];
 
+              // 정렬 로직 수정
               busStopList.sort(
                 (a, b) {
-                  // 버스 타입에 따른 우선순위 비교
-                  int typeComparison =
-                      _compareBusType(a['bustype'], b['bustype']);
-                  if (typeComparison != 0) {
-                    return typeComparison; // 타입이 다르면 타입에 따라 정렬
-                  }
+                  // 'lineno'에서 숫자 및 하위 번호, 부가 정보 (ex. 5-1(심야)) 추출해서 비교
+                  List linenoA = _extractBusNumberAndInfo(a['lineno']);
+                  List linenoB = _extractBusNumberAndInfo(b['lineno']);
 
-                  // 'lineno'에서 숫자 및 하위 번호 (ex.5-1에서 5와 1) 추출해서 비교
-                  List<int> linenoA =
-                      _extractBusNumberAndSubNumber(a['lineno']);
-                  List<int> linenoB =
-                      _extractBusNumberAndSubNumber(b['lineno']);
-
-                  // 번호 비교
+                  // 메인 번호 비교
                   int mainNumberComparison = linenoA[0].compareTo(linenoB[0]);
                   if (mainNumberComparison != 0) {
                     return mainNumberComparison; // 메인 번호가 다르면 그에 따라 정렬
                   }
 
                   // 메인 번호가 같을 때 하위 번호 비교 (-가 포함된 경우)
-                  return linenoA[1].compareTo(linenoB[1]);
+                  int subNumberComparison = linenoA[1].compareTo(linenoB[1]);
+                  if (subNumberComparison != 0) {
+                    return subNumberComparison;
+                  }
+
+                  // 마지막으로 부가 정보 비교 (ex. 심야)
+                  return linenoA[2].compareTo(linenoB[2]);
                 },
               );
 
@@ -156,29 +154,23 @@ class BusRemoteDatasource with ChangeNotifier {
     }
   }
 
-  // 버스 타입을 비교하여 정렬하는 함수
-  int _compareBusType(String typeA, String typeB) {
-    // 버스 타입을 우선순위에 따라 정렬: 일반 > 급행 > 기타
-    const List<String> busTypePriority = ['일반버스', '급행버스', '심야버스(급행)', '기타'];
-    int indexA = busTypePriority.indexOf(typeA);
-    int indexB = busTypePriority.indexOf(typeB);
+  // 'lineno'에서 메인 번호와 하위 번호, 그리고 부가 정보를 추출하는 함수
+  List _extractBusNumberAndInfo(String lineno) {
+    // '5-1(심야)' 같은 경우를 처리하기 위해 숫자와 부가 정보를 분리
+    RegExp regExp = RegExp(r'(\d+)(?:-(\d+))?\s*(\(.+\))?');
+    Match? match = regExp.firstMatch(lineno);
 
-    // 기타 항목으로 처리
-    if (indexA == -1) indexA = busTypePriority.length;
-    if (indexB == -1) indexB = busTypePriority.length;
+    if (match != null) {
+      // 메인 번호와 하위 번호 추출
+      int mainNumber = int.tryParse(match.group(1)!) ?? 0;
+      int subNumber =
+          match.group(2) != null ? int.tryParse(match.group(2)!) ?? 0 : 0;
+      String extraInfo = match.group(3) ?? ''; // '(심야)' 같은 부가 정보
 
-    return indexA.compareTo(indexB);
-  }
-
-  // 'lineno'에서 메인 번호와 하위 번호를 추출하는 함수
-  List<int> _extractBusNumberAndSubNumber(String lineno) {
-    // '5-1'과 같은 경우를 처리하기 위해 '-'로 분리
-    List<String> parts = lineno.replaceAll(RegExp(r'[^0-9\-]'), '').split('-');
-
-    // 메인 번호 (앞부분)와 하위 번호 (뒷부분) 추출
-    int mainNumber = int.tryParse(parts[0]) ?? 0;
-    int subNumber = parts.length > 1 ? int.tryParse(parts[1]) ?? 0 : 0;
-
-    return [mainNumber, subNumber];
+      return [mainNumber, subNumber, extraInfo];
+    } else {
+      // 형식이 맞지 않는 경우 기본 값 반환
+      return [0, 0, ''];
+    }
   }
 }
