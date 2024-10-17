@@ -65,7 +65,8 @@ class BusAllLineView extends StatelessWidget {
                                 ],
                               ),
                             )
-                          : busLineInfo[index].busNumber!.isNotEmpty
+                          : busLineInfo[index].busNumber!.isNotEmpty &&
+                                  index != busLineInfo.length - 1
                               ? Container(
                                   width: 24, // 원하는 아이콘의 크기
                                   height: 24,
