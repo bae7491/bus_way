@@ -8,6 +8,10 @@ class API {
   // 버스 정류장 icon 이미지
   static const busStopImage = '$hostConnectImage/bus_stop_icon.png';
 
+  // 선택한 버스 정류장 icon 이미지 (모달 창 나올 때 강조)
+  static const selectedBusStopImage =
+      '$hostConnectImage/selected_bus_stop_icon.png';
+
   // 내 위치 icon 이미지
   static const myLocationImage = '$hostConnectImage/my_location_icon.png';
   //==================

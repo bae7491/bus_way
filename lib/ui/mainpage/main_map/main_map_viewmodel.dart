@@ -17,6 +17,7 @@ class MainMapViewmodel with ChangeNotifier {
   bool _isBottomSheetVisible = false;
   bool _isLocationReady = false;
   final Set<Marker> _markers = {};
+  String? _selectedMarkerId; // 선택된 마커 ID 저장
   List<NearBusStopModel>? _busStopModel;
   List<BusStopInfoModel>? _busStopInfoModel;
   String? _errorMessage;
@@ -28,6 +29,7 @@ class MainMapViewmodel with ChangeNotifier {
   bool get isBottomSheetVisible => _isBottomSheetVisible;
   bool get isLocationReady => _isLocationReady;
   Set<Marker> get markers => _markers;
+  String? get selectedMarkerId => _selectedMarkerId;
   List<NearBusStopModel>? get busStopList => _busStopModel;
   List<BusStopInfoModel>? get busStopInfoModel => _busStopInfoModel;
   String? get errorMessage => _errorMessage;
@@ -96,13 +98,59 @@ class MainMapViewmodel with ChangeNotifier {
     }
   }
 
+  // 모달 켜지면 선택한 마커 크기 키우기
+  void increaseSelectedMarker(String markerId, latLng) {
+    // 선택된 마커를 찾아서 크기 변경
+    _markers
+        .removeWhere((selectedMarker) => selectedMarker.markerId == markerId);
+    _markers.add(Marker(
+      markerId: markerId,
+      latLng: latLng,
+      width: 45, // 선택된 마커의 크기 확대
+      height: 45,
+      offsetX: 22,
+      offsetY: 45,
+      markerImageSrc: API.selectedBusStopImage, // 선택된 마커 이미지
+      zIndex: 2, // zIndex를 높여서 선택된 마커가 앞에 보이도록 설정
+    ));
+
+    _selectedMarkerId = markerId; // 선택된 마커 저장
+    notifyListeners();
+  }
+
+  // 모달 꺼지면 선택한 마커 크기 되돌리기
+  void decreaseSelectedMarker(String markerId) {
+    if (_selectedMarkerId != null) {
+      // 선택된 마커를 찾아서 크기 원래대로 돌리기
+      final selectedMarker = _busStopModel!.firstWhere(
+          (selectedBusStop) => selectedBusStop.nodeid == _selectedMarkerId);
+
+      _markers.removeWhere(
+          (selectedMarker) => selectedMarker.markerId == _selectedMarkerId);
+      _markers.add(Marker(
+        markerId: selectedMarker.nodeid!,
+        latLng: LatLng(double.parse(selectedMarker.gpslati!),
+            double.parse(selectedMarker.gpslong!)),
+        width: 45, // 원래 크기로 복원
+        height: 45,
+        offsetX: 22,
+        offsetY: 45,
+        markerImageSrc: API.busStopImage, // 원래 마커 이미지
+        zIndex: 0, // 원래 zIndex로 설정
+      ));
+
+      _selectedMarkerId = null;
+      _isBottomSheetVisible = false; // 모달 닫기
+      notifyListeners();
+    }
+  }
+
   // API를 호출하여 버스 정류소 상제 정보 불러오기
-  Future<bool> loadBusStopInfo(String busStopId) async {
+  Future<bool> loadBusStopInfo(String markerId) async {
     _isLoading = true;
     notifyListeners();
-    print('bstopid: $busStopId');
     try {
-      _busStopInfoModel = await busRepository.getBusStopInfo(busStopId);
+      _busStopInfoModel = await busRepository.getBusStopInfo(markerId);
       return true;
     } catch (e) {
       _errorMessage = e.toString();
@@ -269,7 +317,7 @@ class MainMapViewmodel with ChangeNotifier {
     _mapController!.panTo(_center);
   }
 
-  // 현재 지도의 중심으로 이동
+  // 현재 지도의 중심으로 이동 후, 정류소 불러오기
   void moveCameraToMapCenterLocation(BuildContext context) {
     _mapController!.getCenter().then((value) {
       _center = LatLng(value.latitude, value.longitude);

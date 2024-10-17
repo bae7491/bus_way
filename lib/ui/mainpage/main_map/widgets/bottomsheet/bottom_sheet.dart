@@ -11,6 +11,8 @@ void showCustomModalBottomSheet(BuildContext context, String busStopId) {
 
   mainMapViewModel.showBottomSheet();
 
+  final selectedMarkerId = mainMapViewModel.selectedMarkerId;
+
   // tabBar의 높이와 전체 화면의 높이를 계산하는 변수들
   const double tabBarHeight = 70.0; // TabBar의 높이 설정
   final double maxHeight = MediaQuery.of(context).size.height * 0.7; // 화면의 80%
@@ -56,7 +58,10 @@ void showCustomModalBottomSheet(BuildContext context, String busStopId) {
         },
       );
     },
-  ).then((_) {
-    mainMapViewModel.hideBottomSheet();
-  });
+  ).then(
+    (_) {
+      mainMapViewModel.hideBottomSheet();
+      mainMapViewModel.decreaseSelectedMarker(selectedMarkerId!);
+    },
+  );
 }

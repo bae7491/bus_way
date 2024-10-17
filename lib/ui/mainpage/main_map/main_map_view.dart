@@ -52,6 +52,7 @@ class MainMapView extends StatelessWidget {
                     });
 
                     // TODO: 선택된 마커 크기 키우기 or 마커 강조 (다른 색상) 아이콘 추가해서 변경
+                    mainMapViewModel.increaseSelectedMarker(markerId, latLng);
                   }
                 }),
                 markers: mainMapViewModel.markers.toList(),
