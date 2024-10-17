@@ -76,6 +76,7 @@ flutter:
   assets:
     - assets/.env
     - assets/lottie/refresh_icon.json
+    - assets/images/double_arrow.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

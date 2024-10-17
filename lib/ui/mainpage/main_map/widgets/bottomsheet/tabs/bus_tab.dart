@@ -1,4 +1,6 @@
+import 'package:bus_way/theme/colors.dart';
 import 'package:bus_way/ui/mainpage/bus/bus_detail_view.dart';
+import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -45,6 +47,10 @@ class BusTab extends StatelessWidget {
               ),
               // 새로고침 버튼을 오른쪽에 배치
               IconButton(
+                onPressed: () {
+                  // 버스 새로고침
+                  viewmodel.refreshBusStopInfo(busStopId);
+                },
                 icon: viewmodel.isRefreshLoading
                     ? Lottie.asset(
                         'assets/lottie/refresh_icon.json',
@@ -52,15 +58,16 @@ class BusTab extends StatelessWidget {
                         height: 24,
                       )
                     : const Icon(Icons.refresh),
-                onPressed: () {
-                  // 버스 새로고침
-                  viewmodel.refreshBusStopInfo(busStopId);
-                },
               ),
             ],
           ),
         ),
-        const Divider(height: 1, color: Colors.grey),
+        const Divider(
+            height: 0,
+            thickness: 5,
+            indent: 12.0,
+            endIndent: 12.0,
+            color: paleBlueGray),
         Expanded(
           child: ListView.builder(
             controller: scrollController,
@@ -70,17 +77,17 @@ class BusTab extends StatelessWidget {
               return InkWell(
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return BusDetailView(
-                            busStopInfo: busStopInfoModel[index]);
-                      },
-                    ),
+                    NavigatorAnimation(
+                            destination: BusDetailView(
+                                busStopInfoModel: busStopInfoModel[index]))
+                        .createRoute(SlideDirection.bottomToTop),
                   );
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
+                  padding: index == 0
+                      ? const EdgeInsets.symmetric(horizontal: 20.0)
+                          .copyWith(top: 10)
+                      : const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -89,10 +96,8 @@ class BusTab extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: busStopInfoModel[index].bustype == '일반버스' ||
-                                  busStopInfoModel[index].bustype == '심야버스(일반)'
-                              ? Colors.blue
-                              : Colors.red,
+                          color:
+                              checkBusColor(busStopInfoModel[index].bustype!),
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -121,7 +126,7 @@ class BusTab extends StatelessWidget {
                                       TextStyle(fontWeight: FontWeight.bold)),
                         ],
                       ),
-                      const Divider(height: 20, color: Colors.grey),
+                      const Divider(height: 20, color: paleBlueGray),
                     ],
                   ),
                 ),

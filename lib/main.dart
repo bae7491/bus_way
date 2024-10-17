@@ -1,6 +1,7 @@
 import 'package:bus_way/ui/auth/auth_check.dart';
 import 'package:bus_way/ui/auth/reset_password/reset_password_viewmodel.dart';
 import 'package:bus_way/ui/auth/verify_email/verify_email_viewmodel.dart';
+import 'package:bus_way/ui/mainpage/bus/bus_detail_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/main_map/main_map_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mypage/mypage_viewmodel.dart';
@@ -51,6 +52,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => MainMapViewmodel(context),
         ),
+        // // 버스 상세 페이지
+        // ChangeNotifierProvider(
+        //   create: (_) => BusDetailViewmodel(),
+        // ),
         // 마이페이지
         ChangeNotifierProvider(
           create: (_) => MypageViewmodel(),

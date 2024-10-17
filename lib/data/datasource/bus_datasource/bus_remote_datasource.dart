@@ -1,5 +1,7 @@
 import 'package:bus_way/data/api/api.dart';
 import 'package:bus_way/data/api/api_enum.dart';
+import 'package:bus_way/data/model/bus_model/bus_info_model.dart';
+import 'package:bus_way/data/model/bus_model/bus_line_model.dart';
 import 'package:bus_way/data/model/bus_model/bus_stop_info_model.dart';
 import 'package:bus_way/data/model/bus_model/near_bus_stop_model.dart';
 import 'package:flutter/material.dart';
@@ -43,9 +45,11 @@ class BusRemoteDatasource with ChangeNotifier {
             // 필터링하여 citycode가 21 (부산)이고 nodeid가 BSB (일반 버스)로 시작하는 데이터만 반환
             return nearBusList
                 .where((item) =>
-                    item['citycode'] == '21' &&
-                    item['nodeid'].toString().startsWith('BSB') &&
-                    item['nodeno'] != null)
+                        item['citycode'] == '21' &&
+                        item['nodeid'].toString().startsWith('BSB')
+                    // &&
+                    // item['nodeno'] != null
+                    )
                 .map<NearBusStopModel>(
                     (item) => NearBusStopModel.fromJson(item))
                 .toList();
@@ -98,7 +102,8 @@ class BusRemoteDatasource with ChangeNotifier {
               // 단일 객체일 경우, 리스트로 감싸서 반환
               return [
                 BusStopInfoModel.fromJson(
-                    Map<String, dynamic>.from(jsonBusStop['item']))
+                  Map<String, dynamic>.from(jsonBusStop['item']),
+                ),
               ];
             } else if (jsonBusStop['item'] is List) {
               // 리스트일 경우
@@ -171,6 +176,85 @@ class BusRemoteDatasource with ChangeNotifier {
     } else {
       // 형식이 맞지 않는 경우 기본 값 반환
       return [0, 0, ''];
+    }
+  }
+
+  // 3. 노선 정보 조회 (버스 상세 정보)
+  Future<List<BusInfoModel>?> getBusDetailInfo(String lineId) async {
+    try {
+      Map<String, dynamic> parameters = {
+        'serviceKey': dotenv.env['publicDataKey'],
+        'lineid': lineId,
+      };
+      Uri uri = Uri.https(API.tagoBusStop, API.getBusDetailInfo, parameters);
+      http.Response result = await http.get(uri);
+
+      if (result.statusCode == 200) {
+        final body = convert.utf8.decode(result.bodyBytes);
+        final xml = Xml2Json()..parse(body);
+        final json = xml.toParker();
+
+        Map<String, dynamic> jsonResult = convert.json.decode(json);
+
+        if (jsonResult['response'] != null) {
+          if (jsonResult['response'] != null &&
+              jsonResult['response']['body'] != null &&
+              jsonResult['response']['body']['items'] != null) {
+            final jsonBusDetailInfo = jsonResult['response']['body']['items'];
+
+            return [
+              BusInfoModel.fromJson(
+                  Map<String, dynamic>.from(jsonBusDetailInfo['item']))
+            ];
+          } else {
+            errorMessage = getApiMessageForStatusCode('');
+            throw errorMessage;
+          }
+        } else {
+          errorMessage = getApiMessageForStatusCode('');
+        }
+      }
+      throw errorMessage;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  // 4. 노선 정류소 조회 (해당 버스 전체 노선 불러오기)
+  Future<List<BusLineModel>?> getBusLineInfo(String lineId) async {
+    try {
+      Map<String, dynamic> parameters = {
+        'serviceKey': dotenv.env['publicDataKey'],
+        'lineid': lineId,
+      };
+      Uri uri = Uri.https(API.tagoBusStop, API.getBusLineInfo, parameters);
+      http.Response result = await http.get(uri);
+
+      if (result.statusCode == 200) {
+        final body = convert.utf8.decode(result.bodyBytes);
+        final xml = Xml2Json()..parse(body);
+        final json = xml.toParker();
+
+        Map<String, dynamic> jsonResult = convert.json.decode(json);
+
+        if (jsonResult['response'] != null &&
+            jsonResult['response']['body'] != null &&
+            jsonResult['response']['body']['items'] != null) {
+          final jsonLineInfo = jsonResult['response']['body']['items'];
+
+          List<dynamic> busLineList = jsonLineInfo['item'];
+
+          return busLineList
+              .map<BusLineModel>((item) => BusLineModel.fromJson(item))
+              .toList();
+        } else {
+          errorMessage = getApiMessageForStatusCode('');
+        }
+      }
+
+      throw errorMessage;
+    } catch (e) {
+      throw e.toString();
     }
   }
 }

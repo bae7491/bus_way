@@ -52,7 +52,7 @@ class InfoTabbar extends StatelessWidget {
             // TabBarView 추가
             SizedBox(
               height: maxHeight -
-                  (tabBarHeight + 20), // TabBar height를 제외한 나머지 공간 설정
+                  (tabBarHeight + 15), // TabBar height를 제외한 나머지 공간 설정
               child: TabBarView(
                 children: <Widget>[
                   BusTab(

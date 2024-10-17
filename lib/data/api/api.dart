@@ -37,5 +37,11 @@ class API {
   // ================== 버스 공공 데이터 API (부산 버스 공공 데이터 API)
   // 정류소 도착 정보 조회 (정류장 ID)
   static const getBusStopInfo = '6260000/BusanBIMS/stopArrByBstopid';
+
+  // 노선 정보 조회 (버스 상세 정보)
+  static const getBusDetailInfo = '6260000/BusanBIMS/busInfo';
+
+  // 노선 정류소 조회 (해당 버스 전체 노선 불러오기)
+  static const getBusLineInfo = '6260000/BusanBIMS/busInfoByRouteId';
   //==================
 }
