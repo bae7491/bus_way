@@ -31,7 +31,7 @@ class BusAllLineView extends StatelessWidget {
                 children: [
                   // 세로로 된 일직선 추가
                   Positioned(
-                    left: 10, // 아이콘 뒤에 선이 오도록 위치 설정
+                    left: 13, // 아이콘 뒤에 선이 오도록 위치 설정
                     top: index == 0 ? 35 : 0.0,
                     bottom: index == busLineInfo.length - 1 ? 35 : 0,
                     child: Container(
@@ -40,6 +40,8 @@ class BusAllLineView extends StatelessWidget {
                     ),
                   ),
                   Row(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.center, // 아이콘들을 중앙에 맞추기 위해 추가
                     children: [
                       busLineInfo[index].returnPoint == '1'
                           ? Container(
@@ -51,14 +53,14 @@ class BusAllLineView extends StatelessWidget {
                               ),
                               child: const Row(
                                 children: [
-                                  Icon(Icons.restart_alt,
+                                  Icon(Icons.u_turn_right,
                                       size: 16, color: Colors.black), // 회차지 아이콘
                                   SizedBox(width: 4),
                                   Text(
-                                    '회차지',
+                                    '회차',
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 12,
+                                      fontSize: 10,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -68,8 +70,8 @@ class BusAllLineView extends StatelessWidget {
                           : busLineInfo[index].busNumber!.isNotEmpty &&
                                   index != busLineInfo.length - 1
                               ? Container(
-                                  width: 24, // 원하는 아이콘의 크기
-                                  height: 24,
+                                  width: 30, // 원하는 버스 아이콘 크기
+                                  height: 30,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: Colors.white, // 내부를 하얗게 설정
@@ -82,25 +84,27 @@ class BusAllLineView extends StatelessWidget {
                                   child: Icon(
                                     Icons.directions_bus,
                                     color: checkBusColor(busType), // 아이콘 테두리 색상
-                                    size: 18, // 아이콘 크기
+                                    size: 20, // 버스 아이콘 크기
                                   ),
                                 )
-                              : Container(
-                                  width: 24, // 원하는 아이콘의 크기
-                                  height: 24,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white, // 내부를 하얗게 설정
-                                    border: Border.all(
-                                      color:
-                                          checkBusColor(busType), // 외부 테두리 색상
-                                      width: 2.0,
+                              : SizedBox(
+                                  width: 30,
+                                  child: Container(
+                                    width: 18, // 원하는 화살표 컨테이너 크기 (아이콘 크기와 동일하게)
+                                    height: 18,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white, // 내부를 하얗게 설정
+                                      border: Border.all(
+                                        color: Colors.grey, // 외부 테두리 색상
+                                        width: 2.0,
+                                      ),
                                     ),
-                                  ),
-                                  child: Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: checkBusColor(busType), // 아이콘 테두리 색상
-                                    size: 20, // 아이콘 크기
+                                    child: const Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Colors.grey, // 아이콘 테두리 색상
+                                      size: 15, // 화살표 아이콘 크기 줄임
+                                    ),
                                   ),
                                 ),
                       Padding(
