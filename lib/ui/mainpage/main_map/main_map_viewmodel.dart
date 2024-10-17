@@ -127,6 +127,7 @@ class MainMapViewmodel with ChangeNotifier {
 
       _markers.removeWhere(
           (selectedMarker) => selectedMarker.markerId == _selectedMarkerId);
+
       _markers.add(Marker(
         markerId: selectedMarker.nodeid!,
         latLng: LatLng(double.parse(selectedMarker.gpslati!),
@@ -140,7 +141,6 @@ class MainMapViewmodel with ChangeNotifier {
       ));
 
       _selectedMarkerId = null;
-      _isBottomSheetVisible = false; // 모달 닫기
       notifyListeners();
     }
   }
