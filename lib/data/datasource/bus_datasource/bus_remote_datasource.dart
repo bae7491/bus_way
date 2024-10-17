@@ -21,7 +21,7 @@ class BusRemoteDatasource with ChangeNotifier {
       Map<String, dynamic> parameters = {
         'serviceKey': dotenv.env['publicDataKey'],
         'pageNo': '1',
-        'numOfRows': '50',
+        'numOfRows': '100',
         'gpsLati': center.latitude.toString(), // 위도
         'gpsLong': center.longitude.toString(), // 경도
       };

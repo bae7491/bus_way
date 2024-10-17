@@ -48,11 +48,12 @@ class MainMapView extends StatelessWidget {
                       if (isSuccess && context.mounted) {
                         // 마커를 탭했을 때, 모달 창 나오는 함수 불러오기
                         showCustomModalBottomSheet(context, markerId);
+
+                        // 선택된 마커 크기 키우기 or 마커 강조 (다른 색상) 아이콘 추가해서 변경
+                        mainMapViewModel.increaseSelectedMarker(
+                            markerId, latLng);
                       }
                     });
-
-                    // TODO: 선택된 마커 크기 키우기 or 마커 강조 (다른 색상) 아이콘 추가해서 변경
-                    mainMapViewModel.increaseSelectedMarker(markerId, latLng);
                   }
                 }),
                 markers: mainMapViewModel.markers.toList(),
