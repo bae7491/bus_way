@@ -1,4 +1,4 @@
-import 'package:bus_way/data/model/bus_model/bus_stop_info_model.dart';
+import 'package:bus_way/data/model/bus_model/bus_arrive_info_model.dart';
 import 'package:bus_way/data/model/bus_model/near_bus_stop_model.dart';
 import 'package:bus_way/data/respository/bus_repository/bus_repository.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class MainMapViewmodel with ChangeNotifier {
   final Set<Marker> _markers = {};
   String? _selectedMarkerId; // 선택된 마커 ID 저장
   List<NearBusStopModel>? _busStopModel;
-  List<BusStopInfoModel>? _busStopInfoModel;
+  List<BusArriveInfoModel>? _busStopInfoModel;
   String? _errorMessage;
 
   KakaoMapController? get mapController => _mapController;
@@ -31,7 +31,7 @@ class MainMapViewmodel with ChangeNotifier {
   Set<Marker> get markers => _markers;
   String? get selectedMarkerId => _selectedMarkerId;
   List<NearBusStopModel>? get busStopList => _busStopModel;
-  List<BusStopInfoModel>? get busStopInfoModel => _busStopInfoModel;
+  List<BusArriveInfoModel>? get busStopInfoModel => _busStopInfoModel;
   String? get errorMessage => _errorMessage;
 
   MainMapViewmodel(BuildContext context) {

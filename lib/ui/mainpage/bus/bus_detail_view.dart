@@ -1,4 +1,4 @@
-import 'package:bus_way/data/model/bus_model/bus_stop_info_model.dart';
+import 'package:bus_way/data/model/bus_model/bus_arrive_info_model.dart';
 import 'package:bus_way/theme/colors.dart';
 import 'package:bus_way/ui/mainpage/bus/bus_detail_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/bus/widgets/bus_all_line_view.dart';
@@ -15,7 +15,7 @@ class BusDetailView extends StatelessWidget {
     required this.busStopInfoModel,
   });
 
-  final BusStopInfoModel busStopInfoModel;
+  final BusArriveInfoModel busStopInfoModel;
 
   @override
   Widget build(BuildContext context) {

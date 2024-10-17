@@ -1,7 +1,7 @@
 import 'package:bus_way/data/datasource/bus_datasource/bus_remote_datasource.dart';
 import 'package:bus_way/data/model/bus_model/bus_info_model.dart';
 import 'package:bus_way/data/model/bus_model/bus_line_model.dart';
-import 'package:bus_way/data/model/bus_model/bus_stop_info_model.dart';
+import 'package:bus_way/data/model/bus_model/bus_arrive_info_model.dart';
 import 'package:bus_way/data/model/bus_model/near_bus_stop_model.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
@@ -15,7 +15,7 @@ class BusRepository {
   }
 
   // 정류소 도착 정보 조회 (정류장 ID) API 호출
-  Future<List<BusStopInfoModel>?> getBusArriveInfo(String busStopId) async {
+  Future<List<BusArriveInfoModel>?> getBusArriveInfo(String busStopId) async {
     final busStopInfoList =
         await busRemoteDatasource.getBusArriveInfo(busStopId);
     return busStopInfoList;

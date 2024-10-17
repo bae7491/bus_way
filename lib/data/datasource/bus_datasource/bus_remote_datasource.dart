@@ -2,7 +2,7 @@ import 'package:bus_way/data/api/api.dart';
 import 'package:bus_way/data/api/api_enum.dart';
 import 'package:bus_way/data/model/bus_model/bus_info_model.dart';
 import 'package:bus_way/data/model/bus_model/bus_line_model.dart';
-import 'package:bus_way/data/model/bus_model/bus_stop_info_model.dart';
+import 'package:bus_way/data/model/bus_model/bus_arrive_info_model.dart';
 import 'package:bus_way/data/model/bus_model/near_bus_stop_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -73,7 +73,7 @@ class BusRemoteDatasource with ChangeNotifier {
   }
 
   // 2. 정류소 도착 정보 조회 (정류장 ID)
-  Future<List<BusStopInfoModel>?> getBusArriveInfo(String bstopid) async {
+  Future<List<BusArriveInfoModel>?> getBusArriveInfo(String bstopid) async {
     try {
       Map<String, dynamic> parameters = {
         'serviceKey': dotenv.env['publicDataKey'],
@@ -101,7 +101,7 @@ class BusRemoteDatasource with ChangeNotifier {
             if (jsonBusStop['item'] is Map<String, dynamic>) {
               // 단일 객체일 경우, 리스트로 감싸서 반환
               return [
-                BusStopInfoModel.fromJson(
+                BusArriveInfoModel.fromJson(
                   Map<String, dynamic>.from(jsonBusStop['item']),
                 ),
               ];
@@ -134,8 +134,9 @@ class BusRemoteDatasource with ChangeNotifier {
               );
 
               return busStopList
-                  .map<BusStopInfoModel>((item) => BusStopInfoModel.fromJson(
-                      Map<String, dynamic>.from(item)))
+                  .map<BusArriveInfoModel>((item) =>
+                      BusArriveInfoModel.fromJson(
+                          Map<String, dynamic>.from(item)))
                   .toList();
             }
           } else {

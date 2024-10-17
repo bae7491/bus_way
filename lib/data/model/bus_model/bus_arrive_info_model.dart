@@ -1,5 +1,5 @@
 // 정류소 도착 정보 조회 (정류장 ID) API 데이터를 담을 모델
-class BusStopInfoModel {
+class BusArriveInfoModel {
   String? nodenm; // 정류장 명
   String? lineno; // 버스 번호
   String? min1; // 1번째 뒤 버스의 남은 시간
@@ -9,7 +9,7 @@ class BusStopInfoModel {
   String? bustype; // 버스 타입
   String? lineid; // 노선 아이디
 
-  BusStopInfoModel({
+  BusArriveInfoModel({
     this.nodenm,
     this.lineno,
     this.min1,
@@ -20,8 +20,8 @@ class BusStopInfoModel {
     this.lineid,
   });
 
-  factory BusStopInfoModel.fromJson(Map<String, dynamic> json) {
-    return BusStopInfoModel(
+  factory BusArriveInfoModel.fromJson(Map<String, dynamic> json) {
+    return BusArriveInfoModel(
       nodenm: json['nodenm'] as String,
       lineno: json['lineno'] as String,
       min1: json['min1'] as String? ?? '',
