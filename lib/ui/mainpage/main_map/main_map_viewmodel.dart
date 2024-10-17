@@ -150,7 +150,7 @@ class MainMapViewmodel with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     try {
-      _busStopInfoModel = await busRepository.getBusStopInfo(markerId);
+      _busStopInfoModel = await busRepository.getBusArriveInfo(markerId);
       return true;
     } catch (e) {
       _errorMessage = e.toString();
@@ -167,7 +167,7 @@ class MainMapViewmodel with ChangeNotifier {
     _isRefreshLoading = true;
     notifyListeners();
     try {
-      _busStopInfoModel = await busRepository.getBusStopInfo(busStopId);
+      _busStopInfoModel = await busRepository.getBusArriveInfo(busStopId);
     } catch (e) {
       _errorMessage = e.toString();
       notifyListeners();

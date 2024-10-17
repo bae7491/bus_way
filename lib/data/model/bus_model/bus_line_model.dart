@@ -1,10 +1,12 @@
 class BusLineModel {
+  String? busStopId; // 정류소 ID
   String? busStopName; // 정류소 이름
   String? busStopNumber; // 정류소 번호
   String? busNumber; // 버스 번호
   String? returnPoint; // 회차지 체크 (0: 회차지 X, 1: 회차지 O)
 
   BusLineModel({
+    this.busStopId,
     this.busStopName,
     this.busStopNumber,
     this.busNumber,
@@ -13,6 +15,7 @@ class BusLineModel {
 
   factory BusLineModel.fromJson(Map<String, dynamic> json) {
     return BusLineModel(
+      busStopId: json['nodeid'] as String,
       busStopName: json['bstopnm'] as String,
       busStopNumber: json['arsno']?.toString() ?? '',
       busNumber: json['carno']?.toString() ?? '',

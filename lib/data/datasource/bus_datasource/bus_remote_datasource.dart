@@ -73,7 +73,7 @@ class BusRemoteDatasource with ChangeNotifier {
   }
 
   // 2. 정류소 도착 정보 조회 (정류장 ID)
-  Future<List<BusStopInfoModel>?> getBusStopInfo(String bstopid) async {
+  Future<List<BusStopInfoModel>?> getBusArriveInfo(String bstopid) async {
     try {
       Map<String, dynamic> parameters = {
         'serviceKey': dotenv.env['publicDataKey'],
@@ -81,7 +81,7 @@ class BusRemoteDatasource with ChangeNotifier {
             'BSB', ''), // 정류장 ID가 'BSB0000' -> '0000'으로 변경해야 데이터를 제대로 불러옴
       };
 
-      Uri uri = Uri.https(API.tagoBusStop, API.getBusStopInfo, parameters);
+      Uri uri = Uri.https(API.tagoBusStop, API.getBusArriveInfo, parameters);
       http.Response result = await http.get(uri);
 
       if (result.statusCode == 200) {

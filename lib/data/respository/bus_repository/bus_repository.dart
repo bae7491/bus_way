@@ -15,8 +15,9 @@ class BusRepository {
   }
 
   // 정류소 도착 정보 조회 (정류장 ID) API 호출
-  Future<List<BusStopInfoModel>?> getBusStopInfo(String busStopId) async {
-    final busStopInfoList = await busRemoteDatasource.getBusStopInfo(busStopId);
+  Future<List<BusStopInfoModel>?> getBusArriveInfo(String busStopId) async {
+    final busStopInfoList =
+        await busRemoteDatasource.getBusArriveInfo(busStopId);
     return busStopInfoList;
   }
 

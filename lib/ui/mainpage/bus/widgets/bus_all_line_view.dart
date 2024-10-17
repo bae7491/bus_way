@@ -26,7 +26,9 @@ class BusAllLineView extends StatelessWidget {
                     .copyWith(bottom: 10)
                 : const EdgeInsets.symmetric(horizontal: 20.0),
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                print('busStopId: ${busLineInfo[index].busStopId}');
+              },
               child: Stack(
                 children: [
                   // 세로로 된 일직선 추가
