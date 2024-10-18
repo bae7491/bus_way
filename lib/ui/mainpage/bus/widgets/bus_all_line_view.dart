@@ -27,7 +27,10 @@ class BusAllLineView extends StatelessWidget {
                 : const EdgeInsets.symmetric(horizontal: 20.0),
             child: InkWell(
               onTap: () {
-                print('busStopId: ${busLineInfo[index].busStopId}');
+                busDetailViewModel.onTapBusStop(
+                    context,
+                    busLineInfo[index].busStopName!,
+                    busLineInfo[index].busStopId!);
               },
               child: Stack(
                 children: [

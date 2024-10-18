@@ -58,8 +58,10 @@ void showCustomModalBottomSheet(BuildContext context, String busStopId) {
     },
   ).then(
     (_) {
-      mainMapViewModel
-          .decreaseSelectedMarker(mainMapViewModel.selectedMarkerId!);
+      if (mainMapViewModel.selectedMarkerId != null) {
+        mainMapViewModel
+            .decreaseSelectedMarker(mainMapViewModel.selectedMarkerId!);
+      }
       mainMapViewModel.hideBottomSheet();
     },
   );

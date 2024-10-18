@@ -41,7 +41,7 @@ class BusTab extends StatelessWidget {
               Text(
                 busStopInfoModel![0].nodenm!,
                 style: const TextStyle(
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
               ),

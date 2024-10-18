@@ -3,6 +3,7 @@ import 'package:bus_way/data/api/api_enum.dart';
 import 'package:bus_way/data/model/bus_model/bus_info_model.dart';
 import 'package:bus_way/data/model/bus_model/bus_line_model.dart';
 import 'package:bus_way/data/model/bus_model/bus_arrive_info_model.dart';
+import 'package:bus_way/data/model/bus_model/bus_stop_info_model.dart';
 import 'package:bus_way/data/model/bus_model/near_bus_stop_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -14,6 +15,26 @@ import 'package:xml2json/xml2json.dart';
 class BusRemoteDatasource with ChangeNotifier {
   ApiResponseStatus? statusCode; // 상태 코드 저장
   String errorMessage = '';
+
+  // 'lineno'에서 메인 번호와 하위 번호, 그리고 부가 정보를 추출하는 함수
+  List _extractBusNumberAndInfo(String lineno) {
+    // '5-1(심야)' 같은 경우를 처리하기 위해 숫자와 부가 정보를 분리
+    RegExp regExp = RegExp(r'(\d+)(?:-(\d+))?\s*(\(.+\))?');
+    Match? match = regExp.firstMatch(lineno);
+
+    if (match != null) {
+      // 메인 번호와 하위 번호 추출
+      int mainNumber = int.tryParse(match.group(1)!) ?? 0;
+      int subNumber =
+          match.group(2) != null ? int.tryParse(match.group(2)!) ?? 0 : 0;
+      String extraInfo = match.group(3) ?? ''; // '(심야)' 같은 부가 정보
+
+      return [mainNumber, subNumber, extraInfo];
+    } else {
+      // 형식이 맞지 않는 경우 기본 값 반환
+      return [0, 0, ''];
+    }
+  }
 
   // 1, 좌표 기반 근접(500m 이내) 버스 정류소 목록 조회
   Future<List<NearBusStopModel>?> getNearBusStop(LatLng center) async {
@@ -95,22 +116,22 @@ class BusRemoteDatasource with ChangeNotifier {
           if (jsonResult['response'] != null &&
               jsonResult['response']['body'] != null &&
               jsonResult['response']['body']['items'] != null) {
-            final jsonBusStop = jsonResult['response']['body']['items'];
+            final jsonBusArrive = jsonResult['response']['body']['items'];
 
             // item이 단일 객체인지, 리스트인지 확인
-            if (jsonBusStop['item'] is Map<String, dynamic>) {
+            if (jsonBusArrive['item'] is Map<String, dynamic>) {
               // 단일 객체일 경우, 리스트로 감싸서 반환
               return [
                 BusArriveInfoModel.fromJson(
-                  Map<String, dynamic>.from(jsonBusStop['item']),
+                  Map<String, dynamic>.from(jsonBusArrive['item']),
                 ),
               ];
-            } else if (jsonBusStop['item'] is List) {
+            } else if (jsonBusArrive['item'] is List) {
               // 리스트일 경우
-              List<dynamic> busStopList = jsonBusStop['item'];
+              List<dynamic> busArriveList = jsonBusArrive['item'];
 
               // 정렬 로직 수정
-              busStopList.sort(
+              busArriveList.sort(
                 (a, b) {
                   // 'lineno'에서 숫자 및 하위 번호, 부가 정보 (ex. 5-1(심야)) 추출해서 비교
                   List linenoA = _extractBusNumberAndInfo(a['lineno']);
@@ -133,7 +154,7 @@ class BusRemoteDatasource with ChangeNotifier {
                 },
               );
 
-              return busStopList
+              return busArriveList
                   .map<BusArriveInfoModel>((item) =>
                       BusArriveInfoModel.fromJson(
                           Map<String, dynamic>.from(item)))
@@ -154,29 +175,8 @@ class BusRemoteDatasource with ChangeNotifier {
       }
       throw errorMessage;
     } catch (e) {
-      print('e.toString: ${e.toString()}');
       errorMessage = getApiMessageForStatusCode('');
       throw errorMessage;
-    }
-  }
-
-  // 'lineno'에서 메인 번호와 하위 번호, 그리고 부가 정보를 추출하는 함수
-  List _extractBusNumberAndInfo(String lineno) {
-    // '5-1(심야)' 같은 경우를 처리하기 위해 숫자와 부가 정보를 분리
-    RegExp regExp = RegExp(r'(\d+)(?:-(\d+))?\s*(\(.+\))?');
-    Match? match = regExp.firstMatch(lineno);
-
-    if (match != null) {
-      // 메인 번호와 하위 번호 추출
-      int mainNumber = int.tryParse(match.group(1)!) ?? 0;
-      int subNumber =
-          match.group(2) != null ? int.tryParse(match.group(2)!) ?? 0 : 0;
-      String extraInfo = match.group(3) ?? ''; // '(심야)' 같은 부가 정보
-
-      return [mainNumber, subNumber, extraInfo];
-    } else {
-      // 형식이 맞지 않는 경우 기본 값 반환
-      return [0, 0, ''];
     }
   }
 
@@ -253,6 +253,56 @@ class BusRemoteDatasource with ChangeNotifier {
         }
       }
 
+      throw errorMessage;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  // 5. 정류소 정보 조회 (버스 정류소 ID로 위,경도 찾기)
+  Future<List<BusStopInfoModel>?> getBusStopInfo(
+      String busStopName, String busStopId) async {
+    try {
+      Map<String, dynamic> parameters = {
+        'serviceKey': dotenv.env['publicDataKey'],
+        'bstopnm': busStopName,
+      };
+      Uri uri = Uri.https(API.tagoBusStop, API.getBusStopInfo, parameters);
+      http.Response result = await http.get(uri);
+
+      if (result.statusCode == 200) {
+        final body = convert.utf8.decode(result.bodyBytes);
+        final xml = Xml2Json()..parse(body);
+        final json = xml.toParker();
+
+        Map<String, dynamic> jsonResult = convert.json.decode(json);
+
+        if (jsonResult['response'] != null &&
+            jsonResult['response']['body'] != null &&
+            jsonResult['response']['body']['items'] != null) {
+          final jsonBusStopInfo = jsonResult['response']['body']['items'];
+
+          if (jsonBusStopInfo['item'] is Map<String, dynamic>) {
+            return [
+              BusStopInfoModel.fromJson(
+                Map<String, dynamic>.from(
+                  jsonBusStopInfo['item'],
+                ),
+              ),
+            ];
+          } else if (jsonBusStopInfo['item'] is List) {
+            List<dynamic> busStopList = jsonBusStopInfo['item'];
+
+            return busStopList
+                .where((item) => item['bstopid'] == busStopId)
+                .map<BusStopInfoModel>(
+                    (item) => BusStopInfoModel.fromJson(item))
+                .toList();
+          }
+        } else {
+          errorMessage = getApiMessageForStatusCode('');
+        }
+      }
       throw errorMessage;
     } catch (e) {
       throw e.toString();

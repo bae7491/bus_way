@@ -37,8 +37,8 @@ class MainMapView extends StatelessWidget {
                   }
                 },
                 onMarkerTap: ((markerId, latLng, zoomLevel) {
-                  if (markerId != '0') {
-                    // 마커의 위치를 중심으로 카카오맵 이동
+                  if (markerId != 'myLocation') {
+                    // 마커의 위치로 카카오맵 이동
                     mainMapViewModel.moveToMarkerLocation(latLng);
 
                     // 마커 탭 후, 해당 정류소의 버스 불러오기.
@@ -89,6 +89,7 @@ class MainMapView extends StatelessWidget {
                               .moveCameraToMapCenterLocation(context);
                         }
                       },
+                      heroTag: 'refresh',
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black,
                       elevation: 5,
@@ -115,6 +116,7 @@ class MainMapView extends StatelessWidget {
                         mainMapViewModel.moveToNewLocation(context);
                       }
                     },
+                    heroTag: 'gps',
                     backgroundColor: Colors.white,
                     foregroundColor: Colors.black,
                     elevation: 5,

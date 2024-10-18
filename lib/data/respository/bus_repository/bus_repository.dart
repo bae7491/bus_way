@@ -2,6 +2,7 @@ import 'package:bus_way/data/datasource/bus_datasource/bus_remote_datasource.dar
 import 'package:bus_way/data/model/bus_model/bus_info_model.dart';
 import 'package:bus_way/data/model/bus_model/bus_line_model.dart';
 import 'package:bus_way/data/model/bus_model/bus_arrive_info_model.dart';
+import 'package:bus_way/data/model/bus_model/bus_stop_info_model.dart';
 import 'package:bus_way/data/model/bus_model/near_bus_stop_model.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
@@ -28,8 +29,17 @@ class BusRepository {
     return busDetailInfoList;
   }
 
+  // 노선 정류소 조회 (해당 버스 전체 노선 불러오기)
   Future<List<BusLineModel>?> getBusLineInfo(String lineId) async {
     final busLineList = await busRemoteDatasource.getBusLineInfo(lineId);
     return busLineList;
+  }
+
+  // 정류소 정보 조회 (버스 정류소 ID로 위,경도 찾기)
+  Future<List<BusStopInfoModel>?> getBusStopInfo(
+      String busStopName, String busStopId) async {
+    final busStopInfoList =
+        await busRemoteDatasource.getBusStopInfo(busStopName, busStopId);
+    return busStopInfoList;
   }
 }

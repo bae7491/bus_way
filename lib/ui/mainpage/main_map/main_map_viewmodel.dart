@@ -1,6 +1,7 @@
 import 'package:bus_way/data/model/bus_model/bus_arrive_info_model.dart';
 import 'package:bus_way/data/model/bus_model/near_bus_stop_model.dart';
 import 'package:bus_way/data/respository/bus_repository/bus_repository.dart';
+import 'package:bus_way/ui/mainpage/main_map/widgets/bottomsheet/bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
@@ -21,6 +22,9 @@ class MainMapViewmodel with ChangeNotifier {
   List<NearBusStopModel>? _busStopModel;
   List<BusArriveInfoModel>? _busStopInfoModel;
   String? _errorMessage;
+  final List<Map<String, LatLng>> _markerHistory = [];
+  int _currentMarkerIndex = -1;
+  LatLng? _selectedLatLng;
 
   KakaoMapController? get mapController => _mapController;
   LatLng get center => _center;
@@ -33,6 +37,8 @@ class MainMapViewmodel with ChangeNotifier {
   List<NearBusStopModel>? get busStopList => _busStopModel;
   List<BusArriveInfoModel>? get busStopInfoModel => _busStopInfoModel;
   String? get errorMessage => _errorMessage;
+  LatLng? get selectedLatLng => _selectedLatLng;
+  int get currentMarkerIndex => _currentMarkerIndex;
 
   MainMapViewmodel(BuildContext context) {
     // 저장된 좌표를 불러오고, 없다면 현재 위치를 가져옴
@@ -55,15 +61,17 @@ class MainMapViewmodel with ChangeNotifier {
   // 버스 API로 주변 500m 정류장 가져와서 마커로 찍기
   Future<void> getNearBusStop(LatLng center) async {
     _isLoading = true;
+    _markers.clear();
     notifyListeners();
 
+    // print('center: $center');
+
     try {
-      _busStopModel = await busRepository.getNearBusStop(_center);
-      _markers.clear();
+      _busStopModel = await busRepository.getNearBusStop(center);
 
       // 본인 위치 마커
       _markers.add(Marker(
-        markerId: _markers.length.toString(),
+        markerId: 'myLocation',
         latLng: _center,
         width: 30,
         height: 30,
@@ -99,31 +107,47 @@ class MainMapViewmodel with ChangeNotifier {
   }
 
   // 모달 켜지면 선택한 마커 크기 키우기
-  void increaseSelectedMarker(String markerId, latLng) {
-    // 선택된 마커를 찾아서 크기 변경
-    _markers
-        .removeWhere((selectedMarker) => selectedMarker.markerId == markerId);
-    _markers.add(Marker(
-      markerId: markerId,
-      latLng: latLng,
-      width: 45, // 선택된 마커의 크기 확대
-      height: 45,
-      offsetX: 22,
-      offsetY: 45,
-      markerImageSrc: API.selectedBusStopImage, // 선택된 마커 이미지
-      zIndex: 2, // zIndex를 높여서 선택된 마커가 앞에 보이도록 설정
-    ));
+  void increaseSelectedMarker(String markerId, LatLng latLng) {
+    print('inner increaseSelectedMarker');
+    try {
+      // markerId가 BSB로 시작하는지 확인하고 없으면 BSB 추가
+      if (!markerId.startsWith("BSB")) {
+        markerId = "BSB$markerId";
+      }
+      // 선택된 마커를 찾아서 크기 변경
+      _markers
+          .removeWhere((selectedMarker) => selectedMarker.markerId == markerId);
 
-    _selectedMarkerId = markerId; // 선택된 마커 저장
-    notifyListeners();
+      _markers.add(Marker(
+        markerId: markerId,
+        latLng: latLng,
+        width: 45, // 선택된 마커의 크기 확대
+        height: 45,
+        offsetX: 22,
+        offsetY: 45,
+        markerImageSrc: API.selectedBusStopImage, // 선택된 마커 이미지
+        zIndex: 2, // zIndex를 높여서 선택된 마커가 앞에 보이도록 설정
+      ));
+
+      _selectedMarkerId = markerId; // 선택된 마커 저장
+      print('increase marker id: $_selectedMarkerId');
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = e.toString();
+      print('increase error: $_errorMessage');
+    }
   }
 
   // 모달 꺼지면 선택한 마커 크기 되돌리기
   void decreaseSelectedMarker(String markerId) {
+    print('decrease selected marker id: $_selectedMarkerId');
+
     if (_selectedMarkerId != null) {
       // 선택된 마커를 찾아서 크기 원래대로 돌리기
       final selectedMarker = _busStopModel!.firstWhere(
           (selectedBusStop) => selectedBusStop.nodeid == _selectedMarkerId);
+
+      print('decrease selectedMarker: ${selectedMarker}');
 
       _markers.removeWhere(
           (selectedMarker) => selectedMarker.markerId == _selectedMarkerId);
@@ -291,7 +315,21 @@ class MainMapViewmodel with ChangeNotifier {
   // 지도 불러오기 (만들기)
   void onMapCreated(BuildContext context, KakaoMapController controller) {
     _mapController = controller;
-    loadSavedLocation(context);
+
+    if (_currentMarkerIndex >= 0) {
+      print('current marker index: $_currentMarkerIndex');
+      // 마지막 마커가 있으면 해당 좌표로 이동
+      moveToMarkerLocation(_markerHistory[_currentMarkerIndex].values.first);
+
+      // 선택된 마커 강조
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showMarkerBottomSheet(_markerHistory[_currentMarkerIndex].keys.first,
+            _markerHistory[_currentMarkerIndex].values.first, context);
+      });
+    } else {
+      // 그렇지 않으면 저장된 좌표 또는 GPS 좌표로 이동
+      loadSavedLocation(context);
+    }
   }
 
   // 새로운 좌표(현재 좌표 변경 할 경우)로 설정 후 이동
@@ -315,6 +353,7 @@ class MainMapViewmodel with ChangeNotifier {
   // 좌표가 설정된 후 카메라 이동
   void moveCameraToCurrentLocation() {
     _mapController!.panTo(_center);
+    _isLocationReady = false;
   }
 
   // 현재 지도의 중심으로 이동 후, 정류소 불러오기
@@ -341,5 +380,93 @@ class MainMapViewmodel with ChangeNotifier {
   void hideBottomSheet() {
     _isBottomSheetVisible = false;
     notifyListeners();
+  }
+
+  // 마커를 추가하는 함수
+  void addMarkerToHistory(String markerId, LatLng latLng) {
+    _markerHistory.add({markerId: latLng});
+    _currentMarkerIndex = _markerHistory.length - 1;
+    _selectedMarkerId = markerId;
+    _selectedLatLng = latLng;
+
+    notifyListeners();
+  }
+
+  // 마커 히스토리에서 마지막 마커를 제거하는 함수
+  void removeMarkerHistory() {
+    if (_markerHistory.isNotEmpty) {
+      _markerHistory.removeLast();
+      _currentMarkerIndex = _markerHistory.length - 1; // 인덱스 업데이트
+
+      // 마지막 마커가 남아있다면 그 마커 정보를 저장
+      if (_currentMarkerIndex >= 0) {
+        print(
+            'after remove markerId: ${_markerHistory[_currentMarkerIndex].keys.first}');
+        print(
+            'after remove markerLatLng: ${_markerHistory[_currentMarkerIndex].values.first}');
+        _selectedMarkerId = _markerHistory[_currentMarkerIndex].keys.first;
+        _selectedLatLng = _markerHistory[_currentMarkerIndex].values.first;
+      } else {
+        _selectedMarkerId = null;
+        _selectedLatLng = null;
+      }
+
+      print(
+          'selectedMarkerId: $_selectedMarkerId / selectedLatLng: $_selectedLatLng');
+
+      notifyListeners();
+    }
+  }
+
+  // 현재 마커 정보 반환
+  LatLng? get currentMarkerLatLng {
+    if (_currentMarkerIndex >= 0) {
+      return _markerHistory[_currentMarkerIndex].values.first;
+    }
+    return null;
+  }
+
+  // 현재 마커 ID 반환
+  String? get currentMarkerId {
+    if (_currentMarkerIndex >= 0) {
+      return _markerHistory[_currentMarkerIndex].keys.first;
+    }
+    return null;
+  }
+
+  // 기존 마커 제거 후 주변 정류소 검색
+  Future<void> searchNewBusStops(LatLng newCenter) async {
+    _isLoading = true;
+    _markers.clear();
+    notifyListeners();
+
+    // print('newCenter: $newCenter');
+
+    // 새로운 주변 정류소 검색
+    await getNearBusStop(newCenter);
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  // 마커를 설정하고 바텀시트를 실행하는 함수 추가
+  Future<void> showMarkerBottomSheet(
+      String markerId, LatLng latLng, BuildContext context) async {
+    _markers.clear();
+    notifyListeners();
+    print('showMarkerBottomSheet - markerId: $markerId');
+
+    // 1. 마커의 위치로 이동
+    await moveToMarkerLocation(latLng);
+    await loadBusStopInfo(markerId);
+    await searchNewBusStops(latLng);
+
+    if (context.mounted) {
+      // 3. 모달 창 (바텀 시트) 실행
+      showCustomModalBottomSheet(context, markerId);
+
+      // 4. 선택된 마커 강조 (크기 변경 등)
+      increaseSelectedMarker(markerId, latLng);
+    }
   }
 }
