@@ -26,6 +26,8 @@ class MainMapViewmodel with ChangeNotifier {
   int _currentMarkerIndex = -1;
   LatLng? _selectedLatLng;
 
+  int _selectedIndex = 0;
+
   KakaoMapController? get mapController => _mapController;
   LatLng get center => _center;
   bool get isLoading => _isLoading;
@@ -39,6 +41,7 @@ class MainMapViewmodel with ChangeNotifier {
   String? get errorMessage => _errorMessage;
   LatLng? get selectedLatLng => _selectedLatLng;
   int get currentMarkerIndex => _currentMarkerIndex;
+  int get seletedIndex => _selectedIndex;
 
   MainMapViewmodel(BuildContext context) {
     // 저장된 좌표를 불러오고, 없다면 현재 위치를 가져옴
@@ -68,8 +71,6 @@ class MainMapViewmodel with ChangeNotifier {
     _isLoading = true;
     _markers.clear();
     notifyListeners();
-
-    // print('center: $center');
 
     try {
       _busStopModel = await busRepository.getNearBusStop(center);
@@ -406,8 +407,6 @@ class MainMapViewmodel with ChangeNotifier {
     _markers.clear();
     notifyListeners();
 
-    // print('newCenter: $newCenter');
-
     // 새로운 주변 정류소 검색
     await getNearBusStop(newCenter);
 
@@ -438,6 +437,11 @@ class MainMapViewmodel with ChangeNotifier {
     // 4. 선택된 마커 강조 (크기 변경 등)
     increaseSelectedMarker(markerId, latLng);
 
+    notifyListeners();
+  }
+
+  void setChips(bool selected, int index) {
+    _selectedIndex = selected ? index : _selectedIndex;
     notifyListeners();
   }
 }

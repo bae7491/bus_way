@@ -46,14 +46,12 @@ class AuthRemoteDataSource with ChangeNotifier {
   // 2. firebase에 회원가입 요청
   Future<User?> signUpWithEmail(String email, String password) async {
     try {
-      debugPrint('email: $email, password: $password');
       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
-      debugPrint('signUp exception: ${e.code}');
       String message = '';
       if (e.code == 'email-already-in-use') {
         message = '이미 존재하는 이메일입니다.';

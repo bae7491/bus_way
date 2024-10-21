@@ -23,9 +23,6 @@ class MainMapView extends StatelessWidget {
             mainMapViewModel.clearErrorMessage();
           }
         });
-        print(
-            'main map view isBottomSheetVIsible: ${mainMapViewModel.isBottomSheetVisible}');
-        print('map controller: ${mainMapViewModel.mapController}');
         // 좌표가 준비되면 지도를 표시
         return Scaffold(
           resizeToAvoidBottomInset: true,
@@ -37,7 +34,6 @@ class MainMapView extends StatelessWidget {
               children: [
                 KakaoMap(
                   onMapCreated: (controller) {
-                    print('In main map onMapCreated');
                     mainMapViewModel.onMapCreated(context, controller);
                     // 지도 생성 후 사용자의 현재 위치로 이동
                     if (mainMapViewModel.isLocationReady) {

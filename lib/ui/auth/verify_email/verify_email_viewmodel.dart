@@ -22,7 +22,6 @@ class VerifyEmailViewmodel with ChangeNotifier {
     notifyListeners();
 
     _emailVerified = await loginAuthRepository.checkVerifyEmail();
-    print('이메일 인증 확인: $_emailVerified');
 
     // 메일 인증 완료 후,
     if (_emailVerified) {

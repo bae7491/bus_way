@@ -30,8 +30,6 @@ class AuthLocalDatasource with ChangeNotifier {
         },
       );
 
-      print('result: ${result.statusCode}');
-
       if (result.statusCode == 200) {
         var signUpResult = jsonDecode(result.body);
         if (signUpResult['success'] == true) {
@@ -136,8 +134,6 @@ class AuthLocalDatasource with ChangeNotifier {
               'Error: Request Timeout', 408); // 408은 타임아웃 상태 코드
         },
       );
-
-      print('result.status: ${result.statusCode}');
 
       if (result.statusCode == 200) {
         var updatePasswordResult = jsonDecode(result.body);
