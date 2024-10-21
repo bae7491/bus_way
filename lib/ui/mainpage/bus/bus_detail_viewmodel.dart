@@ -96,13 +96,14 @@ class BusDetailViewModel with ChangeNotifier {
         final longitude = double.parse(_busStopInfoModel!.first.longitude!);
         final markerLatLng = LatLng(latitude, longitude);
 
-        // 마커 히스토리에 추가
-        mainMapViewModel.addMarkerToHistory(busStopId, markerLatLng);
+        // TODO: 버스 상세 노선도에서 버스 정류장 클릭 시, 계속해서 지도 -> 정류장 -> 지도 순으로 이동 가능하게 구현해야함.
+        // // 마커 히스토리에 추가
+        // mainMapViewModel.addMarkerToHistory(busStopId, markerLatLng);
 
-        Navigator.of(context).push(
-          const NavigatorAnimation(destination: MainView())
-              .createRoute(SlideDirection.bottomToTop),
-        );
+        // Navigator.of(context).push(
+        //   const NavigatorAnimation(destination: MainView())
+        //       .createRoute(SlideDirection.bottomToTop),
+        // );
       }
     } else if (_errorMessage != null && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

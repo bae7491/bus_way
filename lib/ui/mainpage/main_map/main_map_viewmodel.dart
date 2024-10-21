@@ -58,6 +58,11 @@ class MainMapViewmodel with ChangeNotifier {
     notifyListeners();
   }
 
+  void refreshMap(BuildContext context) {
+    showBottomSheet();
+    onMapCreated(context, mapController!);
+  }
+
   // 버스 API로 주변 500m 정류장 가져와서 마커로 찍기
   Future<void> getNearBusStop(LatLng center) async {
     _isLoading = true;
@@ -107,47 +112,32 @@ class MainMapViewmodel with ChangeNotifier {
   }
 
   // 모달 켜지면 선택한 마커 크기 키우기
-  void increaseSelectedMarker(String markerId, LatLng latLng) {
-    print('inner increaseSelectedMarker');
-    try {
-      // markerId가 BSB로 시작하는지 확인하고 없으면 BSB 추가
-      if (!markerId.startsWith("BSB")) {
-        markerId = "BSB$markerId";
-      }
-      // 선택된 마커를 찾아서 크기 변경
-      _markers
-          .removeWhere((selectedMarker) => selectedMarker.markerId == markerId);
+  void increaseSelectedMarker(String markerId, LatLng latLng) async {
+    // 선택된 마커를 찾아서 크기 변경
+    _markers
+        .removeWhere((selectedMarker) => selectedMarker.markerId == markerId);
 
-      _markers.add(Marker(
-        markerId: markerId,
-        latLng: latLng,
-        width: 45, // 선택된 마커의 크기 확대
-        height: 45,
-        offsetX: 22,
-        offsetY: 45,
-        markerImageSrc: API.selectedBusStopImage, // 선택된 마커 이미지
-        zIndex: 2, // zIndex를 높여서 선택된 마커가 앞에 보이도록 설정
-      ));
+    _markers.add(Marker(
+      markerId: markerId,
+      latLng: latLng,
+      width: 45,
+      height: 45,
+      offsetX: 22,
+      offsetY: 45,
+      markerImageSrc: API.selectedBusStopImage, // 선택된 마커 이미지
+      zIndex: 2, // zIndex를 높여서 선택된 마커가 앞에 보이도록 설정
+    ));
+    notifyListeners();
 
-      _selectedMarkerId = markerId; // 선택된 마커 저장
-      print('increase marker id: $_selectedMarkerId');
-      notifyListeners();
-    } catch (e) {
-      _errorMessage = e.toString();
-      print('increase error: $_errorMessage');
-    }
+    _selectedMarkerId = markerId; // 선택된 마커 저장
   }
 
-  // 모달 꺼지면 선택한 마커 크기 되돌리기
+  // 모달 꺼지면 선택한 마커 이미지 되돌리기
   void decreaseSelectedMarker(String markerId) {
-    print('decrease selected marker id: $_selectedMarkerId');
-
     if (_selectedMarkerId != null) {
-      // 선택된 마커를 찾아서 크기 원래대로 돌리기
+      // 선택된 마커를 찾아서 원래 이미지로 돌리기
       final selectedMarker = _busStopModel!.firstWhere(
           (selectedBusStop) => selectedBusStop.nodeid == _selectedMarkerId);
-
-      print('decrease selectedMarker: ${selectedMarker}');
 
       _markers.removeWhere(
           (selectedMarker) => selectedMarker.markerId == _selectedMarkerId);
@@ -156,7 +146,7 @@ class MainMapViewmodel with ChangeNotifier {
         markerId: selectedMarker.nodeid!,
         latLng: LatLng(double.parse(selectedMarker.gpslati!),
             double.parse(selectedMarker.gpslong!)),
-        width: 45, // 원래 크기로 복원
+        width: 45,
         height: 45,
         offsetX: 22,
         offsetY: 45,
@@ -317,7 +307,6 @@ class MainMapViewmodel with ChangeNotifier {
     _mapController = controller;
 
     if (_currentMarkerIndex >= 0) {
-      print('current marker index: $_currentMarkerIndex');
       // 마지막 마커가 있으면 해당 좌표로 이동
       moveToMarkerLocation(_markerHistory[_currentMarkerIndex].values.first);
 
@@ -400,10 +389,6 @@ class MainMapViewmodel with ChangeNotifier {
 
       // 마지막 마커가 남아있다면 그 마커 정보를 저장
       if (_currentMarkerIndex >= 0) {
-        print(
-            'after remove markerId: ${_markerHistory[_currentMarkerIndex].keys.first}');
-        print(
-            'after remove markerLatLng: ${_markerHistory[_currentMarkerIndex].values.first}');
         _selectedMarkerId = _markerHistory[_currentMarkerIndex].keys.first;
         _selectedLatLng = _markerHistory[_currentMarkerIndex].values.first;
       } else {
@@ -411,27 +396,8 @@ class MainMapViewmodel with ChangeNotifier {
         _selectedLatLng = null;
       }
 
-      print(
-          'selectedMarkerId: $_selectedMarkerId / selectedLatLng: $_selectedLatLng');
-
       notifyListeners();
     }
-  }
-
-  // 현재 마커 정보 반환
-  LatLng? get currentMarkerLatLng {
-    if (_currentMarkerIndex >= 0) {
-      return _markerHistory[_currentMarkerIndex].values.first;
-    }
-    return null;
-  }
-
-  // 현재 마커 ID 반환
-  String? get currentMarkerId {
-    if (_currentMarkerIndex >= 0) {
-      return _markerHistory[_currentMarkerIndex].keys.first;
-    }
-    return null;
   }
 
   // 기존 마커 제거 후 주변 정류소 검색
@@ -454,7 +420,10 @@ class MainMapViewmodel with ChangeNotifier {
       String markerId, LatLng latLng, BuildContext context) async {
     _markers.clear();
     notifyListeners();
-    print('showMarkerBottomSheet - markerId: $markerId');
+
+    if (!markerId.startsWith("BSB")) {
+      markerId = "BSB$markerId";
+    }
 
     // 1. 마커의 위치로 이동
     await moveToMarkerLocation(latLng);
@@ -464,9 +433,11 @@ class MainMapViewmodel with ChangeNotifier {
     if (context.mounted) {
       // 3. 모달 창 (바텀 시트) 실행
       showCustomModalBottomSheet(context, markerId);
-
-      // 4. 선택된 마커 강조 (크기 변경 등)
-      increaseSelectedMarker(markerId, latLng);
     }
+
+    // 4. 선택된 마커 강조 (크기 변경 등)
+    increaseSelectedMarker(markerId, latLng);
+
+    notifyListeners();
   }
 }

@@ -20,7 +20,6 @@ void showCustomModalBottomSheet(BuildContext context, String busStopId) {
     useRootNavigator: true,
     useSafeArea: true,
     isScrollControlled: true,
-    // showDragHandle: true,
     barrierColor: Colors.transparent,
     backgroundColor: Colors.white,
     shape: RoundedRectangleBorder(
