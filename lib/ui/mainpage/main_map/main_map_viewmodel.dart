@@ -8,10 +8,13 @@ import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bus_way/data/api/api.dart';
 
-class MainMapViewmodel with ChangeNotifier {
+class MainMapViewModel with ChangeNotifier {
   BusRepository busRepository = BusRepository();
 
+  // 버스 탭 사용 변수
   KakaoMapController? _mapController;
+  List<NearBusStopModel>? _busStopModel;
+  List<BusArriveInfoModel>? _busStopInfoModel;
   LatLng _center = LatLng(35.1797, 129.0746); // 초기 좌표를 부산 시청으로 설정
   bool _isLoading = false;
   bool _isRefreshLoading = false;
@@ -19,16 +22,17 @@ class MainMapViewmodel with ChangeNotifier {
   bool _isLocationReady = false;
   final Set<Marker> _markers = {};
   String? _selectedMarkerId; // 선택된 마커 ID 저장
-  List<NearBusStopModel>? _busStopModel;
-  List<BusArriveInfoModel>? _busStopInfoModel;
+  LatLng? _selectedMarkerLatLng; // 선택된 마커 위경도 저장
   String? _errorMessage;
   final List<Map<String, LatLng>> _markerHistory = [];
   int _currentMarkerIndex = -1;
   LatLng? _selectedLatLng;
 
-  int _selectedIndex = 0;
-
+  // ======================================================
+  // 버스 탭 getter
   KakaoMapController? get mapController => _mapController;
+  List<NearBusStopModel>? get busStopList => _busStopModel;
+  List<BusArriveInfoModel>? get busStopInfoModel => _busStopInfoModel;
   LatLng get center => _center;
   bool get isLoading => _isLoading;
   bool get isRefreshLoading => _isRefreshLoading;
@@ -36,14 +40,14 @@ class MainMapViewmodel with ChangeNotifier {
   bool get isLocationReady => _isLocationReady;
   Set<Marker> get markers => _markers;
   String? get selectedMarkerId => _selectedMarkerId;
-  List<NearBusStopModel>? get busStopList => _busStopModel;
-  List<BusArriveInfoModel>? get busStopInfoModel => _busStopInfoModel;
+  LatLng? get selectedMarkerLatLng => _selectedMarkerLatLng;
   String? get errorMessage => _errorMessage;
   LatLng? get selectedLatLng => _selectedLatLng;
   int get currentMarkerIndex => _currentMarkerIndex;
-  int get seletedIndex => _selectedIndex;
 
-  MainMapViewmodel(BuildContext context) {
+  // ======================================================
+  // 버스탭 함수
+  MainMapViewModel(BuildContext context) {
     // 저장된 좌표를 불러오고, 없다면 현재 위치를 가져옴
     loadSavedLocation(context);
   }
@@ -338,6 +342,10 @@ class MainMapViewmodel with ChangeNotifier {
     _mapController!.setLevel(1);
     // 정류소와 모달의 범위를 생각해서 마커를 지도 중심보다 조금더 위쪽에 보일 수 있게 좌표 수정
     _mapController!.panTo(LatLng(latLng.latitude - 0.0004, latLng.longitude));
+
+    // 여행 탭에서 사용하기 위해 마커의 위치 저장
+    _selectedMarkerLatLng = latLng;
+    notifyListeners();
   }
 
   // 좌표가 설정된 후 카메라 이동
@@ -437,11 +445,6 @@ class MainMapViewmodel with ChangeNotifier {
     // 4. 선택된 마커 강조 (크기 변경 등)
     increaseSelectedMarker(markerId, latLng);
 
-    notifyListeners();
-  }
-
-  void setChips(bool selected, int index) {
-    _selectedIndex = selected ? index : _selectedIndex;
     notifyListeners();
   }
 }

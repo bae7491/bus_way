@@ -89,7 +89,7 @@ class BusDetailViewModel with ChangeNotifier {
 
     if (_errorMessage == null && context.mounted) {
       final mainMapViewModel =
-          Provider.of<MainMapViewmodel>(context, listen: false);
+          Provider.of<MainMapViewModel>(context, listen: false);
 
       if (_busStopInfoModel != null && _busStopInfoModel!.isNotEmpty) {
         final latitude = double.parse(_busStopInfoModel!.first.latitude!);

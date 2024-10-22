@@ -38,7 +38,7 @@ class MainView extends StatelessWidget {
           bottomNavigationBar: BottomNavigationBar(
             onTap: (int index) {
               final mainMapViewModel =
-                  Provider.of<MainMapViewmodel>(context, listen: false);
+                  Provider.of<MainMapViewModel>(context, listen: false);
 
               if (mainMapViewModel.isLoading == false) {
                 mainPageViewModel.updateCurrentPage(index);

@@ -7,7 +7,7 @@ import 'tabs/info_tabbar.dart';
 
 void showCustomModalBottomSheet(BuildContext context, String busStopId) {
   final mainMapViewModel =
-      Provider.of<MainMapViewmodel>(context, listen: false);
+      Provider.of<MainMapViewModel>(context, listen: false);
 
   mainMapViewModel.showBottomSheet();
 
@@ -26,7 +26,7 @@ void showCustomModalBottomSheet(BuildContext context, String busStopId) {
       borderRadius: BorderRadius.circular(30),
     ),
     builder: (context) {
-      return Consumer<MainMapViewmodel>(
+      return Consumer<MainMapViewModel>(
         builder: (context, mainMapViewModel, child) {
           return DraggableScrollableSheet(
             expand: false,

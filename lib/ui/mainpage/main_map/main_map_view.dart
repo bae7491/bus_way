@@ -1,4 +1,5 @@
 import 'package:bus_way/theme/colors.dart';
+import 'package:bus_way/ui/mainpage/main_map/main_map_travel_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/main_map/main_map_viewmodel.dart';
 import 'package:bus_way/widget/custom_snackbar.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,9 @@ class MainMapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MainMapViewmodel>(
+    final travelViewModel =
+        Provider.of<MainMapTravelViewModel>(context, listen: false);
+    return Consumer<MainMapViewModel>(
       builder: (context, mainMapViewModel, child) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mainMapViewModel.errorMessage != null) {
@@ -44,6 +47,7 @@ class MainMapView extends StatelessWidget {
                     if (markerId != 'myLocation') {
                       // 마커의 위치로 카카오맵 이동
                       mainMapViewModel.moveToMarkerLocation(latLng);
+                      travelViewModel.setCenter(latLng);
 
                       // 마커 탭 후, 해당 정류소의 버스 불러오기.
                       mainMapViewModel
@@ -58,6 +62,7 @@ class MainMapView extends StatelessWidget {
                               markerId, latLng);
                         }
                       });
+                      // travelViewModel.getTravelInfo(latLng, 'S', '');
                     }
                   }),
                   markers: mainMapViewModel.markers.toList(),

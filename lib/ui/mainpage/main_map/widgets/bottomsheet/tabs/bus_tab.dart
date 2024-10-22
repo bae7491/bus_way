@@ -14,7 +14,7 @@ class BusTab extends StatelessWidget {
     required this.scrollController,
   });
 
-  final MainMapViewmodel viewmodel;
+  final MainMapViewModel viewmodel;
   final String busStopId;
   final ScrollController scrollController;
 

@@ -14,7 +14,7 @@ class InfoTabbar extends StatelessWidget {
     required this.busStopId,
   });
 
-  final MainMapViewmodel viewmodel;
+  final MainMapViewModel viewmodel;
   final ScrollController scrollController;
   final double maxHeight;
   final double tabBarHeight;
@@ -44,6 +44,7 @@ class InfoTabbar extends StatelessWidget {
             const TabBar(
               labelColor: Colors.black,
               indicatorColor: Colors.black,
+              unselectedLabelColor: Colors.grey,
               tabs: <Widget>[
                 Tab(text: '버스'),
                 Tab(text: '관광'),
@@ -61,7 +62,10 @@ class InfoTabbar extends StatelessWidget {
                     scrollController: scrollController,
                   ),
                   // 두 번째 탭: 관광 정보
-                  TravelTab(),
+                  TravelTab(
+                    viewModel: viewmodel,
+                    scrollController: scrollController,
+                  ),
                 ],
               ),
             ),

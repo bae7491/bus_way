@@ -46,7 +46,7 @@ class BusRemoteDatasource with ChangeNotifier {
         'gpsLati': center.latitude.toString(), // 위도
         'gpsLong': center.longitude.toString(), // 경도
       };
-      Uri uri = Uri.https(API.tagoBusStop, API.getNearBusStop, parameters);
+      Uri uri = Uri.https(API.publicDataUrl, API.getNearBusStop, parameters);
       http.Response result = await http.get(uri);
 
       if (result.statusCode == 200) {
@@ -102,7 +102,7 @@ class BusRemoteDatasource with ChangeNotifier {
             'BSB', ''), // 정류장 ID가 'BSB0000' -> '0000'으로 변경해야 데이터를 제대로 불러옴
       };
 
-      Uri uri = Uri.https(API.tagoBusStop, API.getBusArriveInfo, parameters);
+      Uri uri = Uri.https(API.publicDataUrl, API.getBusArriveInfo, parameters);
       http.Response result = await http.get(uri);
 
       if (result.statusCode == 200) {
@@ -187,7 +187,7 @@ class BusRemoteDatasource with ChangeNotifier {
         'serviceKey': dotenv.env['publicDataKey'],
         'lineid': lineId,
       };
-      Uri uri = Uri.https(API.tagoBusStop, API.getBusDetailInfo, parameters);
+      Uri uri = Uri.https(API.publicDataUrl, API.getBusDetailInfo, parameters);
       http.Response result = await http.get(uri);
 
       if (result.statusCode == 200) {
@@ -228,7 +228,7 @@ class BusRemoteDatasource with ChangeNotifier {
         'serviceKey': dotenv.env['publicDataKey'],
         'lineid': lineId,
       };
-      Uri uri = Uri.https(API.tagoBusStop, API.getBusLineInfo, parameters);
+      Uri uri = Uri.https(API.publicDataUrl, API.getBusLineInfo, parameters);
       http.Response result = await http.get(uri);
 
       if (result.statusCode == 200) {
@@ -267,7 +267,7 @@ class BusRemoteDatasource with ChangeNotifier {
         'serviceKey': dotenv.env['publicDataKey'],
         'bstopnm': busStopName,
       };
-      Uri uri = Uri.https(API.tagoBusStop, API.getBusStopInfo, parameters);
+      Uri uri = Uri.https(API.publicDataUrl, API.getBusStopInfo, parameters);
       http.Response result = await http.get(uri);
 
       if (result.statusCode == 200) {
