@@ -14,11 +14,10 @@ class TravelRemoteDatasource with ChangeNotifier {
   String errorMessage = '';
 
   // 1. 위치 기반 관광 정보 조회
-  Future<List<NearTravelInfoModel>?> getNearTravelInfo(LatLng? center,
-      int pageNo, int pageSize, String arrange, String contentTypeId) async {
+  Future<NearTravelInfoResponse> getNearTravelInfo(LatLng? center, int pageNo,
+      int pageSize, String arrange, String contentTypeId) async {
     try {
       if (center != null) {
-        print('center: ${center.latitude} / ${center.longitude}');
         Map<String, dynamic> parameters = {
           'serviceKey': dotenv.env['publicDataKey'],
           'MobileOS': 'AND',
@@ -26,11 +25,10 @@ class TravelRemoteDatasource with ChangeNotifier {
           'mapY': center.latitude.toString(), // 위도
           'mapX': center.longitude.toString(), // 경도
           'radius': '1000', // 반경 (단위: m)
-          'arrange':
-              arrange, // (A=제목순,C=수정일순, D=생성일순, E=거리순) / 대표이미지가반드시있는정렬 (O=제목순, Q=수정일순, R=생성일순,S=거리순)
+          'arrange': arrange, // 정렬 기준
           'pageNo': pageNo.toString(),
           'numOfRows': pageSize.toString(),
-          'contentTypeId': contentTypeId,
+          'contentTypeId': contentTypeId != '0' ? contentTypeId : '',
         };
         Uri uri = Uri.https(API.publicDataUrl, API.getNearTourInfo, parameters);
         http.Response result = await http.get(uri);
@@ -43,21 +41,43 @@ class TravelRemoteDatasource with ChangeNotifier {
           Map<String, dynamic> jsonResult = convert.json.decode(json);
 
           if (jsonResult['response'] != null) {
-            if (jsonResult['response'] != null &&
-                jsonResult['response']['body'] != null &&
-                jsonResult['response']['body']['items'] != null) {
-              final jsonNearTravelInfo =
-                  jsonResult['response']['body']['items'];
+            if (jsonResult['response']['body'] != null) {
+              // totalCount 가져오기 (필터링 전 총 개수)
+              int totalCount =
+                  int.parse(jsonResult['response']['body']['totalCount']);
 
-              List<dynamic> nearTravelInfoList = jsonNearTravelInfo['item'];
+              // items가 없는 경우 처리
+              var items = jsonResult['response']['body']['items'];
+              if (items == null || items == '' || items['item'] == null) {
+                // items가 없을 때, 빈 리스트를 반환하고 totalCount만 포함
+                return NearTravelInfoResponse(
+                  totalCount: totalCount.toString(),
+                  travelInfoList: [],
+                );
+              }
 
-              print('nearTravelInfoList: $nearTravelInfoList');
+              // items가 존재하는 경우 처리
+              if (items['item'] != null) {
+                // 관광지 리스트 변환
+                List<dynamic> jsonNearTravelInfo = items['item'];
 
-              return nearTravelInfoList
-                  // .where((item) => item['areacode'] == 6)
-                  .map<NearTravelInfoModel>(
-                      (item) => NearTravelInfoModel.fromJson(item))
-                  .toList();
+                // 필터링된 데이터 리스트
+                List<NearTravelInfoModel> travelInfoList = jsonNearTravelInfo
+                    .map<NearTravelInfoModel>(
+                        (item) => NearTravelInfoModel.fromJson(item))
+                    .toList();
+
+                // NearTravelInfoResponse 반환 (필터링된 항목을 제외한 totalCount 반환)
+                return NearTravelInfoResponse(
+                  totalCount: totalCount.toString(),
+                  travelInfoList: travelInfoList,
+                );
+              } else {
+                return NearTravelInfoResponse(
+                  totalCount: totalCount.toString(),
+                  travelInfoList: [], // 빈 리스트 반환
+                );
+              }
             } else {
               errorMessage = getApiMessageForStatusCode('');
               throw errorMessage;
@@ -67,15 +87,18 @@ class TravelRemoteDatasource with ChangeNotifier {
             String returnReasonCode = jsonResult['OpenAPI_ServiceResponse']
                 ['cmmMsgHeader']['returnReasonCode'];
             errorMessage = getApiMessageForStatusCode(returnReasonCode);
+            throw errorMessage;
           }
         } else {
           errorMessage = getApiMessageForStatusCode('');
+          throw errorMessage;
         }
       }
-
+      errorMessage = getApiMessageForStatusCode('');
       throw errorMessage;
     } catch (e) {
-      throw e.toString();
+      errorMessage = getApiMessageForStatusCode('');
+      throw errorMessage;
     }
   }
 }

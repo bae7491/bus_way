@@ -5,7 +5,6 @@ class NearTravelInfoModel {
   String? distance; // 거리
   String? travelImage; // 대표 이미지
   String? travelTitle; // 제목 (관광지 이름)
-  // String? totalCount; // 전체 결과 수
 
   NearTravelInfoModel({
     this.contentId,
@@ -13,7 +12,6 @@ class NearTravelInfoModel {
     this.distance,
     this.travelImage,
     this.travelTitle,
-    // this.totalCount,
   });
 
   factory NearTravelInfoModel.fromJson(Map<String, dynamic> json) {
@@ -21,9 +19,18 @@ class NearTravelInfoModel {
       contentId: json['contentid'] as String,
       contentTypeId: json['contenttypeid'] as String,
       distance: json['dist'] as String,
-      travelImage: json['firstimage'] as String? ?? '',
+      travelImage: json['firstimage2'] as String? ?? '',
       travelTitle: json['title'] as String,
-      // totalCount: json['totalCount'] as String,
     );
   }
+}
+
+class NearTravelInfoResponse {
+  final String totalCount; // 전체 결과 수
+  final List<NearTravelInfoModel> travelInfoList; // 관광지 리스트
+
+  NearTravelInfoResponse({
+    required this.totalCount,
+    required this.travelInfoList,
+  });
 }
