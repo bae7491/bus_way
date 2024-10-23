@@ -1,6 +1,6 @@
 import 'package:bus_way/theme/colors.dart';
 import 'package:bus_way/ui/mainpage/main_map/main_map_view.dart';
-import 'package:bus_way/ui/mainpage/main_map/main_map_viewmodel.dart';
+import 'package:bus_way/ui/mainpage/main_map/main_map_bus_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mypage/mypage_view.dart';
 import 'package:flutter/material.dart';

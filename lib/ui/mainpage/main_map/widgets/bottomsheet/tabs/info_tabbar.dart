@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../main_map_viewmodel.dart';
+import '../../../main_map_bus_viewmodel.dart';
 import 'bus_tab.dart';
 import 'travel_tab.dart';
 

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../main_map_viewmodel.dart';
+import '../../main_map_bus_viewmodel.dart';
 import 'tabs/info_tabbar.dart';
 
 void showCustomModalBottomSheet(BuildContext context, String busStopId) {

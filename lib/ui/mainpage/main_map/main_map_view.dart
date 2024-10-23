@@ -1,6 +1,6 @@
 import 'package:bus_way/theme/colors.dart';
 import 'package:bus_way/ui/mainpage/main_map/main_map_travel_viewmodel.dart';
-import 'package:bus_way/ui/mainpage/main_map/main_map_viewmodel.dart';
+import 'package:bus_way/ui/mainpage/main_map/main_map_bus_viewmodel.dart';
 import 'package:bus_way/widget/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

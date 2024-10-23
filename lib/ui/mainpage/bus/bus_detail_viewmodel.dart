@@ -2,7 +2,7 @@ import 'package:bus_way/data/model/bus_model/bus_info_model.dart';
 import 'package:bus_way/data/model/bus_model/bus_line_model.dart';
 import 'package:bus_way/data/model/bus_model/bus_stop_info_model.dart';
 import 'package:bus_way/data/respository/bus_repository/bus_repository.dart';
-import 'package:bus_way/ui/mainpage/main_map/main_map_viewmodel.dart';
+import 'package:bus_way/ui/mainpage/main_map/main_map_bus_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mainpage_view.dart';
 import 'package:bus_way/widget/custom_snackbar.dart';
 import 'package:bus_way/widget/navigator_animation.dart';

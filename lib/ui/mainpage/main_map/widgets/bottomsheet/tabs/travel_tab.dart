@@ -3,7 +3,7 @@ import 'package:bus_way/constant/travel_category_constant.dart';
 import 'package:bus_way/constant/travel_filter_constant.dart';
 import 'package:bus_way/theme/colors.dart';
 import 'package:bus_way/ui/mainpage/main_map/main_map_travel_viewmodel.dart';
-import 'package:bus_way/ui/mainpage/main_map/main_map_viewmodel.dart';
+import 'package:bus_way/ui/mainpage/main_map/main_map_bus_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/main_map/widgets/bottomsheet/tabs/travel_info_card/travel_info_card.dart';
 import 'package:chip_list/chip_list.dart';
 import 'package:flutter/material.dart';

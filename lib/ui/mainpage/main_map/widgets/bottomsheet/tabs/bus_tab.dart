@@ -4,7 +4,7 @@ import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../../main_map_viewmodel.dart';
+import '../../../main_map_bus_viewmodel.dart';
 
 class BusTab extends StatelessWidget {
   const BusTab({
