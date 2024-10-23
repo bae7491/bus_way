@@ -45,10 +45,6 @@ class MainMapView extends StatelessWidget {
                   },
                   onMarkerTap: ((markerId, latLng, zoomLevel) {
                     if (markerId != 'myLocation') {
-                      // 마커의 위치로 카카오맵 이동
-                      mainMapViewModel.moveToMarkerLocation(latLng);
-                      travelViewModel.setCenter(latLng);
-
                       // 마커 탭 후, 해당 정류소의 버스 불러오기.
                       mainMapViewModel
                           .loadBusStopInfo(markerId)
@@ -61,8 +57,11 @@ class MainMapView extends StatelessWidget {
                           mainMapViewModel.increaseSelectedMarker(
                               markerId, latLng);
                         }
+
+                        // 마커의 위치로 카카오맵 이동
+                        mainMapViewModel.moveToMarkerLocation(latLng);
+                        travelViewModel.setCenter(latLng);
                       });
-                      // travelViewModel.getTravelInfo(latLng, 'S', '');
                     }
                   }),
                   markers: mainMapViewModel.markers.toList(),
