@@ -58,20 +58,35 @@ class TravelRemoteDatasource with ChangeNotifier {
 
               // items가 존재하는 경우 처리
               if (items['item'] != null) {
-                // 관광지 리스트 변환
-                List<dynamic> jsonNearTravelInfo = items['item'];
+                // item이 단일 객체인지, 리스트인지 확인
+                if (items['item'] is Map<String, dynamic>) {
+                  // 단일 객체일 경우, 리스트로 감싸서 반환
+                  List<NearTravelInfoModel> travelInfoList = [
+                    NearTravelInfoModel.fromJson(
+                      Map<String, dynamic>.from(items['item']),
+                    ),
+                  ];
+                  // NearTravelInfoResponse 반환
+                  return NearTravelInfoResponse(
+                    totalCount: totalCount.toString(),
+                    travelInfoList: travelInfoList,
+                  );
+                } else if (items['item'] is List) {
+                  // 관광지 리스트 변환
+                  List<dynamic> jsonNearTravelInfo = items['item'];
 
-                // 필터링된 데이터 리스트
-                List<NearTravelInfoModel> travelInfoList = jsonNearTravelInfo
-                    .map<NearTravelInfoModel>(
-                        (item) => NearTravelInfoModel.fromJson(item))
-                    .toList();
+                  // 필터링된 데이터 리스트
+                  List<NearTravelInfoModel> travelInfoList = jsonNearTravelInfo
+                      .map<NearTravelInfoModel>(
+                          (item) => NearTravelInfoModel.fromJson(item))
+                      .toList();
 
-                // NearTravelInfoResponse 반환 (필터링된 항목을 제외한 totalCount 반환)
-                return NearTravelInfoResponse(
-                  totalCount: totalCount.toString(),
-                  travelInfoList: travelInfoList,
-                );
+                  // NearTravelInfoResponse 반환
+                  return NearTravelInfoResponse(
+                    totalCount: totalCount.toString(),
+                    travelInfoList: travelInfoList,
+                  );
+                }
               } else {
                 return NearTravelInfoResponse(
                   totalCount: totalCount.toString(),
