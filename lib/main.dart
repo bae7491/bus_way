@@ -5,6 +5,7 @@ import 'package:bus_way/ui/mainpage/main_map/main_map_travel_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/main_map/main_map_bus_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mypage/mypage_viewmodel.dart';
+import 'package:bus_way/ui/mainpage/travel/travel_detail_viewmodel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -59,6 +60,10 @@ class MyApp extends StatelessWidget {
         // // 버스 상세 페이지
         // ChangeNotifierProvider(
         //   create: (_) => BusDetailViewmodel(),
+        // ),
+        // // 여행지 상세 페이지
+        // ChangeNotifierProvider(
+        //   create: (_) => TravelDetailViewModel(),
         // ),
         // 마이페이지
         ChangeNotifierProvider(

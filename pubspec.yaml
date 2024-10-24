@@ -53,6 +53,7 @@ dependencies:
   infinite_scroll_pagination: ^4.0.0
   cached_network_image: ^3.4.1
   animated_custom_dropdown: ^3.1.1
+  flutter_html: ^3.0.0-beta.2
 
 dev_dependencies:
   flutter_test:

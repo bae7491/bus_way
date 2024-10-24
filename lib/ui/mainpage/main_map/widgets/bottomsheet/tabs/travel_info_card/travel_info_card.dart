@@ -31,6 +31,8 @@ class TravelInfoCard extends StatelessWidget {
               child: InkWell(
                 onTap: () {
                   // TODO: 관광지 선택 후, 뷰 이동 및 이벤트 추가.
+                  travelViewModel.navigateTravelDetail(
+                      context, item.contentId!, item.contentTypeId!);
                 },
                 child: Container(
                   decoration: BoxDecoration(

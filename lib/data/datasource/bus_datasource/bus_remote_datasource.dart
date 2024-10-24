@@ -87,6 +87,7 @@ class BusRemoteDatasource with ChangeNotifier {
       } else {
         errorMessage = getApiMessageForStatusCode('');
       }
+
       throw errorMessage;
     } catch (e) {
       throw e.toString();
@@ -161,8 +162,10 @@ class BusRemoteDatasource with ChangeNotifier {
                   .toList();
             }
           } else {
-            errorMessage = getApiMessageForStatusCode('');
-            throw errorMessage;
+            // 에러가 발생한 경우 returnReasonCode 추출
+            String returnReasonCode = jsonResult['OpenAPI_ServiceResponse']
+                ['cmmMsgHeader']['returnReasonCode'];
+            errorMessage = getApiMessageForStatusCode(returnReasonCode);
           }
         } else {
           // 에러가 발생한 경우 returnReasonCode 추출
@@ -173,6 +176,7 @@ class BusRemoteDatasource with ChangeNotifier {
       } else {
         errorMessage = getApiMessageForStatusCode('');
       }
+
       throw errorMessage;
     } catch (e) {
       errorMessage = getApiMessageForStatusCode('');
@@ -208,13 +212,21 @@ class BusRemoteDatasource with ChangeNotifier {
                   Map<String, dynamic>.from(jsonBusDetailInfo['item']))
             ];
           } else {
-            errorMessage = getApiMessageForStatusCode('');
-            throw errorMessage;
+            // 에러가 발생한 경우 returnReasonCode 추출
+            String returnReasonCode = jsonResult['OpenAPI_ServiceResponse']
+                ['cmmMsgHeader']['returnReasonCode'];
+            errorMessage = getApiMessageForStatusCode(returnReasonCode);
           }
         } else {
-          errorMessage = getApiMessageForStatusCode('');
+          // 에러가 발생한 경우 returnReasonCode 추출
+          String returnReasonCode = jsonResult['OpenAPI_ServiceResponse']
+              ['cmmMsgHeader']['returnReasonCode'];
+          errorMessage = getApiMessageForStatusCode(returnReasonCode);
         }
+      } else {
+        errorMessage = getApiMessageForStatusCode('');
       }
+
       throw errorMessage;
     } catch (e) {
       throw e.toString();
@@ -249,8 +261,13 @@ class BusRemoteDatasource with ChangeNotifier {
               .map<BusLineModel>((item) => BusLineModel.fromJson(item))
               .toList();
         } else {
-          errorMessage = getApiMessageForStatusCode('');
+          // 에러가 발생한 경우 returnReasonCode 추출
+          String returnReasonCode = jsonResult['OpenAPI_ServiceResponse']
+              ['cmmMsgHeader']['returnReasonCode'];
+          errorMessage = getApiMessageForStatusCode(returnReasonCode);
         }
+      } else {
+        errorMessage = getApiMessageForStatusCode('');
       }
 
       throw errorMessage;
@@ -300,9 +317,15 @@ class BusRemoteDatasource with ChangeNotifier {
                 .toList();
           }
         } else {
-          errorMessage = getApiMessageForStatusCode('');
+          // 에러가 발생한 경우 returnReasonCode 추출
+          String returnReasonCode = jsonResult['OpenAPI_ServiceResponse']
+              ['cmmMsgHeader']['returnReasonCode'];
+          errorMessage = getApiMessageForStatusCode(returnReasonCode);
         }
+      } else {
+        errorMessage = getApiMessageForStatusCode('');
       }
+
       throw errorMessage;
     } catch (e) {
       throw e.toString();

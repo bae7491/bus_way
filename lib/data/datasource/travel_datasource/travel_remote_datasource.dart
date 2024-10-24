@@ -1,6 +1,8 @@
+import 'package:bus_way/constant/travel_detail_info_model_parser.dart';
 import 'package:bus_way/data/api/api.dart';
 import 'package:bus_way/data/api/api_enum.dart';
 import 'package:bus_way/data/model/travel_model/near_travel_info_model.dart';
+import 'package:bus_way/data/model/travel_model/travel_common_info_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
@@ -108,8 +110,113 @@ class TravelRemoteDatasource with ChangeNotifier {
           errorMessage = getApiMessageForStatusCode('');
           throw errorMessage;
         }
+      } else {
+        errorMessage = getApiMessageForStatusCode('');
       }
+
+      throw errorMessage;
+    } catch (e) {
       errorMessage = getApiMessageForStatusCode('');
+      throw errorMessage;
+    }
+  }
+
+  // 2. 공통 정보 조회
+  Future<TravelCommonInfoModel?>? getTravelCommonInfo(String contentId) async {
+    try {
+      Map<String, dynamic> parameters = {
+        'serviceKey': dotenv.env['publicDataKey'],
+        'MobileOS': 'AND',
+        'MobileApp': 'MobileApp',
+        'defaultYN': 'Y',
+        'addrinfoYN': 'Y',
+        'mapinfoYN': 'Y',
+        'overviewYN': 'Y',
+        'firstImageYN': 'Y',
+        'contentId': contentId,
+      };
+      Uri uri =
+          Uri.https(API.publicDataUrl, API.getTravelCommonInfo, parameters);
+      http.Response result = await http.get(uri);
+
+      if (result.statusCode == 200) {
+        final body = convert.utf8.decode(result.bodyBytes);
+        final xml = Xml2Json()..parse(body);
+        final json = xml.toParker();
+
+        Map<String, dynamic> jsonResult = convert.json.decode(json);
+
+        if (jsonResult['response'] != null &&
+            jsonResult['response']['body'] != null &&
+            jsonResult['response']['body']['items'] != null) {
+          final jsonTravelCommonInfo = jsonResult['response']['body']['items'];
+
+          if (jsonTravelCommonInfo['item'] is Map<String, dynamic>) {
+            TravelCommonInfoModel? travelCommonInfoList =
+                TravelCommonInfoModel.fromJson(jsonTravelCommonInfo['item']);
+
+            return travelCommonInfoList;
+          }
+        } else {
+          // 에러가 발생한 경우 returnReasonCode 추출
+          String returnReasonCode = jsonResult['OpenAPI_ServiceResponse']
+              ['cmmMsgHeader']['returnReasonCode'];
+          errorMessage = getApiMessageForStatusCode(returnReasonCode);
+        }
+      } else {
+        errorMessage = getApiMessageForStatusCode('');
+      }
+
+      throw errorMessage;
+    } catch (e) {
+      errorMessage = getApiMessageForStatusCode('');
+      throw errorMessage;
+    }
+  }
+
+  // 3. 소개 정보 조회
+  Future<dynamic> getTravelDetailInfo(
+      String contentId, String contentTypeId) async {
+    try {
+      Map<String, dynamic> parameters = {
+        'serviceKey': dotenv.env['publicDataKey'],
+        'MobileOS': 'AND',
+        'MobileApp': 'MobileApp',
+        'contentId': contentId,
+        'contentTypeId': contentTypeId,
+      };
+      Uri uri =
+          Uri.https(API.publicDataUrl, API.getTravelDetailInfo, parameters);
+      http.Response result = await http.get(uri);
+
+      if (result.statusCode == 200) {
+        final body = convert.utf8.decode(result.bodyBytes);
+        final xml = Xml2Json()..parse(body);
+        final json = xml.toParker();
+
+        Map<String, dynamic> jsonResult = convert.json.decode(json);
+
+        if (jsonResult['response'] != null &&
+            jsonResult['response']['body'] != null &&
+            jsonResult['response']['body']['items'] != null) {
+          var items = jsonResult['response']['body']['items'];
+
+          if (items['item'] != null && items['item'] is Map<String, dynamic>) {
+            dynamic travelDetailInfoList =
+                travelDetailInfoModelParser(items['item'], contentTypeId);
+
+            return travelDetailInfoList;
+          }
+        } else {
+          // 에러가 발생한 경우 returnReasonCode 추출
+          String returnReasonCode = jsonResult['OpenAPI_ServiceResponse']
+              ['cmmMsgHeader']['returnReasonCode'];
+          errorMessage = getApiMessageForStatusCode(returnReasonCode);
+        }
+      } else {
+        errorMessage = getApiMessageForStatusCode('');
+      }
+
       throw errorMessage;
     } catch (e) {
       errorMessage = getApiMessageForStatusCode('');

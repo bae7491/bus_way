@@ -1,5 +1,6 @@
 import 'package:bus_way/data/datasource/travel_datasource/travel_remote_datasource.dart';
 import 'package:bus_way/data/model/travel_model/near_travel_info_model.dart';
+import 'package:bus_way/data/model/travel_model/travel_common_info_model.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 class TravelRepository {
@@ -12,5 +13,20 @@ class TravelRepository {
     final nearTravelInfoList = await travelRemoteDatasource.getNearTravelInfo(
         center, pageNo, pageSize, arrange, contentTypeId);
     return nearTravelInfoList;
+  }
+
+  // 공통 정보 조회
+  Future<TravelCommonInfoModel?>? getTravelCommonInfo(String contentId) async {
+    final travelCommonInfoList =
+        await travelRemoteDatasource.getTravelCommonInfo(contentId);
+    return travelCommonInfoList;
+  }
+
+  // 소개 정보 조회 (관광지 타입 별 정보 조회)
+  Future<dynamic> getTravelDetailInfo(
+      String contentId, String contentTypeId) async {
+    final travelDetailInfoList = await travelRemoteDatasource
+        .getTravelDetailInfo(contentId, contentTypeId);
+    return travelDetailInfoList;
   }
 }

@@ -55,4 +55,10 @@ class API {
   // ================== 관광 공공 데이터 API (한국관광공사 Tour API)
   // 위치 기반 관광 정보 조회
   static const getNearTourInfo = 'B551011/KorService1/locationBasedList1';
+
+  // 공통 정보 조회
+  static const getTravelCommonInfo = 'B551011/KorService1/detailCommon1';
+
+  // 소개 정보 조회 (관광지 타입 별 정보 조회)
+  static const getTravelDetailInfo = 'B551011/KorService1/detailIntro1';
 }

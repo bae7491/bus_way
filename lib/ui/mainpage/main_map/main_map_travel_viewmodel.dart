@@ -2,6 +2,8 @@ import 'package:bus_way/constant/travel_category_constant.dart';
 import 'package:bus_way/constant/travel_filter_constant.dart';
 import 'package:bus_way/data/model/travel_model/near_travel_info_model.dart';
 import 'package:bus_way/data/respository/travel_repository/travel_repository.dart';
+import 'package:bus_way/ui/mainpage/travel/travel_detail_view.dart';
+import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
@@ -12,7 +14,7 @@ class MainMapTravelViewModel with ChangeNotifier {
   final PagingController<int, NearTravelInfoModel> _pageController =
       PagingController(firstPageKey: 1);
   static const _pageSize = 20;
-  List<NearTravelInfoModel>? _nearTravelInfoList = [];
+  List<NearTravelInfoModel>? _nearTravelInfoList;
   String? _travelTotalCount;
   String? _errorMessage;
   String? _setCategoryName;
@@ -115,5 +117,18 @@ class MainMapTravelViewModel with ChangeNotifier {
       _errorMessage = e.toString();
       notifyListeners();
     }
+  }
+
+  // 관광지 선택 시, 상세 페이지로 이동
+  void navigateTravelDetail(
+      BuildContext context, String contentId, String contentTypeId) {
+    Navigator.of(context).push(
+      NavigatorAnimation(
+        destination: TravelDetailView(
+          contentId: contentId,
+          contentTypeId: contentTypeId,
+        ),
+      ).createRoute(SlideDirection.bottomToTop),
+    );
   }
 }

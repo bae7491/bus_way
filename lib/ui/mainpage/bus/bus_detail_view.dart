@@ -3,6 +3,8 @@ import 'package:bus_way/theme/colors.dart';
 import 'package:bus_way/ui/mainpage/bus/bus_detail_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/bus/widgets/bus_all_line_view.dart';
 import 'package:bus_way/ui/mainpage/bus/widgets/bus_detail_info_view.dart';
+import 'package:bus_way/ui/mainpage/main_map/main_map_bus_viewmodel.dart';
+import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
 import 'package:bus_way/widget/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -22,8 +24,8 @@ class BusDetailView extends StatelessWidget {
     return ChangeNotifierProvider<BusDetailViewModel>(
       create: (_) =>
           BusDetailViewModel()..loadBusInfo(busStopInfoModel.lineid!),
-      child: Consumer<BusDetailViewModel>(
-        builder: (context, busDetailViewModel, child) {
+      child: Consumer2<BusDetailViewModel, MainPageViewModel>(
+        builder: (context, busDetailViewModel, mainPageViewModel, child) {
           final busDetailInfo = busDetailViewModel.busInfoModel;
           final busLineInfo = busDetailViewModel.busLineModel;
 
@@ -35,6 +37,7 @@ class BusDetailView extends StatelessWidget {
               busDetailViewModel.clearErrorMessage();
             }
           });
+
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
@@ -104,6 +107,29 @@ class BusDetailView extends StatelessWidget {
                     ),
                 ],
               ),
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              onTap: (int index) {
+                final mainMapViewModel =
+                    Provider.of<MainMapViewModel>(context, listen: false);
+
+                if (index == 1 && mainMapViewModel.isBottomSheetVisible) {
+                  Navigator.of(context).pop(); // 바텀 시트 닫기
+                  mainMapViewModel.hideBottomSheet(); // 상태 업데이트
+                }
+
+                if (!mainMapViewModel.isLoading) {
+                  mainPageViewModel.updateCurrentPage(index);
+                  Navigator.of(context).pop(); // 네비게이션 바에서 선택 시 이전 화면으로 이동
+                }
+              },
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+                BottomNavigationBarItem(icon: Icon(Icons.person), label: 'MY'),
+              ],
+              currentIndex: mainPageViewModel.index,
+              fixedColor: orchid,
+              backgroundColor: Colors.white,
             ),
           );
         },
