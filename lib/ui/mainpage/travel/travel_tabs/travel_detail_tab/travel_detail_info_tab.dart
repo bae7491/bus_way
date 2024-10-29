@@ -178,7 +178,27 @@ class TravelDetailInfoTab extends StatelessWidget {
         );
       // 추가적인 contentTypeId에 따른 위젯 처리
       default:
-        return const Center(child: Text('유효한 데이터가 없습니다.'));
+        return const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.warning_amber_rounded, // 경고 아이콘
+                size: 50.0, // 아이콘 크기
+                color: Colors.orange, // 아이콘 색상
+              ),
+              SizedBox(height: 16), // 텍스트와 아이콘 사이 간격
+              Text(
+                '유효한 데이터가 없습니다!',
+                style: TextStyle(
+                  fontSize: 18, // 텍스트 크기
+                  fontWeight: FontWeight.bold, // 텍스트 굵기
+                  color: Colors.black, // 텍스트 색상
+                ),
+              ),
+            ],
+          ),
+        );
     }
   }
 }
