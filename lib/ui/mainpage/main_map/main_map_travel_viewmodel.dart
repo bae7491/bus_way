@@ -5,6 +5,7 @@ import 'package:bus_way/data/respository/travel_repository/travel_repository.dar
 import 'package:bus_way/ui/mainpage/travel/travel_detail_view.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
@@ -80,7 +81,9 @@ class MainMapTravelViewModel with ChangeNotifier {
   Future<void> getTravelInfo(int pageKey) async {
     try {
       _isLoading = true;
-      notifyListeners();
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        notifyListeners();
+      });
 
       final nearTravelInfoResponse = await travelRepository.getNearTravelInfo(
         _center,
@@ -92,7 +95,6 @@ class MainMapTravelViewModel with ChangeNotifier {
 
       // API로 호출한 데이터의 총 개수
       _travelTotalCount = nearTravelInfoResponse.totalCount;
-      notifyListeners();
 
       // 새로 받아온 페이지 데이터
       _nearTravelInfoList = nearTravelInfoResponse.travelInfoList;
@@ -120,10 +122,14 @@ class MainMapTravelViewModel with ChangeNotifier {
       }
     } catch (e) {
       _errorMessage = e.toString();
-      notifyListeners();
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        notifyListeners();
+      });
     } finally {
       _isLoading = false;
-      notifyListeners();
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        notifyListeners();
+      });
     }
   }
 

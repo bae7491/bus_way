@@ -5,7 +5,6 @@ import 'package:bus_way/theme/colors.dart';
 import 'package:bus_way/ui/mainpage/main_map/main_map_travel_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/main_map/main_map_bus_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/main_map/widgets/bottomsheet/tabs/travel_info_card/travel_info_card.dart';
-import 'package:bus_way/widget/custom_snackbar.dart';
 import 'package:chip_list/chip_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -77,6 +76,7 @@ class TravelTab extends StatelessWidget {
                           travelViewModel.setTravelFilterValue(value);
                         }
                       },
+                      enabled: !travelViewModel.isLoading ? true : false,
                       items: travelFilter.values.toList(),
                       // 마커를 클릭하면 정렬 값 초기 값으로 설정 / 칩 리스트의 항목을 바꾸면 정렬 값 유지
                       initialItem: travelFilter.values.toList()[travelFilter
