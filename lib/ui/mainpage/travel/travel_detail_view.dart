@@ -2,7 +2,7 @@ import 'package:bus_way/theme/colors.dart';
 import 'package:bus_way/ui/mainpage/main_map/main_map_bus_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_detail_viewmodel.dart';
-import 'package:bus_way/ui/mainpage/travel/travel_tabs/travel_detail_tab/travel_detail_tab_view.dart';
+import 'package:bus_way/ui/mainpage/travel/travel_tabs/travel_detail_tab.dart';
 import 'package:bus_way/widget/custom_snackbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -68,36 +68,37 @@ class TravelDetailView extends StatelessWidget {
                       ),
                     ],
                   ) // 데이터 로딩 중
-                : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // 관광지 이름
-                          if (travelCommonInfo != null)
-                            Text(
-                              travelCommonInfo.travelTitle!,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24,
-                              ),
+                : Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // 관광지 이름
+                        if (travelCommonInfo != null)
+                          Text(
+                            travelCommonInfo.travelTitle!,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
                             ),
-                          const SizedBox(
-                            height: 14,
                           ),
-                          // 관광지 대표 이미지
-                          if (travelCommonInfo!.travelImage != null)
-                            Container(
-                              width: 250,
-                              height: 180,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Colors.grey.shade300, // 이미지가 없을 때 배경
-                              ),
+                        const SizedBox(
+                          height: 14,
+                        ),
+                        // 관광지 대표 이미지
+                        if (travelCommonInfo!.travelImage != null)
+                          Container(
+                            width: 250,
+                            height: 180,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.grey.shade300, // 이미지가 없을 때 배경
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
                               child: Center(
                                   child: CachedNetworkImage(
                                 imageUrl: travelCommonInfo.travelImage!,
+                                fit: BoxFit.contain,
                                 progressIndicatorBuilder:
                                     (context, url, progress) => const Center(
                                   child: SpinKitRing(
@@ -108,32 +109,15 @@ class TravelDetailView extends StatelessWidget {
                                 ),
                               )),
                             ),
-                          const SizedBox(height: 14),
-                          // TODO: 탭바 추가 예정.(info_tabbar.dart 참고)
-                          const DefaultTabController(
-                            length: 3,
-                            initialIndex: 0,
-                            child: Column(
-                              children: [
-                                TabBar(
-                                  labelColor: Colors.black,
-                                  indicatorColor: Colors.black,
-                                  unselectedLabelColor: Colors.grey,
-                                  tabs: <Widget>[
-                                    Tab(text: '상세 소개'),
-                                    Tab(text: '사진'),
-                                    Tab(text: '후기'),
-                                  ],
-                                ),
-                              ],
-                            ),
                           ),
-                          // TravelDetailTabView(
-                          //     contentTypeId: contentTypeId,
-                          //     detailData: detailData,
-                          //   ), // contentTypeId에 따른 위젯 렌더링
-                        ],
-                      ),
+                        const SizedBox(height: 14),
+                        TravelDetailTab(
+                          viewmodel: travelDetailViewmodel,
+                          contentTypeId: contentTypeId,
+                          detailData: detailData,
+                          travelCommonInfo: travelCommonInfo,
+                        ),
+                      ],
                     ),
                   ),
             bottomNavigationBar: BottomNavigationBar(

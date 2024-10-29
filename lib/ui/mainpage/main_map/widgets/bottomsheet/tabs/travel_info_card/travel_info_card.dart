@@ -30,7 +30,6 @@ class TravelInfoCard extends StatelessWidget {
                   const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: InkWell(
                 onTap: () {
-                  // TODO: 관광지 선택 후, 뷰 이동 및 이벤트 추가.
                   travelViewModel.navigateTravelDetail(
                       context, item.contentId!, item.contentTypeId!);
                 },
@@ -59,23 +58,26 @@ class TravelInfoCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                             color: Colors.grey.shade300, // 이미지가 없을 때 배경
                           ),
-                          child: Center(
-                            child: item.travelImage != null &&
-                                    item.travelImage!.isNotEmpty
-                                ? CachedNetworkImage(
-                                    imageUrl: item.travelImage!,
-                                    progressIndicatorBuilder:
-                                        (context, url, progress) =>
-                                            const Center(
-                                      child: SpinKitRing(
-                                        color: orchid, // 원하는 색상
-                                        size: 30.0, // 크기 설정
-                                        lineWidth: 5.0,
+                          child: Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: Center(
+                              child: item.travelImage != null &&
+                                      item.travelImage!.isNotEmpty
+                                  ? CachedNetworkImage(
+                                      imageUrl: item.travelImage!,
+                                      progressIndicatorBuilder:
+                                          (context, url, progress) =>
+                                              const Center(
+                                        child: SpinKitRing(
+                                          color: orchid, // 원하는 색상
+                                          size: 30.0, // 크기 설정
+                                          lineWidth: 5.0,
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                : const Icon(
-                                    Icons.image_not_supported_outlined),
+                                    )
+                                  : const Icon(
+                                      Icons.image_not_supported_outlined),
+                            ),
                           ),
                         ),
                       ),

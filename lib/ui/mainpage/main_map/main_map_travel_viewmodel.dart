@@ -21,6 +21,7 @@ class MainMapTravelViewModel with ChangeNotifier {
   int? _setCategoryType;
   LatLng? _center;
   String? _setTravelFilter;
+  bool _isLoading = false;
 
   PagingController<int, NearTravelInfoModel> get pageController =>
       _pageController;
@@ -31,6 +32,7 @@ class MainMapTravelViewModel with ChangeNotifier {
   int? get setCategoryType => _setCategoryType;
   LatLng? get center => _center;
   String? get setTravelFilter => _setTravelFilter;
+  bool get isLoading => _isLoading;
 
   // 생성자에서 페이지 리스너 추가
   MainMapTravelViewModel() {
@@ -77,6 +79,9 @@ class MainMapTravelViewModel with ChangeNotifier {
   // 해당 좌표의 관광지 정보 불러오기
   Future<void> getTravelInfo(int pageKey) async {
     try {
+      _isLoading = true;
+      notifyListeners();
+
       final nearTravelInfoResponse = await travelRepository.getNearTravelInfo(
         _center,
         pageKey,
@@ -115,6 +120,9 @@ class MainMapTravelViewModel with ChangeNotifier {
       }
     } catch (e) {
       _errorMessage = e.toString();
+      notifyListeners();
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
   }

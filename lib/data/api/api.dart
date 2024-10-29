@@ -14,6 +14,10 @@ class API {
 
   // 내 위치 icon 이미지
   static const myLocationImage = '$hostConnectImage/my_location_icon.png';
+
+  // 관광지 icon 이미지
+  static const travelLocationImage =
+      '$hostConnectImage/travel_location_icon.png';
   // ==================
 
   // ================== 회원 관련 DB 요청 API
