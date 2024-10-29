@@ -3,6 +3,7 @@ import 'package:bus_way/data/api/api.dart';
 import 'package:bus_way/data/api/api_enum.dart';
 import 'package:bus_way/data/model/travel_model/near_travel_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_common_info_model.dart';
+import 'package:bus_way/data/model/travel_model/travel_image_info_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
@@ -217,6 +218,104 @@ class TravelRemoteDatasource with ChangeNotifier {
         errorMessage = getApiMessageForStatusCode('');
       }
 
+      throw errorMessage;
+    } catch (e) {
+      errorMessage = getApiMessageForStatusCode('');
+      throw errorMessage;
+    }
+  }
+
+  // 4. 이미지 정보 조회
+  Future<TravelImageInfoResponse> getTravelImageInfo(
+      int pageNo, int pageSize, String contentId) async {
+    try {
+      Map<String, dynamic> parameters = {
+        'serviceKey': dotenv.env['publicDataKey'],
+        'MobileOS': 'AND',
+        'MobileApp': 'MobileApp',
+        'pageNo': pageNo.toString(),
+        'numOfRows': pageSize.toString(),
+        'contentId': contentId,
+        'imageYN': 'Y',
+        'subImageYN': 'Y',
+      };
+      Uri uri =
+          Uri.https(API.publicDataUrl, API.getTravelImageInfo, parameters);
+      http.Response result = await http.get(uri);
+
+      if (result.statusCode == 200) {
+        final body = convert.utf8.decode(result.bodyBytes);
+        final xml = Xml2Json()..parse(body);
+        final json = xml.toParker();
+
+        Map<String, dynamic> jsonResult = convert.json.decode(json);
+
+        if (jsonResult['response'] != null) {
+          if (jsonResult['response']['body'] != null) {
+            // totalCount 가져오기
+            int totalCount =
+                int.parse(jsonResult['response']['body']['totalCount']);
+
+            // items가 없는 경우 처리
+            var items = jsonResult['response']['body']['items'];
+            if (items == null || items == '' || items['item'] == null) {
+              // items가 없을 때, 빈 리스트를 반환하고, totalCount만 포함
+              return TravelImageInfoResponse(
+                totalCount: totalCount.toString(),
+                travelImageInfoList: [],
+              );
+            }
+
+            // items가 존재하는 경우 처리
+            if (items['item'] != null) {
+              // item이 단일 객체인지, 리스트인지 확인
+              if (items['item'] is Map<String, dynamic>) {
+                // 단일 객체일 경우, 리스트로 감싸서 반환
+                List<TravelImageInfoModel> travelImageInfoList = [
+                  TravelImageInfoModel.fromJson(
+                    Map<String, dynamic>.from(items['item']),
+                  ),
+                ];
+
+                // TravelImageInfoResponse 반환
+                return TravelImageInfoResponse(
+                  totalCount: totalCount.toString(),
+                  travelImageInfoList: travelImageInfoList,
+                );
+              } else if (items['item'] is List) {
+                // 관광지 이미지 리스트 반환
+                List<dynamic> jsonTravelImageInfo = items['item'];
+
+                List<TravelImageInfoModel> travelImageInfoList =
+                    jsonTravelImageInfo
+                        .map<TravelImageInfoModel>(
+                            (item) => TravelImageInfoModel.fromJson(item))
+                        .toList();
+
+                // TravelImageInfoResponse 반환
+                return TravelImageInfoResponse(
+                  totalCount: totalCount.toString(),
+                  travelImageInfoList: travelImageInfoList,
+                );
+              }
+            } else {
+              return TravelImageInfoResponse(
+                totalCount: totalCount.toString(),
+                travelImageInfoList: [], // 빈 리스트 반환
+              );
+            }
+          } else {
+            errorMessage = getApiMessageForStatusCode('');
+          }
+        } else {
+          // 에러가 발생한 경우 returnReasonCode 추출
+          String returnReasonCode = jsonResult['OpenAPI_ServiceResponse']
+              ['cmmMsgHeader']['returnReasonCode'];
+          errorMessage = getApiMessageForStatusCode(returnReasonCode);
+        }
+      } else {
+        errorMessage = getApiMessageForStatusCode('');
+      }
       throw errorMessage;
     } catch (e) {
       errorMessage = getApiMessageForStatusCode('');

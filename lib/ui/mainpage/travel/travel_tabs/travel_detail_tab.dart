@@ -1,18 +1,21 @@
 import 'package:bus_way/data/model/travel_model/travel_common_info_model.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_detail_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_tabs/travel_detail_tab/travel_detail_info_tab.dart';
+import 'package:bus_way/ui/mainpage/travel/travel_tabs/travel_image_tab/travel_image_tab.dart';
 import 'package:flutter/material.dart';
 
 class TravelDetailTab extends StatelessWidget {
   const TravelDetailTab({
     super.key,
     required this.viewmodel,
+    required this.contentId,
     required this.contentTypeId,
     required this.detailData,
     required this.travelCommonInfo,
   });
 
   final TravelDetailViewModel viewmodel;
+  final String contentId;
   final String contentTypeId;
   final dynamic detailData;
   final TravelCommonInfoModel travelCommonInfo;
@@ -44,10 +47,12 @@ class TravelDetailTab extends StatelessWidget {
                     contentTypeId: contentTypeId,
                     detailData: detailData,
                     travelCommonInfo: travelCommonInfo,
-                  ), // contentTypeId에 따른 위젯 렌더링),
+                  ),
+
                   // 두 번째 탭 - 사진
-                  const Center(
-                    child: Text('사진 탭의 내용이 여기 표시됩니다'),
+                  TravelImageTab(
+                    viewmodel: viewmodel,
+                    contentId: contentId,
                   ),
 
                   // 세 번째 탭 - 후기

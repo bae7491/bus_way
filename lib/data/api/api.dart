@@ -65,4 +65,7 @@ class API {
 
   // 소개 정보 조회 (관광지 타입 별 정보 조회)
   static const getTravelDetailInfo = 'B551011/KorService1/detailIntro1';
+
+  // 이미지 정보 조회
+  static const getTravelImageInfo = 'B551011/KorService1/detailImage1';
 }

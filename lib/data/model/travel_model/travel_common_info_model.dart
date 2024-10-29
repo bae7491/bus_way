@@ -1,5 +1,6 @@
 // 관광지의 공통 정보 조회 API 데이터를 담을 모델
 class TravelCommonInfoModel {
+  String? contentId; // 컨텐츠 ID
   String? travelHomePage; // 홈페이지
   String? travelTel; // 전화번호
   String? travelTitle; // 관광지 이름
@@ -12,6 +13,7 @@ class TravelCommonInfoModel {
   String? travelOverview; // 관광지 정보 개요
 
   TravelCommonInfoModel({
+    this.contentId,
     this.travelHomePage,
     this.travelTel,
     this.travelTitle,
@@ -25,6 +27,7 @@ class TravelCommonInfoModel {
 
   factory TravelCommonInfoModel.fromJson(Map<String, dynamic> json) {
     return TravelCommonInfoModel(
+      contentId: json['contentid'] as String?,
       travelHomePage: json['homepage'] as String?,
       travelTel: json['tel'] as String?,
       travelTitle: json['title'] as String?,

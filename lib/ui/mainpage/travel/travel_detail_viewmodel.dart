@@ -1,13 +1,20 @@
 import 'package:bus_way/data/api/api.dart';
 import 'package:bus_way/data/model/travel_model/travel_common_info_model.dart';
+import 'package:bus_way/data/model/travel_model/travel_image_info_model.dart';
 import 'package:bus_way/data/respository/travel_repository/travel_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TravelDetailViewModel with ChangeNotifier {
   TravelRepository travelRepository = TravelRepository();
 
+  final PagingController<int, TravelImageInfoModel> _pageController =
+      PagingController(firstPageKey: 1);
+  static const _pageSize = 20;
+  String? _travelImageTotalCount;
+  List<TravelImageInfoModel>? _travelImageInfoList; // 관광지 이미지 정보 리스트
   TravelCommonInfoModel? _travelCommonInfoList; // 관광지 공통 정보 리스트
   dynamic _travelDetailInfoList; // 관광지 소개 정보 리스트
   KakaoMapController? _mapController;
@@ -15,6 +22,10 @@ class TravelDetailViewModel with ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
 
+  PagingController<int, TravelImageInfoModel> get pageController =>
+      _pageController;
+  String? get travelImageTotalCount => _travelImageTotalCount;
+  List<TravelImageInfoModel>? get travelImageInfoList => _travelImageInfoList;
   TravelCommonInfoModel? get travelCommonInfoList => _travelCommonInfoList;
   dynamic get travelDetailInfoList => _travelDetailInfoList;
   KakaoMapController? get mapController => _mapController;
@@ -24,6 +35,7 @@ class TravelDetailViewModel with ChangeNotifier {
 
   @override
   void dispose() {
+    _pageController.dispose();
     _mapController?.dispose();
     super.dispose();
   }
@@ -53,11 +65,18 @@ class TravelDetailViewModel with ChangeNotifier {
       [
         getTravelCommonInfo(contentId),
         getTravelDetailInfo(contentId, contentTypeId),
+        loadTravelImageInfo(contentId),
       ],
     );
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<void> loadTravelImageInfo(String contentId) async {
+    _pageController.addPageRequestListener((pageKey) {
+      getTravelImageInfo(pageKey, contentId); // 파라미터는 인스턴스 변수를 사용
+    });
   }
 
   // 관광지 공통 정보 조회 API 호출
@@ -83,7 +102,7 @@ class TravelDetailViewModel with ChangeNotifier {
     }
   }
 
-  // 관광지 상세 정보
+  // 관광지 지도 정보
   Future<void> onMapCreated(
     BuildContext context,
     KakaoMapController controller,
@@ -111,5 +130,48 @@ class TravelDetailViewModel with ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  // 관광지 이미지 정보 불러오기
+  Future<void> getTravelImageInfo(int pageKey, String contentId) async {
+    try {
+      final travelImageInfoResponse = await travelRepository.getTravelImageInfo(
+        pageKey,
+        _pageSize,
+        contentId,
+      );
+
+      // API로 호출한 데이터의 총 개수
+      _travelImageTotalCount = travelImageInfoResponse.totalCount;
+
+      // 새로 받아온 페이지 데이터
+      _travelImageInfoList = travelImageInfoResponse.travelImageInfoList;
+
+      // 빈 리스트인 경우 마지막 페이지로 철
+      if (_travelImageInfoList!.isEmpty) {
+        _pageController.appendLastPage([]); // 마지막 페이지로 처리
+        return;
+      }
+
+      // 현재까지 불러온 데이터의 개수
+      final int totalFetchedItems = pageKey * _pageSize;
+
+      // totalFetchedItems와 totalCount를 비교하여 마지막 페이지 여부를 결정
+      final isLastPage =
+          totalFetchedItems >= int.parse(_travelImageTotalCount!);
+
+      // 마지막 페이지이면, 무한 스크롤 종료 / else, 무한 스크롤로 페이지 늘리기
+      if (isLastPage) {
+        _pageController
+            .appendLastPage(_travelImageInfoList!); // 중복 추가 없이 새로운 데이터 추가
+      } else {
+        final nextPageKey = pageKey + 1;
+        _pageController.appendPage(
+            _travelImageInfoList!, nextPageKey); // 다음 페이지로 넘어가도록 설정
+      }
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+    }
   }
 }

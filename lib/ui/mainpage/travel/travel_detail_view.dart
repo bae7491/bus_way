@@ -74,11 +74,15 @@ class TravelDetailView extends StatelessWidget {
                       children: [
                         // 관광지 이름
                         if (travelCommonInfo != null)
-                          Text(
-                            travelCommonInfo.travelTitle!,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24,
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 30.0),
+                            child: Text(
+                              travelCommonInfo.travelTitle!,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24,
+                              ),
                             ),
                           ),
                         const SizedBox(
@@ -113,6 +117,7 @@ class TravelDetailView extends StatelessWidget {
                         const SizedBox(height: 14),
                         TravelDetailTab(
                           viewmodel: travelDetailViewmodel,
+                          contentId: contentId,
                           contentTypeId: contentTypeId,
                           detailData: detailData,
                           travelCommonInfo: travelCommonInfo,
