@@ -2,6 +2,7 @@ import 'package:bus_way/constant/travel_detail_info_model_parser.dart';
 import 'package:bus_way/data/api/api.dart';
 import 'package:bus_way/data/api/api_enum.dart';
 import 'package:bus_way/data/model/travel_model/near_travel_info_model.dart';
+import 'package:bus_way/data/model/travel_model/travel_blog_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_common_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_image_info_model.dart';
 import 'package:flutter/material.dart';
@@ -319,6 +320,43 @@ class TravelRemoteDatasource with ChangeNotifier {
       throw errorMessage;
     } catch (e) {
       errorMessage = getApiMessageForStatusCode('');
+      throw errorMessage;
+    }
+  }
+
+  // 5. 네이버 블로그 검색 조회
+  Future<List<TravelBlogInfoModel>> getTravelBlogInfo(
+      int pageNo, int pageSize, String title, String sortIndex) async {
+    try {
+      Map<String, dynamic> parameters = {
+        'query': title,
+        'start': pageNo.toString(), // 검색 시작 위치 (현재 페이지)
+        'display': pageSize.toString(), // 한번에 표시할 최대 개수
+        'sort': sortIndex,
+      };
+
+      Uri uri = Uri.https(API.naverUrl, API.getTravelBlogInfo, parameters);
+      http.Response result = await http.get(
+        uri,
+        headers: {
+          "X-Naver-Client-Id": dotenv.env["X_Naver_Client_Id"]!,
+          "X-Naver-Client-Secret": dotenv.env["X_Naver_Client_Secret"]!,
+        },
+      );
+
+      if (result.statusCode == 200) {
+        Map<String, dynamic> jsonResult = convert.json.decode(result.body);
+
+        return TravelBlogInfoModel.fromJsonList(jsonResult);
+      } else {
+        Map<String, dynamic> jsonResult = convert.json.decode(result.body);
+        errorMessage = getNaverApiMessageForStatusCode(jsonResult['errorCode']);
+        throw errorMessage;
+      }
+    } catch (e) {
+      if (errorMessage.isEmpty) {
+        errorMessage = getApiMessageForStatusCode('');
+      }
       throw errorMessage;
     }
   }

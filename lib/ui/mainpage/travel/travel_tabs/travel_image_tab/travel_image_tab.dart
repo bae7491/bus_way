@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:intl/intl.dart';
 
 class TravelImageTab extends StatelessWidget {
   const TravelImageTab({
@@ -20,10 +21,10 @@ class TravelImageTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () => Future.sync(
-        () => viewmodel.pageController.refresh(),
+        () => viewmodel.imagePageController.refresh(),
       ),
       child: PagedListView<int, TravelImageInfoModel>(
-        pagingController: viewmodel.pageController,
+        pagingController: viewmodel.imagePageController,
         builderDelegate: PagedChildBuilderDelegate(
           itemBuilder: (context, item, index) => Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -35,11 +36,12 @@ class TravelImageTab extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15.0, vertical: 8.0),
                     child: Text(
-                      '총 ${viewmodel.travelImageTotalCount} 개',
+                      '전체 (${NumberFormat('###,###,###,###').format(
+                        int.parse(viewmodel.travelImageTotalCount!),
+                      )} 건)',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
                       ),
                       textAlign: TextAlign.start,
                     ),

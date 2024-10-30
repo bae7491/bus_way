@@ -14,16 +14,18 @@ class TravelDetailView extends StatelessWidget {
     super.key,
     required this.contentId,
     required this.contentTypeId,
+    required this.title,
   });
 
   final String contentId;
   final String contentTypeId;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<TravelDetailViewModel>(
-      create: (_) =>
-          TravelDetailViewModel()..loadTravelInfo(contentId, contentTypeId),
+      create: (_) => TravelDetailViewModel()
+        ..loadTravelInfo(contentId, contentTypeId, title),
       child: Consumer2<TravelDetailViewModel, MainPageViewModel>(
         builder: (context, travelDetailViewmodel, mainPageViewModel, child) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -68,62 +70,74 @@ class TravelDetailView extends StatelessWidget {
                       ),
                     ],
                   ) // 데이터 로딩 중
-                : Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // 관광지 이름
-                        if (travelCommonInfo != null)
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 30.0),
-                            child: Text(
-                              travelCommonInfo.travelTitle!,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24,
-                              ),
-                            ),
+                : Column(
+                    children: [
+                      // 관광지 이름
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30.0, vertical: 10.0),
+                        child: Text(
+                          travelCommonInfo!.travelTitle!,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
                           ),
-                        const SizedBox(
-                          height: 14,
+                          textAlign: TextAlign.center,
                         ),
-                        // 관광지 대표 이미지
-                        if (travelCommonInfo!.travelImage != null)
-                          Container(
-                            width: 250,
-                            height: 180,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.grey.shade300, // 이미지가 없을 때 배경
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                  child: CachedNetworkImage(
-                                imageUrl: travelCommonInfo.travelImage!,
-                                fit: BoxFit.contain,
-                                progressIndicatorBuilder:
-                                    (context, url, progress) => const Center(
-                                  child: SpinKitRing(
-                                    color: orchid,
-                                    size: 30.0, // 로딩 인디케이터 크기 설정
-                                    lineWidth: 5.0,
-                                  ),
+                      ),
+                      Expanded(
+                        child: NestedScrollView(
+                          headerSliverBuilder: (context, innerBoxIsScrolled) {
+                            return [
+                              SliverToBoxAdapter(
+                                child: Column(
+                                  children: [
+                                    // 관광지 대표 이미지
+                                    if (travelCommonInfo.travelImage != null)
+                                      Container(
+                                        width: 250,
+                                        height: 180,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          color: Colors.grey.shade300,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Center(
+                                            child: CachedNetworkImage(
+                                              imageUrl:
+                                                  travelCommonInfo.travelImage!,
+                                              fit: BoxFit.contain,
+                                              progressIndicatorBuilder:
+                                                  (context, url, progress) =>
+                                                      const Center(
+                                                child: SpinKitRing(
+                                                  color: orchid,
+                                                  size: 30.0,
+                                                  lineWidth: 5.0,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    const SizedBox(height: 14),
+                                  ],
                                 ),
-                              )),
-                            ),
+                              ),
+                            ];
+                          },
+                          body: TravelDetailTab(
+                            viewmodel: travelDetailViewmodel,
+                            contentId: contentId,
+                            contentTypeId: contentTypeId,
+                            detailData: detailData,
+                            travelCommonInfo: travelCommonInfo!,
                           ),
-                        const SizedBox(height: 14),
-                        TravelDetailTab(
-                          viewmodel: travelDetailViewmodel,
-                          contentId: contentId,
-                          contentTypeId: contentTypeId,
-                          detailData: detailData,
-                          travelCommonInfo: travelCommonInfo,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
             bottomNavigationBar: BottomNavigationBar(
               onTap: (int index) {

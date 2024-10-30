@@ -34,7 +34,7 @@ class API {
   // ==================
 
   // ================= 공공 데이터 =================
-  // 공공 데이터 전역 url
+  // 공공 데이터 전역 URL
   static const publicDataUrl = 'apis.data.go.kr';
   // ================== 버스 공공 데이터 API (TAGO 버스정류소정보 API)
   // 좌표 기반 근접(500m 이내) 정류소 목록 조회
@@ -68,4 +68,11 @@ class API {
 
   // 이미지 정보 조회
   static const getTravelImageInfo = 'B551011/KorService1/detailImage1';
+
+  // ================== 네이버 API
+  //네이버 API 전역 URL
+  static const naverUrl = 'openapi.naver.com';
+
+  // 네이버 블로그 검색
+  static const getTravelBlogInfo = 'v1/search/blog.json';
 }

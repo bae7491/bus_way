@@ -11,12 +11,12 @@ Widget customHtmlWidget(String htmlData, [dynamic viewmodel]) {
       }
     },
     style: {
-      "p": Style(
-        fontSize: FontSize(15),
-      ),
       "a": Style(
         color: Colors.blue,
         textDecoration: TextDecoration.underline,
+      ),
+      "body": Style(
+        fontSize: FontSize(12.0),
       ),
     },
   );

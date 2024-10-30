@@ -55,3 +55,25 @@ String getApiMessageForStatusCode(String errorCode) {
       return '알 수 없는 오류가 발생했습니다.';
   }
 }
+
+// 네이버 API 에러 처리
+String getNaverApiMessageForStatusCode(String errorCode) {
+  switch (errorCode) {
+    case 'SE01':
+      return '잘못된 검색어 요청입니다.';
+    case 'SE02':
+      return '부적절한 display 값입니다.';
+    case 'SE03':
+      return '부적절한 start 값입니다.';
+    case 'SE04':
+      return '부적절한 sort 값입니다.';
+    case 'SE06':
+      return '잘못된 형식의 인코딩입니다.';
+    case 'SE05':
+      return '존재하지 않는 검색 api 입니다.';
+    case 'SE99':
+      return '알 수 없는 오류가 발생했습니다.';
+    default:
+      return '알 수 없는 오류가 발생했습니다.';
+  }
+}

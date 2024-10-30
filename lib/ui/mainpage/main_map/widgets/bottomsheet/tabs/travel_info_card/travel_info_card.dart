@@ -30,8 +30,8 @@ class TravelInfoCard extends StatelessWidget {
                   const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: InkWell(
                 onTap: () {
-                  travelViewModel.navigateTravelDetail(
-                      context, item.contentId!, item.contentTypeId!);
+                  travelViewModel.navigateTravelDetail(context, item.contentId!,
+                      item.contentTypeId!, item.travelTitle!);
                 },
                 child: Container(
                   decoration: BoxDecoration(

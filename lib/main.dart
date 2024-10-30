@@ -66,6 +66,7 @@ class MyApp extends StatelessWidget {
         home: const AuthCheck(), // AuthCheck 위젯을 따로 분리
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
+          fontFamily: 'SCDream',
         ),
       ),
     );
