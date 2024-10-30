@@ -133,7 +133,7 @@ class TravelDetailView extends StatelessWidget {
                             contentId: contentId,
                             contentTypeId: contentTypeId,
                             detailData: detailData,
-                            travelCommonInfo: travelCommonInfo!,
+                            travelCommonInfo: travelCommonInfo,
                           ),
                         ),
                       ),
