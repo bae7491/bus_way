@@ -14,7 +14,7 @@ class TravelDetailViewModel with ChangeNotifier {
   final PagingController<int, TravelImageInfoModel> _imagePageController =
       PagingController(firstPageKey: 1); // 관광지 이미지 pageController
   final PagingController<int, TravelBlogInfoModel> _blogPageController =
-      PagingController(firstPageKey: 1);
+      PagingController(firstPageKey: 1); // 관광지 블로그 pageController
   static const _pageSize = 20;
   String? _travelImageTotalCount; // 관광지 이미지 API 호출 총 개수
   String? _travelBlogTotalCount; // 관광지 블로그 API 호출 총 개수

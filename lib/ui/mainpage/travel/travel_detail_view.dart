@@ -105,17 +105,21 @@ class TravelDetailView extends StatelessWidget {
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Center(
-                                            child: CachedNetworkImage(
-                                              imageUrl:
-                                                  travelCommonInfo.travelImage!,
-                                              fit: BoxFit.contain,
-                                              progressIndicatorBuilder:
-                                                  (context, url, progress) =>
-                                                      const Center(
-                                                child: SpinKitRing(
-                                                  color: orchid,
-                                                  size: 30.0,
-                                                  lineWidth: 5.0,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              child: CachedNetworkImage(
+                                                imageUrl: travelCommonInfo
+                                                    .travelImage!,
+                                                fit: BoxFit.contain,
+                                                progressIndicatorBuilder:
+                                                    (context, url, progress) =>
+                                                        const Center(
+                                                  child: SpinKitRing(
+                                                    color: orchid,
+                                                    size: 30.0,
+                                                    lineWidth: 5.0,
+                                                  ),
                                                 ),
                                               ),
                                             ),
