@@ -76,7 +76,7 @@ class TravelTab extends StatelessWidget {
                           travelViewModel.setTravelFilterValue(value);
                         }
                       },
-                      enabled: !travelViewModel.isLoading ? true : false,
+                      enabled: !travelViewModel.isLoading,
                       items: travelFilter.values.toList(),
                       // 마커를 클릭하면 정렬 값 초기 값으로 설정 / 칩 리스트의 항목을 바꾸면 정렬 값 유지
                       initialItem: travelFilter.values.toList()[travelFilter
