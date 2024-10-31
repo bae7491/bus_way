@@ -73,7 +73,7 @@ class AuthLocalDatasource with ChangeNotifier {
         },
         body: {'email': email, 'phoneNumber': phoneNumber},
       ).timeout(
-        const Duration(seconds: 5), // 타임아웃을 1분으로 설정
+        const Duration(minutes: 1), // 타임아웃을 1분으로 설정
         onTimeout: () {
           return http.Response(
               'Error: Request Timeout', 408); // 408은 타임아웃 상태 코드
