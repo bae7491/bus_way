@@ -135,13 +135,14 @@ class MainMapTravelViewModel with ChangeNotifier {
 
   // 관광지 선택 시, 상세 페이지로 이동
   void navigateTravelDetail(BuildContext context, String contentId,
-      String contentTypeId, String title) {
+      String contentTypeId, String title, String travelImage) {
     Navigator.of(context).push(
       NavigatorAnimation(
         destination: TravelDetailView(
           contentId: contentId,
           contentTypeId: contentTypeId,
           title: title,
+          travelImage: travelImage,
         ),
       ).createRoute(SlideDirection.bottomToTop),
     );

@@ -28,6 +28,8 @@ class TravelDetailViewModel with ChangeNotifier {
   String? _errorMessage;
   int _reviewCurrentIndex = 0;
   int _travelBlogSortIndex = 0;
+  bool _isTravelFollow = false; // 관광지 팔로우 상태
+  bool _isFollowProcessing = false;
 
   PagingController<int, TravelImageInfoModel> get imagePageController =>
       _imagePageController;
@@ -45,6 +47,8 @@ class TravelDetailViewModel with ChangeNotifier {
   String? get errorMessage => _errorMessage;
   int get reviewCurrentIndex => _reviewCurrentIndex;
   int get travelBlogSortIndex => _travelBlogSortIndex;
+  bool get isTravelFollow => _isTravelFollow;
+  bool get isFollowProcessing => _isFollowProcessing;
 
   @override
   void dispose() {
@@ -56,6 +60,63 @@ class TravelDetailViewModel with ChangeNotifier {
   // 에러 메시지 초기화
   void clearErrorMessage() async {
     _errorMessage = null;
+    notifyListeners();
+  }
+
+  // 팔로우 상태 변경
+  void toggleTravelFollow(String contentId, String contentTypeId, String title,
+      String travelImage) {
+    if (_isFollowProcessing) return; // 요청 중일 때는 메서드를 실행하지 않음
+
+    _isFollowProcessing = true;
+    notifyListeners();
+
+    try {
+      // 팔로우 상태가 아니라면 팔로우 요청 보내기
+      if (!_isTravelFollow) {
+        requestFollow(contentId, contentTypeId, title, travelImage);
+      } else {
+        requestUnFollow(contentId, contentTypeId, title, travelImage);
+      }
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      _isFollowProcessing = false;
+      notifyListeners();
+    }
+  }
+
+  // 팔로우 요청
+  Future<void> requestFollow(String contentId, String contentTypeId,
+      String title, String travelImage) async {
+    try {
+      await travelRepository.requestFollow(
+          contentId, contentTypeId, title, travelImage);
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      _isTravelFollow = !_isTravelFollow;
+      notifyListeners();
+    }
+  }
+
+  // 언팔로우 요청
+  Future<void> requestUnFollow(String contentId, String contentTypeId,
+      String title, String travelImage) async {
+    try {
+      await travelRepository.requestUnFollow(
+          contentId, contentTypeId, title, travelImage);
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      _isTravelFollow = !_isTravelFollow;
+      notifyListeners();
+    }
+  }
+
+  // 선택한 관광지의 팔로우 상태 확인 (bool로 확인해서 _isTravelFollow 변경)
+  Future<void> checkTravelFollow(String contentId) async {
+    _isTravelFollow = await travelRepository.checkTravelFollow(contentId);
     notifyListeners();
   }
 
@@ -86,6 +147,8 @@ class TravelDetailViewModel with ChangeNotifier {
         // TODO: 관광지 후기 API 호출
         // 관광지 블로그 정보 API 호출
         loadTravelBlogInfo(title),
+        // 팔로우 정보 확인
+        checkTravelFollow(contentId),
       ],
     );
 

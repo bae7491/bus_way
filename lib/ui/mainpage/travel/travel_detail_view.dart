@@ -15,11 +15,13 @@ class TravelDetailView extends StatelessWidget {
     required this.contentId,
     required this.contentTypeId,
     required this.title,
+    required this.travelImage,
   });
 
   final String contentId;
   final String contentTypeId;
   final String title;
+  final String travelImage;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,24 @@ class TravelDetailView extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              // TODO: 앱바의 오른쪽 상단에 팔로우 하트 아이콘 및 기능 추가 예정.
+              // 앱바 오른쪽에 위치하는 팔로우 버튼
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    travelDetailViewmodel.toggleTravelFollow(
+                        contentId, contentTypeId, title, travelImage);
+                  },
+                  enableFeedback: travelDetailViewmodel.isFollowProcessing,
+                  icon: travelDetailViewmodel.isTravelFollow
+                      ? const Icon(
+                          Icons.favorite,
+                          color: Colors.redAccent,
+                        )
+                      : const Icon(
+                          Icons.favorite_border_outlined,
+                        ),
+                ),
+              ],
             ),
             body: detailData == null
                 ? const Stack(

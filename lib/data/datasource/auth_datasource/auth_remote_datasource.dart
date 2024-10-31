@@ -133,4 +133,10 @@ class AuthRemoteDataSource with ChangeNotifier {
       return false; // 로그아웃 상태일 때 처리
     }
   }
+
+  // 9. 로그인한 이메일 정보 상태 저장
+  Future<void> setEmailInfo(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('loginEmail', email);
+  }
 }

@@ -67,7 +67,12 @@ class LoginViewModel with ChangeNotifier {
             password: password,
             emailVerified: user.emailVerified);
         _autoLogin = autoLogin;
-        await setAutoLogin(autoLogin);
+        Future.wait(
+          [
+            setAutoLogin(autoLogin),
+            setEmailInfo(email),
+          ],
+        );
       }
     } catch (e) {
       _errorMessage = e.toString().replaceFirst('Exception: ', '');
@@ -109,6 +114,11 @@ class LoginViewModel with ChangeNotifier {
   void togglePasswordVisibility() {
     _passwordVisible = !_passwordVisible;
     notifyListeners();
+  }
+
+  // 로그인한 이메일 정보 저장
+  Future<void> setEmailInfo(String email) async {
+    await loginAuthRepository.setEmailInfo(email);
   }
 
   // 자동 로그인 체크 상태 관리 로직

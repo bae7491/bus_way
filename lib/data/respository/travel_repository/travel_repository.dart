@@ -1,3 +1,4 @@
+import 'package:bus_way/data/datasource/travel_datasource/travel_local_datasource.dart';
 import 'package:bus_way/data/datasource/travel_datasource/travel_remote_datasource.dart';
 import 'package:bus_way/data/model/travel_model/near_travel_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_blog_info_model.dart';
@@ -8,6 +9,7 @@ import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 class TravelRepository {
   final TravelRemoteDatasource travelRemoteDatasource =
       TravelRemoteDatasource();
+  final TravelLocalDatasource travelLocalDatasource = TravelLocalDatasource();
 
   // 위치 기반 관광 정보 조회 API 호출
   Future<NearTravelInfoResponse> getNearTravelInfo(LatLng? center, int pageNo,
@@ -61,5 +63,24 @@ class TravelRepository {
       sortIndex,
     );
     return travelBlogInfoList;
+  }
+
+  // 관광지 팔로우 기능
+  Future<void> requestFollow(String contentId, String contentTypeId,
+      String title, String travelImage) async {
+    await travelLocalDatasource.requestFollow(
+        contentId, contentTypeId, title, travelImage);
+  }
+
+  // 관광지 언팔로우 기능
+  Future<void> requestUnFollow(String contentId, String contentTypeId,
+      String title, String travelImage) async {
+    await travelLocalDatasource.requestUnFollow(
+        contentId, contentTypeId, title, travelImage);
+  }
+
+  // 관광지 팔로우 상태 불러오기
+  Future<bool> checkTravelFollow(String contentId) async {
+    return await travelLocalDatasource.checkTravelFollow(contentId);
   }
 }

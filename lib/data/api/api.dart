@@ -33,6 +33,19 @@ class API {
   static const updatePassword = '$hostConnectUser/update_password.php';
   // ==================
 
+  // ================== 관광지 DB 요청 API
+  static const hostConnectTravel = '$hostConnect/travel';
+
+  // 관광지 팔로우 DB 요청
+  static const travelFollow = '$hostConnectTravel/travel_follow.php';
+
+  // 관광지 언팔로우 DB 요청
+  static const travelUnFollow = '$hostConnectTravel/travel_unfollow.php';
+
+  // 선택 관광지 팔로우 정보 DB 체크
+  static const checkTravelFollow = '$hostConnectTravel/check_travel_follow.php';
+  // ==================
+
   // ================= 공공 데이터 =================
   // 공공 데이터 전역 URL
   static const publicDataUrl = 'apis.data.go.kr';

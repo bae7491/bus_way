@@ -74,4 +74,9 @@ class LoginAuthRepository {
   Future<bool> checkVerifyEmail() async {
     return await authRemoteDataSource.checkVerifyEmail();
   }
+
+  // 로그인한 이메일 정보 저장
+  Future<void> setEmailInfo(String email) async {
+    await authRemoteDataSource.setEmailInfo(email);
+  }
 }
