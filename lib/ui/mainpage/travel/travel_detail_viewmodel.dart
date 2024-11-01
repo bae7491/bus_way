@@ -3,6 +3,8 @@ import 'package:bus_way/data/model/travel_model/travel_blog_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_common_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_image_info_model.dart';
 import 'package:bus_way/data/respository/travel_repository/travel_repository.dart';
+import 'package:bus_way/ui/mainpage/travel/travel_review/travel_review_view.dart';
+import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
@@ -274,6 +276,15 @@ class TravelDetailViewModel with ChangeNotifier {
   void checkReviewSegmentIndex(int index) {
     _reviewCurrentIndex = index;
     notifyListeners();
+  }
+
+  // 후기 작성 이동
+  void writeReviewNavigate(BuildContext context) {
+    Navigator.of(context).push(
+      const NavigatorAnimation(
+        destination: TravelReviewView(),
+      ).createRoute(SlideDirection.bottomToTop),
+    );
   }
 
   // 네이버 블로그 리뷰 API 호출

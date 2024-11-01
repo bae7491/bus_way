@@ -46,6 +46,14 @@ class API {
   static const checkTravelFollow = '$hostConnectTravel/check_travel_follow.php';
   // ==================
 
+  // ================== 관광지 리뷰 DB 요청 API
+  static const hostConnectReview = '$hostConnect/review';
+
+  // 관광지 리뷰 업로드 DB 요청
+  static const uploadTravelReview =
+      '$hostConnectReview/upload_travel_review.php';
+  // ==================
+
   // ================= 공공 데이터 =================
   // 공공 데이터 전역 URL
   static const publicDataUrl = 'apis.data.go.kr';

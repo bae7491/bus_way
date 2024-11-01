@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:bus_way/data/api/api.dart';
 import 'package:bus_way/data/api/api_enum.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TravelLocalDatasource with ChangeNotifier {
@@ -40,8 +42,8 @@ class TravelLocalDatasource with ChangeNotifier {
       );
 
       if (result.statusCode == 200) {
-        var signUpResult = jsonDecode(result.body);
-        if (signUpResult['success'] == true) {
+        var followResult = jsonDecode(result.body);
+        if (followResult['success'] == true) {
           isSuccess = true;
         } else {
           statusCode = ApiResponseStatus.unknownError;
@@ -99,8 +101,8 @@ class TravelLocalDatasource with ChangeNotifier {
       );
 
       if (result.statusCode == 200) {
-        var signUpResult = jsonDecode(result.body);
-        if (signUpResult['success'] == true) {
+        var unFollowResult = jsonDecode(result.body);
+        if (unFollowResult['success'] == true) {
           isSuccess = true;
         } else {
           statusCode = ApiResponseStatus.unknownError;
@@ -175,5 +177,56 @@ class TravelLocalDatasource with ChangeNotifier {
       return false;
     }
     return false;
+  }
+
+  // 5. 관광지 리뷰 업로드 DB 요청
+  Future<void> uploadTravelReview(
+      double rating, String content, XFile imageFile) async {
+    final Dio dio = Dio();
+    bool isSuccess = false;
+    try {
+      // 기기에 저장된 email 정보 불러오기
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final email = prefs.getString('loginEmail') ?? "";
+
+      // FormData 생성
+      FormData formData = FormData.fromMap({
+        'email': email,
+        'review_rate': rating.toString(),
+        'review_content': content,
+        'image': await MultipartFile.fromFile(
+          imageFile.path,
+          filename: imageFile.name,
+        ),
+      });
+
+      // 서버에 요청 전송
+      final result = await dio.post(
+        API.uploadTravelReview, // 업로드할 서버의 URL
+        data: formData,
+      );
+
+      if (result.statusCode == 200) {
+        isSuccess = true;
+      } else if (result.statusCode == 400) {
+        statusCode = ApiResponseStatus.badRequest;
+      } else if (result.statusCode == 401) {
+        statusCode = ApiResponseStatus.unauthorized;
+      } else if (result.statusCode == 408) {
+        statusCode = ApiResponseStatus.requestTimeout;
+      } else if (result.statusCode == 500) {
+        statusCode = ApiResponseStatus.serverError;
+      } else {
+        statusCode = ApiResponseStatus.unknownError;
+      }
+    } catch (e) {
+      statusCode = ApiResponseStatus.unknownError;
+    } finally {
+      // 상태 코드에 따른 메시지를 던짐
+      if (!isSuccess) {
+        throw getMessageForStatusCode(
+            statusCode ?? ApiResponseStatus.unknownError);
+      }
+    }
   }
 }

@@ -4,6 +4,7 @@ import 'package:bus_way/data/model/travel_model/near_travel_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_blog_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_common_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_image_info_model.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 class TravelRepository {
@@ -82,5 +83,11 @@ class TravelRepository {
   // 관광지 팔로우 상태 불러오기
   Future<bool> checkTravelFollow(String contentId) async {
     return await travelLocalDatasource.checkTravelFollow(contentId);
+  }
+
+  // 관광지 리뷰 업로드 DB 요청
+  Future<void> uploadTravelReview(
+      double rating, String content, XFile imageFile) async {
+    await travelLocalDatasource.uploadTravelReview(rating, content, imageFile);
   }
 }
