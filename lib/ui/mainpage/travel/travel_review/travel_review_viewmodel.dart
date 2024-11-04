@@ -97,6 +97,7 @@ class TravelReviewViewModel with ChangeNotifier {
       await uploadTravelReview(context);
     }
 
+    // 리뷰 작성 textFormField의 Focus 제거
     reviewFocusNode.unfocus();
   }
 

@@ -41,6 +41,8 @@ class TravelReviewView extends StatelessWidget {
                           context, '후기 작성을 취소하시겠습니까?') ??
                       false;
 
+                  travelReviewViewModel.reviewFocusNode.unfocus();
+
                   if (shouldPop && context.mounted) {
                     Navigator.of(context, rootNavigator: true).pop();
                   }
