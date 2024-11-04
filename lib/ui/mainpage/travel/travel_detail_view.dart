@@ -58,21 +58,22 @@ class TravelDetailView extends StatelessWidget {
               ),
               // 앱바 오른쪽에 위치하는 팔로우 버튼
               actions: [
-                IconButton(
-                  onPressed: () {
-                    travelDetailViewmodel.toggleTravelFollow(
-                        contentId, contentTypeId, title, travelImage);
-                  },
-                  enableFeedback: travelDetailViewmodel.isFollowProcessing,
-                  icon: travelDetailViewmodel.isTravelFollow
-                      ? const Icon(
-                          Icons.favorite,
-                          color: Colors.redAccent,
-                        )
-                      : const Icon(
-                          Icons.favorite_border_outlined,
-                        ),
-                ),
+                if (detailData != null)
+                  IconButton(
+                    onPressed: () {
+                      travelDetailViewmodel.toggleTravelFollow(
+                          contentId, contentTypeId, title, travelImage);
+                    },
+                    enableFeedback: travelDetailViewmodel.isFollowProcessing,
+                    icon: travelDetailViewmodel.isTravelFollow
+                        ? const Icon(
+                            Icons.favorite,
+                            color: Colors.redAccent,
+                          )
+                        : const Icon(
+                            Icons.favorite_border_outlined,
+                          ),
+                  ),
               ],
             ),
             body: detailData == null
