@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:bus_way/data/api/api.dart';
 import 'package:bus_way/data/api/api_enum.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -182,29 +181,30 @@ class TravelLocalDatasource with ChangeNotifier {
   // 5. 관광지 리뷰 업로드 DB 요청
   Future<void> uploadTravelReview(
       double rating, String content, XFile imageFile) async {
-    final Dio dio = Dio();
     bool isSuccess = false;
     try {
       // 기기에 저장된 email 정보 불러오기
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final email = prefs.getString('loginEmail') ?? "";
 
-      // FormData 생성
-      FormData formData = FormData.fromMap({
-        'email': email,
-        'review_rate': rating.toString(),
-        'review_content': content,
-        'image': await MultipartFile.fromFile(
-          imageFile.path,
-          filename: imageFile.name,
-        ),
-      });
-
-      // 서버에 요청 전송
-      final result = await dio.post(
-        API.uploadTravelReview, // 업로드할 서버의 URL
-        data: formData,
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(API.uploadTravelReview),
       );
+
+      request.fields['email'] = email;
+      request.fields['review_rate'] = rating.toString();
+      request.fields['review_content'] = content;
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'image',
+          imageFile.path,
+        ),
+      );
+
+      var result = await request.send();
+
+      print("request.statusCode: ${result.statusCode}");
 
       if (result.statusCode == 200) {
         isSuccess = true;
@@ -220,6 +220,7 @@ class TravelLocalDatasource with ChangeNotifier {
         statusCode = ApiResponseStatus.unknownError;
       }
     } catch (e) {
+      print('e: ${e.toString()}');
       statusCode = ApiResponseStatus.unknownError;
     } finally {
       // 상태 코드에 따른 메시지를 던짐
