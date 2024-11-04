@@ -59,6 +59,7 @@ class TravelDetailTab extends StatelessWidget {
                 TravelReviewTab(
                   viewmodel: viewmodel,
                   title: travelCommonInfo.travelTitle!,
+                  contentId: contentId,
                 ),
               ],
             ),

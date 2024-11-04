@@ -10,10 +10,12 @@ class TravelReviewTab extends StatelessWidget {
     super.key,
     required this.viewmodel,
     required this.title,
+    required this.contentId,
   });
 
   final TravelDetailViewModel viewmodel;
   final String title;
+  final String contentId;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +65,7 @@ class TravelReviewTab extends StatelessWidget {
             index: viewmodel.reviewCurrentIndex,
             children: [
               // 후기 뷰
-              travelReviewListView(context, viewmodel),
+              travelReviewListView(context, viewmodel, contentId),
 
               // 블로그 뷰
               travelBlogListView(viewmodel, title),

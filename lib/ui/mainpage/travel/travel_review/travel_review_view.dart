@@ -11,7 +11,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class TravelReviewView extends StatelessWidget {
-  const TravelReviewView({super.key});
+  const TravelReviewView({
+    super.key,
+    required this.contentId,
+  });
+
+  final String contentId;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -272,7 +278,8 @@ class TravelReviewView extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 22.0),
                         child: CustomContinueButton(
                           onPressed: () {
-                            travelReviewViewModel.checkTravelReview(context);
+                            travelReviewViewModel.checkTravelReview(
+                                context, contentId);
                           },
                           color: travelReviewViewModel.isReviewActiveBtn
                               ? orchid

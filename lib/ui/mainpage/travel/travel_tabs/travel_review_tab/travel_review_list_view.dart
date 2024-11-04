@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 Widget travelReviewListView(
-    BuildContext context, TravelDetailViewModel viewmodel) {
+    BuildContext context, TravelDetailViewModel viewmodel, String contentId) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -67,7 +67,7 @@ Widget travelReviewListView(
                 ElevatedButton(
                   onPressed: () {
                     // print('rating: $rating')
-                    viewmodel.writeReviewNavigate(context);
+                    viewmodel.writeReviewNavigate(context, contentId);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: orchid,

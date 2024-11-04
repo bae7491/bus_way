@@ -279,10 +279,10 @@ class TravelDetailViewModel with ChangeNotifier {
   }
 
   // 후기 작성 이동
-  void writeReviewNavigate(BuildContext context) {
+  void writeReviewNavigate(BuildContext context, String contentId) {
     Navigator.of(context).push(
-      const NavigatorAnimation(
-        destination: TravelReviewView(),
+      NavigatorAnimation(
+        destination: TravelReviewView(contentId: contentId),
       ).createRoute(SlideDirection.bottomToTop),
     );
   }

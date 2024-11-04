@@ -179,7 +179,8 @@ class TravelLocalDatasource with ChangeNotifier {
   }
 
   // 5. 관광지 리뷰 업로드 DB 요청
-  Future<void> uploadTravelReview(double rating, String content,
+  Future<void> uploadTravelReview(
+      double rating, String content, String contentId,
       [XFile? imageFile]) async {
     bool isSuccess = false;
     try {
@@ -193,6 +194,7 @@ class TravelLocalDatasource with ChangeNotifier {
       );
 
       request.fields['email'] = email;
+      request.fields['content_id'] = contentId;
       request.fields['review_rate'] = rating.toString();
       request.fields['review_content'] = content;
       if (imageFile != null) {
@@ -207,7 +209,15 @@ class TravelLocalDatasource with ChangeNotifier {
       var result = await request.send();
 
       if (result.statusCode == 200) {
-        isSuccess = true;
+        // 응답을 문자열로 변환한 후 JSON 파싱
+        var responseBody = await result.stream.bytesToString();
+        var reviewResult = jsonDecode(responseBody);
+
+        if (reviewResult['success'] == true) {
+          isSuccess = true;
+        } else {
+          statusCode = ApiResponseStatus.unknownError;
+        }
       } else if (result.statusCode == 400) {
         statusCode = ApiResponseStatus.badRequest;
       } else if (result.statusCode == 401) {

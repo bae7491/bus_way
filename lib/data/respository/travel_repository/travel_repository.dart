@@ -86,8 +86,10 @@ class TravelRepository {
   }
 
   // 관광지 리뷰 업로드 DB 요청
-  Future<void> uploadTravelReview(double rating, String content,
+  Future<void> uploadTravelReview(
+      double rating, String content, String contentId,
       [XFile? imageFile]) async {
-    await travelLocalDatasource.uploadTravelReview(rating, content, imageFile);
+    await travelLocalDatasource.uploadTravelReview(
+        rating, content, contentId, imageFile);
   }
 }
