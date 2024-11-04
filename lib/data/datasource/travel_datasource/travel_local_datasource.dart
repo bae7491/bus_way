@@ -204,8 +204,6 @@ class TravelLocalDatasource with ChangeNotifier {
 
       var result = await request.send();
 
-      print("request.statusCode: ${result.statusCode}");
-
       if (result.statusCode == 200) {
         isSuccess = true;
       } else if (result.statusCode == 400) {
@@ -220,7 +218,6 @@ class TravelLocalDatasource with ChangeNotifier {
         statusCode = ApiResponseStatus.unknownError;
       }
     } catch (e) {
-      print('e: ${e.toString()}');
       statusCode = ApiResponseStatus.unknownError;
     } finally {
       // 상태 코드에 따른 메시지를 던짐
