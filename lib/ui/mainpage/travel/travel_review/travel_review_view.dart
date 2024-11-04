@@ -185,6 +185,8 @@ class TravelReviewView extends StatelessWidget {
                                   ),
                                   controller:
                                       travelReviewViewModel.reviewController,
+                                  focusNode:
+                                      travelReviewViewModel.reviewFocusNode,
                                   maxLength: 100,
                                   maxLines: 6,
                                 ),
@@ -268,7 +270,7 @@ class TravelReviewView extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 22.0),
                         child: CustomContinueButton(
                           onPressed: () {
-                            travelReviewViewModel.uploadTravelReview();
+                            travelReviewViewModel.checkTravelReview(context);
                           },
                           color: travelReviewViewModel.isReviewActiveBtn
                               ? orchid

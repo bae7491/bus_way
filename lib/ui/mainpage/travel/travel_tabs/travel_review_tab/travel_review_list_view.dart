@@ -63,7 +63,7 @@ Widget travelReviewListView(
                     ),
                   ],
                 ),
-                // TODO: 후기 작성 버튼 작성
+                // 후기 작성 버튼 작성
                 ElevatedButton(
                   onPressed: () {
                     // print('rating: $rating')

@@ -1,6 +1,6 @@
-import 'dart:io';
-
 import 'package:bus_way/data/respository/travel_repository/travel_repository.dart';
+import 'package:bus_way/widget/custom_alert_dialog.dart';
+import 'package:bus_way/widget/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -8,6 +8,7 @@ class TravelReviewViewModel with ChangeNotifier {
   TravelRepository travelRepository = TravelRepository();
 
   final reviewController = TextEditingController();
+  final reviewFocusNode = FocusNode();
   final ImagePicker picker = ImagePicker();
 
   bool _isLoading = false;
@@ -27,6 +28,7 @@ class TravelReviewViewModel with ChangeNotifier {
   @override
   void dispose() {
     reviewController.dispose();
+    reviewFocusNode.dispose();
     super.dispose();
   }
 
@@ -70,10 +72,36 @@ class TravelReviewViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // TODO: 리뷰가 제대로 작성되었는지 확인하는 코드 추가해야함. (travel_review_view.dart 후기 등록 버튼에 추가 예정).
+  // 후기 작성 필수 값(별점, 리뷰 글)이 작성되었는지 확인 후 리뷰 업로드
+  void checkTravelReview(BuildContext context) {
+    if (reviewController.text.isNotEmpty) {
+      checkRegisterReivew(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const CustomSnackbar(
+          content: Text('리뷰 필수 값을 다시 확인해주세요.'),
+        ),
+      );
+    }
+  }
+
+  // 후기 작성 등록 확인 팝업
+  Future<void> checkRegisterReivew(BuildContext context) async {
+    final isRegisterReview = await showCustomAlertDialog(
+          context,
+          '작성한 후기를 등록하시겠습니까?',
+        ) ??
+        false;
+
+    if (isRegisterReview && context.mounted) {
+      await uploadTravelReview(context);
+    }
+
+    reviewFocusNode.unfocus();
+  }
 
   // 작성 리뷰 업로드
-  Future<void> uploadTravelReview() async {
+  Future<void> uploadTravelReview(BuildContext context) async {
     try {
       _isLoading = true;
       notifyListeners();
@@ -87,11 +115,19 @@ class TravelReviewViewModel with ChangeNotifier {
           reviewController.text,
         );
       }
+      if (context.mounted) {
+        navigatePreviousPage(context);
+      }
     } catch (e) {
       _errorMessage = e.toString();
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  // 리뷰 작성 완료 후, 관광지 상세 페이지로 이동.
+  void navigatePreviousPage(BuildContext context) {
+    Navigator.of(context).pop();
   }
 }
