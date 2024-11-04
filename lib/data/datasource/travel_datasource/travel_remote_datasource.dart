@@ -329,7 +329,7 @@ class TravelRemoteDatasource with ChangeNotifier {
       int pageNo, int pageSize, String title, String sortIndex) async {
     try {
       Map<String, dynamic> parameters = {
-        'query': title,
+        'query': '부산 $title',
         'start': pageNo.toString(), // 검색 시작 위치 (현재 페이지)
         'display': pageSize.toString(), // 한번에 표시할 최대 개수
         'sort': sortIndex,

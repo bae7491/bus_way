@@ -297,6 +297,12 @@ class TravelDetailViewModel with ChangeNotifier {
         selectedSortText,
       );
 
+      // 블로그 글이 없는 (0개) 갱우
+      if (travelBlogResponse.isEmpty) {
+        _blogPageController.appendLastPage([]); // 마지막 페이지로 처리
+        return;
+      }
+
       // API로 호출한 데이터의 총 개수
       _travelBlogTotalCount = travelBlogResponse.first.blogTotalCount;
 
@@ -304,7 +310,7 @@ class TravelDetailViewModel with ChangeNotifier {
       _travelBlogInfoList = travelBlogResponse;
 
       // 빈 리스트인 경우 마지막 페이지로 처리
-      if (_travelBlogInfoList!.isEmpty) {
+      if (_travelBlogInfoList!.isEmpty && _travelBlogTotalCount!.isEmpty) {
         _blogPageController.appendLastPage([]); // 마지막 페이지로 처리
         return;
       }

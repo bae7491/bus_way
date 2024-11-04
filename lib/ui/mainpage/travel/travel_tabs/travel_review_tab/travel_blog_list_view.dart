@@ -39,6 +39,27 @@ Widget travelBlogListView(TravelDetailViewModel viewmodel, String title) {
               ],
             ),
           ),
+        if (viewmodel.travelBlogTotalCount == null)
+          const Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 8.0,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '전체 (0 건)',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+                SizedBox(height: 5.0),
+              ],
+            ),
+          ),
         const Divider(),
         BlogPagedListView(
           viewmodel: viewmodel,

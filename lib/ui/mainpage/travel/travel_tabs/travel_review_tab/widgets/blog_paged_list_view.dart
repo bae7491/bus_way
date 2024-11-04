@@ -109,7 +109,7 @@ class BlogPagedListView extends StatelessWidget {
                 ),
                 SizedBox(height: 16), // 텍스트와 아이콘 사이 간격
                 Text(
-                  '여행지의 블로그 글이 없습니다!',
+                  '관광지의 블로그 글이 없습니다!',
                   style: TextStyle(
                     fontSize: 18, // 텍스트 크기
                     fontWeight: FontWeight.bold, // 텍스트 굵기
