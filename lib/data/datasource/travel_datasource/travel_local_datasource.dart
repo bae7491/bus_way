@@ -179,8 +179,8 @@ class TravelLocalDatasource with ChangeNotifier {
   }
 
   // 5. 관광지 리뷰 업로드 DB 요청
-  Future<void> uploadTravelReview(
-      double rating, String content, XFile imageFile) async {
+  Future<void> uploadTravelReview(double rating, String content,
+      [XFile? imageFile]) async {
     bool isSuccess = false;
     try {
       // 기기에 저장된 email 정보 불러오기
@@ -195,12 +195,14 @@ class TravelLocalDatasource with ChangeNotifier {
       request.fields['email'] = email;
       request.fields['review_rate'] = rating.toString();
       request.fields['review_content'] = content;
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'image',
-          imageFile.path,
-        ),
-      );
+      if (imageFile != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'image',
+            imageFile.path,
+          ),
+        );
+      }
 
       var result = await request.send();
 

@@ -78,10 +78,15 @@ class TravelReviewViewModel with ChangeNotifier {
       _isLoading = true;
       notifyListeners();
 
-      // print(
-      //     "rating: $_rating / text: ${reviewController.text} / image: $reviewImage");
-      await travelRepository.uploadTravelReview(
-          _rating, reviewController.text, reviewImage!);
+      if (reviewImage != null) {
+        await travelRepository.uploadTravelReview(
+            _rating, reviewController.text, reviewImage!);
+      } else {
+        await travelRepository.uploadTravelReview(
+          _rating,
+          reviewController.text,
+        );
+      }
     } catch (e) {
       _errorMessage = e.toString();
     } finally {
