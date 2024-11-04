@@ -109,8 +109,6 @@ class TravelReviewViewModel with ChangeNotifier {
       _isLoading = true;
       notifyListeners();
 
-      print('contentId: $contentId');
-
       if (reviewImage != null) {
         await travelRepository.uploadTravelReview(
             _rating, reviewController.text, contentId, reviewImage!);
