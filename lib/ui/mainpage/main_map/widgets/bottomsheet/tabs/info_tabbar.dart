@@ -1,3 +1,4 @@
+import 'package:bus_way/theme/colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../../main_map_bus_viewmodel.dart';
@@ -43,7 +44,7 @@ class InfoTabbar extends StatelessWidget {
             // TabBar 추가
             const TabBar(
               labelColor: Colors.black,
-              indicatorColor: Colors.black,
+              indicatorColor: orchid,
               unselectedLabelColor: Colors.grey,
               tabs: <Widget>[
                 Tab(text: '버스'),

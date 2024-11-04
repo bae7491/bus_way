@@ -1,4 +1,5 @@
 import 'package:bus_way/data/model/travel_model/travel_common_info_model.dart';
+import 'package:bus_way/theme/colors.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_detail_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_tabs/travel_detail_tab/travel_detail_info_tab.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_tabs/travel_image_tab/travel_image_tab.dart';
@@ -30,7 +31,7 @@ class TravelDetailTab extends StatelessWidget {
         children: [
           const TabBar(
             labelColor: Colors.black,
-            indicatorColor: Colors.black,
+            indicatorColor: orchid,
             unselectedLabelColor: Colors.grey,
             tabs: <Widget>[
               Tab(text: '상세 정보'),
