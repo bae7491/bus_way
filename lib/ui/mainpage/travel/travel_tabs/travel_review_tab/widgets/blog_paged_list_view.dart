@@ -38,7 +38,7 @@ class BlogPagedListView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          customHtmlWidget(item.blogTitle!),
+                          customHtmlWidget(context, item.blogTitle!),
                           if (item.blogDescription != null &&
                               item.blogDescription != '')
                             Padding(
@@ -52,7 +52,8 @@ class BlogPagedListView extends StatelessWidget {
                                       BorderRadius.circular(8.0), // 모서리 둥글게 설정
                                   color: Colors.transparent, // 배경색 설정
                                 ),
-                                child: customHtmlWidget(item.blogDescription!),
+                                child: customHtmlWidget(
+                                    context, item.blogDescription!),
                               ),
                             ),
                           Padding(

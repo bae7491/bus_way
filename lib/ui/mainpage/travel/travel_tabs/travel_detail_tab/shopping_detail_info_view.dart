@@ -18,17 +18,17 @@ class ShoppingDetailInfoView extends StatelessWidget {
         // 쇼핑(contentTypeId = 38) 추가 상세 정보
         // 쇼핑 소개 정보
         if (shoppingData.shoppingTel != null)
-          travelInfoRow('문의 및 안내', shoppingData.shoppingTel!),
+          travelInfoRow(context, '문의 및 안내', shoppingData.shoppingTel!),
         if (shoppingData.shoppingOpenTime != null)
-          travelInfoRow('영업 시간', shoppingData.shoppingOpenTime!),
+          travelInfoRow(context, '영업 시간', shoppingData.shoppingOpenTime!),
         if (shoppingData.shoppingRestDate != null)
-          travelInfoRow('휴일', shoppingData.shoppingRestDate!),
+          travelInfoRow(context, '휴일', shoppingData.shoppingRestDate!),
         if (shoppingData.shoppingItem != null)
-          travelInfoRow('판매 목록', shoppingData.shoppingItem!),
+          travelInfoRow(context, '판매 목록', shoppingData.shoppingItem!),
         if (shoppingData.shoppingInfo != null)
-          travelInfoRow('매장 정보', shoppingData.shoppingInfo!),
+          travelInfoRow(context, '매장 정보', shoppingData.shoppingInfo!),
         if (shoppingData.shoppingParking != null)
-          travelInfoRow('주차 시설', shoppingData.shoppingParking!),
+          travelInfoRow(context, '주차 시설', shoppingData.shoppingParking!),
 
         // 쇼핑 반복 정보
       ],

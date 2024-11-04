@@ -60,7 +60,7 @@ class TravelDetailInfoTab extends StatelessWidget {
                   color: Colors.white, // 배경색 설정
                 ),
                 child: customHtmlWidget(
-                    travelCommonInfo.travelOverview!, viewmodel),
+                    context, travelCommonInfo.travelOverview!, viewmodel),
               ),
             const SizedBox(height: 30.0),
 
@@ -96,7 +96,7 @@ class TravelDetailInfoTab extends StatelessWidget {
               height: 1,
             ),
             if (travelCommonInfo.travelAddr != null)
-              travelInfoRow('주소', travelCommonInfo.travelAddr!),
+              travelInfoRow(context, '주소', travelCommonInfo.travelAddr!),
             if (travelCommonInfo.travelHomePage != null)
               Column(
                 children: [
@@ -117,7 +117,7 @@ class TravelDetailInfoTab extends StatelessWidget {
                         ),
                         const SizedBox(width: 16),
                         Expanded(
-                          child: customHtmlWidget(
+                          child: customHtmlWidget(context,
                               travelCommonInfo.travelHomePage!, viewmodel),
                         ),
                       ],

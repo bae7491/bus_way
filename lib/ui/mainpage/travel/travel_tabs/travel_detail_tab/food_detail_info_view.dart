@@ -18,15 +18,15 @@ class FoodDetailInfoView extends StatelessWidget {
         // 음식점(contentTypeId = 39) 추가 상세 정보
         // 음식점 소개 정보
         if (foodData.foodTel != null)
-          travelInfoRow('문의 및 안내', foodData.foodTel!),
+          travelInfoRow(context, '문의 및 안내', foodData.foodTel!),
         if (foodData.foodOpenTime != null)
-          travelInfoRow('영업 시간', foodData.foodOpenTime!),
+          travelInfoRow(context, '영업 시간', foodData.foodOpenTime!),
         if (foodData.foodRestDate != null)
-          travelInfoRow('휴일', foodData.foodRestDate!),
+          travelInfoRow(context, '휴일', foodData.foodRestDate!),
         if (foodData.foodParking != null)
-          travelInfoRow('주차 시설', foodData.foodParking!),
+          travelInfoRow(context, '주차 시설', foodData.foodParking!),
         if (foodData.representativeMenu != null)
-          travelInfoRow('대표 메뉴', foodData.representativeMenu!),
+          travelInfoRow(context, '대표 메뉴', foodData.representativeMenu!),
 
         // 음식점 반복 정보
       ],

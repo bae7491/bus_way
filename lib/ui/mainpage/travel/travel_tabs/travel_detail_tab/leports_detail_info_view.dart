@@ -18,15 +18,15 @@ class LeportsDetailInfoView extends StatelessWidget {
         // 레포츠(contentTypeId = 28) 추가 상세 정보
         // 레포츠 소개 정보
         if (leportsData.leportsTel != null)
-          travelInfoRow('문의 및 안내', leportsData.leportsTel!),
+          travelInfoRow(context, '문의 및 안내', leportsData.leportsTel!),
         if (leportsData.leportsUseTime != null)
-          travelInfoRow('이용 시간', leportsData.leportsUseTime!),
+          travelInfoRow(context, '이용 시간', leportsData.leportsUseTime!),
         if (leportsData.leportsRestDate != null)
-          travelInfoRow('휴일', leportsData.leportsRestDate!),
+          travelInfoRow(context, '휴일', leportsData.leportsRestDate!),
         if (leportsData.leportsParking != null)
-          travelInfoRow('주차', leportsData.leportsParking!),
+          travelInfoRow(context, '주차', leportsData.leportsParking!),
         if (leportsData.leportsOpenPeriod != null)
-          travelInfoRow('개장 기간', leportsData.leportsOpenPeriod!),
+          travelInfoRow(context, '개장 기간', leportsData.leportsOpenPeriod!),
 
         // 레포츠 반복 정보
       ],

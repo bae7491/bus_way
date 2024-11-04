@@ -18,13 +18,13 @@ class TourSpotDetailInfoView extends StatelessWidget {
         // 관광지(contentTypeId = 12) 추가 상세 정보
         // 관광지 소개 정보
         if (travelData.travelInfoTel != null)
-          travelInfoRow('문의 및 안내', travelData.travelInfoTel!),
+          travelInfoRow(context, '문의 및 안내', travelData.travelInfoTel!),
         if (travelData.travelUseTime != null)
-          travelInfoRow('이용시간', travelData.travelUseTime!),
+          travelInfoRow(context, '이용시간', travelData.travelUseTime!),
         if (travelData.travelRestDate != null)
-          travelInfoRow('휴일', travelData.travelRestDate!),
+          travelInfoRow(context, '휴일', travelData.travelRestDate!),
         if (travelData.travelParking != null)
-          travelInfoRow('주차 시설', travelData.travelParking!),
+          travelInfoRow(context, '주차 시설', travelData.travelParking!),
 
         // 관광지 반복 정보
       ],

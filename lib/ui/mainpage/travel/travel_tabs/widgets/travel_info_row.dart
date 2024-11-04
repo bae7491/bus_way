@@ -1,7 +1,7 @@
 import 'package:bus_way/widget/custom_html_converter.dart';
 import 'package:flutter/material.dart';
 
-Widget travelInfoRow(String title, String content) {
+Widget travelInfoRow(BuildContext context, String title, String content) {
   // URL을 여는 함수
 
   return Column(
@@ -23,7 +23,7 @@ Widget travelInfoRow(String title, String content) {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: customHtmlWidget(content),
+              child: customHtmlWidget(context, content),
             ),
           ],
         ),

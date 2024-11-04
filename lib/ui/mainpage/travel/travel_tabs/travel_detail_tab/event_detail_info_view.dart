@@ -19,11 +19,12 @@ class EventDetailInfoView extends StatelessWidget {
         // 행사/공연/축제(contentTypeId = 15) 추가 상세 정보
         // 행사/공연/축제 소개 정보
         if (eventData.eventTel != null)
-          travelInfoRow('문의 및 안내', eventData.eventTel!),
+          travelInfoRow(context, '문의 및 안내', eventData.eventTel!),
         if (eventData.eventPlace != null)
-          travelInfoRow('장소', eventData.eventPlace!),
+          travelInfoRow(context, '장소', eventData.eventPlace!),
         if (eventData.eventStartDate != null)
           travelInfoRow(
+            context,
             '시작일',
             DateFormat('yyyy.MM.dd.').format(
               DateTime.parse(eventData.eventStartDate!),
@@ -31,19 +32,20 @@ class EventDetailInfoView extends StatelessWidget {
           ),
         if (eventData.eventEndDate != null)
           travelInfoRow(
+            context,
             '종료일',
             DateFormat('yyyy.MM.dd.').format(
               DateTime.parse(eventData.eventEndDate!),
             ),
           ),
         if (eventData.eventTime != null)
-          travelInfoRow('시간', eventData.eventTime!),
+          travelInfoRow(context, '시간', eventData.eventTime!),
         if (eventData.eventSponsor1 != null)
-          travelInfoRow('주최', eventData.eventSponsor1!),
+          travelInfoRow(context, '주최', eventData.eventSponsor1!),
         if (eventData.eventSponsor2 != null)
-          travelInfoRow('주관', eventData.eventSponsor2!),
+          travelInfoRow(context, '주관', eventData.eventSponsor2!),
         if (eventData.eventFee != null)
-          travelInfoRow('이용 요금', eventData.eventFee!),
+          travelInfoRow(context, '이용 요금', eventData.eventFee!),
 
         // 행사/공연/축제 반복 정보
       ],
