@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bus_way/data/api/api.dart';
 import 'package:bus_way/data/api/api_enum.dart';
+import 'package:bus_way/data/model/travel_model/travel_review_info_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -237,6 +238,61 @@ class TravelLocalDatasource with ChangeNotifier {
         throw getMessageForStatusCode(
             statusCode ?? ApiResponseStatus.unknownError);
       }
+    }
+  }
+
+  // 6. 관광지 리뷰 총 개수, 평점 평균 조회
+  Future<TravelReviewInfoModel> getTravelReview(String contentId) async {
+    try {
+      // 기기에 저장된 email 정보 불러오기
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final email = prefs.getString('loginEmail') ?? "";
+
+      var result = await http.post(
+        Uri.parse(API.getTravelReview),
+        headers: {
+          'Content-Type':
+              'application/x-www-form-urlencoded', // 적절한 Content-Type 설정
+        },
+        body: {
+          'email': email,
+          'content_id': contentId,
+        },
+      ).timeout(
+        const Duration(minutes: 1), // 타임아웃을 1분으로 설정
+        onTimeout: () {
+          return http.Response(
+              'Error: Request Timeout', 408); // 408은 타임아웃 상태 코드
+        },
+      );
+
+      if (result.statusCode == 200) {
+        var reviewResult = jsonDecode(result.body);
+        if (reviewResult['success'] == true) {
+          return TravelReviewInfoModel(
+            reviewCount: reviewResult['review_count'],
+            reviewAverageRate: reviewResult['review_rate'],
+          );
+        } else {
+          statusCode = ApiResponseStatus.unknownError;
+        }
+      } else if (result.statusCode == 400) {
+        statusCode = ApiResponseStatus.badRequest;
+      } else if (result.statusCode == 401) {
+        statusCode = ApiResponseStatus.unauthorized;
+      } else if (result.statusCode == 408) {
+        statusCode = ApiResponseStatus.requestTimeout;
+      } else if (result.statusCode == 500) {
+        statusCode = ApiResponseStatus.serverError;
+      } else {
+        statusCode = ApiResponseStatus.unknownError;
+      }
+      throw getMessageForStatusCode(
+          statusCode ?? ApiResponseStatus.unknownError);
+    } catch (e) {
+      statusCode = ApiResponseStatus.unknownError;
+      throw getMessageForStatusCode(
+          statusCode ?? ApiResponseStatus.unknownError);
     }
   }
 }

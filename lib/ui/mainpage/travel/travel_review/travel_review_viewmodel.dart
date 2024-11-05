@@ -75,6 +75,8 @@ class TravelReviewViewModel with ChangeNotifier {
   // 후기 작성 필수 값(별점, 리뷰 글)이 작성되었는지 확인 후 리뷰 업로드
   void checkTravelReview(BuildContext context, String contentId) {
     if (reviewController.text.isNotEmpty) {
+      // 리뷰 작성 textFormField의 Focus 제거
+      reviewFocusNode.unfocus();
       checkRegisterReivew(context, contentId);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -97,9 +99,6 @@ class TravelReviewViewModel with ChangeNotifier {
     if (isRegisterReview && context.mounted) {
       await uploadTravelReview(context, contentId);
     }
-
-    // 리뷰 작성 textFormField의 Focus 제거
-    reviewFocusNode.unfocus();
   }
 
   // 작성 리뷰 업로드
@@ -120,7 +119,7 @@ class TravelReviewViewModel with ChangeNotifier {
         );
       }
       if (context.mounted) {
-        navigatePreviousPage(context);
+        navigatePreviousPage(context, contentId);
       }
     } catch (e) {
       _errorMessage = e.toString();
@@ -131,7 +130,7 @@ class TravelReviewViewModel with ChangeNotifier {
   }
 
   // 리뷰 작성 완료 후, 관광지 상세 페이지로 이동.
-  void navigatePreviousPage(BuildContext context) {
+  void navigatePreviousPage(BuildContext context, String contentId) {
     Navigator.of(context).pop();
   }
 }

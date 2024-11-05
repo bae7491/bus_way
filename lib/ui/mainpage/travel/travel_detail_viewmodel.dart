@@ -2,6 +2,7 @@ import 'package:bus_way/data/api/api.dart';
 import 'package:bus_way/data/model/travel_model/travel_blog_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_common_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_image_info_model.dart';
+import 'package:bus_way/data/model/travel_model/travel_review_info_model.dart';
 import 'package:bus_way/data/respository/travel_repository/travel_repository.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_review/travel_review_view.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
@@ -24,6 +25,7 @@ class TravelDetailViewModel with ChangeNotifier {
   List<TravelBlogInfoModel>? _travelBlogInfoList; // 관광지 블로그 리뷰 리스트
   TravelCommonInfoModel? _travelCommonInfoList; // 관광지 공통 정보 리스트
   dynamic _travelDetailInfoList; // 관광지 소개 정보 리스트
+  TravelReviewInfoModel? _travelReviewInfo; // 관광지 후기 정보
   KakaoMapController? _mapController;
   final Set<Marker> _marker = {};
   bool _isLoading = false;
@@ -42,6 +44,7 @@ class TravelDetailViewModel with ChangeNotifier {
   List<TravelImageInfoModel>? get travelImageInfoList => _travelImageInfoList;
   List<TravelBlogInfoModel>? get travelBlogInfoList => _travelBlogInfoList;
   TravelCommonInfoModel? get travelCommonInfoList => _travelCommonInfoList;
+  TravelReviewInfoModel? get travelReviewInfo => _travelReviewInfo;
   dynamic get travelDetailInfoList => _travelDetailInfoList;
   KakaoMapController? get mapController => _mapController;
   Set<Marker> get marker => _marker;
@@ -147,6 +150,9 @@ class TravelDetailViewModel with ChangeNotifier {
         // 관광지 이미지 정보 API 호출
         loadTravelImageInfo(contentId),
         // TODO: 관광지 후기 API 호출
+
+        // 관광지 리뷰 총 개수, 평점 평균 조회 API 호출
+        getTravelReview(contentId),
         // 관광지 블로그 정보 API 호출
         loadTravelBlogInfo(title),
         // 팔로우 정보 확인
@@ -165,6 +171,22 @@ class TravelDetailViewModel with ChangeNotifier {
         getTravelImageInfo(pageKey, contentId); // 파라미터는 인스턴스 변수를 사용
       },
     );
+  }
+
+  // TODO: 관광지 후기 API 호출
+
+  // 관광지 리뷰 총 개수, 평점 평균 조회
+  Future<void> getTravelReview(String contentId) async {
+    try {
+      _travelReviewInfo = await travelRepository.getTravelReview(
+        contentId,
+      );
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+    } finally {
+      notifyListeners();
+    }
   }
 
   // 관광지 블로그 정보 조회 API 불러오기
@@ -279,12 +301,15 @@ class TravelDetailViewModel with ChangeNotifier {
   }
 
   // 후기 작성 이동
-  void writeReviewNavigate(BuildContext context, String contentId) {
-    Navigator.of(context).push(
+  Future<void> writeReviewNavigate(
+      BuildContext context, String contentId) async {
+    await Navigator.of(context).push(
       NavigatorAnimation(
         destination: TravelReviewView(contentId: contentId),
       ).createRoute(SlideDirection.bottomToTop),
     );
+
+    await getTravelReview(contentId);
   }
 
   // 네이버 블로그 리뷰 API 호출
