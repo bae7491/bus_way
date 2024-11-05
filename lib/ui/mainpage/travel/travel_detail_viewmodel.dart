@@ -178,7 +178,7 @@ class TravelDetailViewModel with ChangeNotifier {
   // 관광지 리뷰 총 개수, 평점 평균 조회
   Future<void> getTravelReview(String contentId) async {
     try {
-      _travelReviewInfo = await travelRepository.getTravelReview(
+      _travelReviewInfo = await travelRepository.getTravelReviewSummary(
         contentId,
       );
     } catch (e) {

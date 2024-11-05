@@ -95,9 +95,10 @@ class TravelRepository {
   }
 
   // 관광지 리뷰 총 개수, 평점 평균 조회
-  Future<TravelReviewSummaryModel> getTravelReview(String contentId) async {
+  Future<TravelReviewSummaryModel> getTravelReviewSummary(
+      String contentId) async {
     final travelReviewInfo =
-        await travelLocalDatasource.getTravelReview(contentId);
+        await travelLocalDatasource.getTravelReviewSummary(contentId);
     return travelReviewInfo;
   }
 }

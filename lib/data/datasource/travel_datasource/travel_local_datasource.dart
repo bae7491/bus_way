@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bus_way/data/api/api.dart';
 import 'package:bus_way/data/api/api_enum.dart';
+import 'package:bus_way/data/model/travel_model/travel_review_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_review_summary_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -242,7 +243,8 @@ class TravelLocalDatasource with ChangeNotifier {
   }
 
   // 6. 관광지 리뷰 총 개수, 평점 평균 조회
-  Future<TravelReviewSummaryModel> getTravelReview(String contentId) async {
+  Future<TravelReviewSummaryModel> getTravelReviewSummary(
+      String contentId) async {
     try {
       // 기기에 저장된 email 정보 불러오기
       SharedPreferences prefs = await SharedPreferences.getInstance();
