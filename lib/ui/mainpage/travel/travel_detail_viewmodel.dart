@@ -2,7 +2,7 @@ import 'package:bus_way/data/api/api.dart';
 import 'package:bus_way/data/model/travel_model/travel_blog_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_common_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_image_info_model.dart';
-import 'package:bus_way/data/model/travel_model/travel_review_info_model.dart';
+import 'package:bus_way/data/model/travel_model/travel_review_summary_model.dart';
 import 'package:bus_way/data/respository/travel_repository/travel_repository.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_review/travel_review_view.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
@@ -25,7 +25,7 @@ class TravelDetailViewModel with ChangeNotifier {
   List<TravelBlogInfoModel>? _travelBlogInfoList; // 관광지 블로그 리뷰 리스트
   TravelCommonInfoModel? _travelCommonInfoList; // 관광지 공통 정보 리스트
   dynamic _travelDetailInfoList; // 관광지 소개 정보 리스트
-  TravelReviewInfoModel? _travelReviewInfo; // 관광지 후기 정보
+  TravelReviewSummaryModel? _travelReviewInfo; // 관광지 후기 정보
   KakaoMapController? _mapController;
   final Set<Marker> _marker = {};
   bool _isLoading = false;
@@ -44,7 +44,7 @@ class TravelDetailViewModel with ChangeNotifier {
   List<TravelImageInfoModel>? get travelImageInfoList => _travelImageInfoList;
   List<TravelBlogInfoModel>? get travelBlogInfoList => _travelBlogInfoList;
   TravelCommonInfoModel? get travelCommonInfoList => _travelCommonInfoList;
-  TravelReviewInfoModel? get travelReviewInfo => _travelReviewInfo;
+  TravelReviewSummaryModel? get travelReviewInfo => _travelReviewInfo;
   dynamic get travelDetailInfoList => _travelDetailInfoList;
   KakaoMapController? get mapController => _mapController;
   Set<Marker> get marker => _marker;
