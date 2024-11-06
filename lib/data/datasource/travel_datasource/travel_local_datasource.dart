@@ -246,10 +246,6 @@ class TravelLocalDatasource with ChangeNotifier {
   Future<TravelReviewSummaryModel> getTravelReviewSummary(
       String contentId) async {
     try {
-      // 기기에 저장된 email 정보 불러오기
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      final email = prefs.getString('loginEmail') ?? "";
-
       var result = await http.post(
         Uri.parse(API.getTravelReviewSummary),
         headers: {
@@ -257,7 +253,6 @@ class TravelLocalDatasource with ChangeNotifier {
               'application/x-www-form-urlencoded', // 적절한 Content-Type 설정
         },
         body: {
-          'email': email,
           'content_id': contentId,
         },
       ).timeout(
@@ -302,10 +297,6 @@ class TravelLocalDatasource with ChangeNotifier {
   Future<List<TravelReviewInfoModel>> getTravelReviewInfo(
       int pageNo, int pageSize, String contentId, String sortIndex) async {
     try {
-      // 기기에 저장한 email 정보 불러오기
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      final email = prefs.getString('loginEmail');
-
       var result = await http.post(
         Uri.parse(API.getTravelReviewInfo),
         headers: {
@@ -314,7 +305,6 @@ class TravelLocalDatasource with ChangeNotifier {
         },
         body: {
           'server_url': API.hostConnect,
-          'email': email,
           'content_id': contentId,
           'pageNo': pageNo.toString(),
           'pageSize': pageSize.toString(),

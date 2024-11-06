@@ -63,7 +63,7 @@ class ReviewPagedListView extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10.0),
                             child: Container(
-                                padding: const EdgeInsets.all(15.0), // 내부 여백 설정
+                                padding: const EdgeInsets.all(8.0), // 내부 여백 설정
                                 width: double.infinity,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(
