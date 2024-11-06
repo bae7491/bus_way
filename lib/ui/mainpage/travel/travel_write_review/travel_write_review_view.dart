@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:bus_way/theme/colors.dart';
-import 'package:bus_way/ui/mainpage/travel/travel_review/travel_review_viewmodel.dart';
+import 'package:bus_way/ui/mainpage/travel/travel_write_review/travel_write_review_viewmodel.dart';
 import 'package:bus_way/widget/custom_alert_dialog.dart';
 import 'package:bus_way/widget/custom_continue_button.dart';
 import 'package:bus_way/widget/custom_snackbar.dart';
@@ -24,9 +24,9 @@ class TravelReviewView extends StatelessWidget {
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-      child: ChangeNotifierProvider<TravelReviewViewModel>(
-        create: (_) => TravelReviewViewModel(),
-        child: Consumer<TravelReviewViewModel>(
+      child: ChangeNotifierProvider<TravelWriteReviewViewModel>(
+        create: (_) => TravelWriteReviewViewModel(),
+        child: Consumer<TravelWriteReviewViewModel>(
           builder: (context, travelReviewViewModel, child) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (travelReviewViewModel.errorMessage != null) {

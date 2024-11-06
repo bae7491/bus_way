@@ -4,7 +4,7 @@ import 'package:bus_way/widget/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class TravelReviewViewModel with ChangeNotifier {
+class TravelWriteReviewViewModel with ChangeNotifier {
   TravelRepository travelRepository = TravelRepository();
 
   final reviewController = TextEditingController();
