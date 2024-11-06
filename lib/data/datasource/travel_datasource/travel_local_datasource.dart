@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bus_way/data/api/api.dart';
 import 'package:bus_way/data/api/api_enum.dart';
+import 'package:bus_way/data/model/travel_model/travel_review_detail_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_review_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_review_summary_model.dart';
 import 'package:flutter/material.dart';
@@ -323,6 +324,54 @@ class TravelLocalDatasource with ChangeNotifier {
 
         if (reviewResult['success'] == true) {
           return TravelReviewInfoModel.fromJsonList(reviewResult);
+        }
+      } else if (result.statusCode == 400) {
+        statusCode = ApiResponseStatus.badRequest;
+      } else if (result.statusCode == 401) {
+        statusCode = ApiResponseStatus.unauthorized;
+      } else if (result.statusCode == 408) {
+        statusCode = ApiResponseStatus.requestTimeout;
+      } else if (result.statusCode == 500) {
+        statusCode = ApiResponseStatus.serverError;
+      } else {
+        statusCode = ApiResponseStatus.unknownError;
+      }
+
+      throw getMessageForStatusCode(
+          statusCode ?? ApiResponseStatus.unknownError);
+    } catch (e) {
+      statusCode = ApiResponseStatus.unknownError;
+      throw getMessageForStatusCode(
+          statusCode ?? ApiResponseStatus.unknownError);
+    }
+  }
+
+  // 7. 선택 관광지 상세 후기 조회
+  Future<TravelReviewDetailModel> getTravelReviewDetail(String reviewId) async {
+    try {
+      var result = await http.post(
+        Uri.parse(API.getTravelReviewDetail),
+        headers: {
+          'Content-Type':
+              'application/x-www-form-urlencoded', // 적절한 Content-Type 설정
+        },
+        body: {
+          'server_url': API.hostConnect,
+          'review_id': reviewId,
+        },
+      ).timeout(
+        const Duration(minutes: 1), // 타임아웃을 1분으로 설정
+        onTimeout: () {
+          return http.Response(
+              'Error: Request Timeout', 408); // 408은 타임아웃 상태 코드
+        },
+      );
+
+      if (result.statusCode == 200) {
+        final travelReviewDetailResult = jsonDecode(result.body);
+
+        if (travelReviewDetailResult['success'] == true) {
+          return TravelReviewDetailModel.fromJson(travelReviewDetailResult);
         }
       } else if (result.statusCode == 400) {
         statusCode = ApiResponseStatus.badRequest;

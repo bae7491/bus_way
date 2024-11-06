@@ -28,7 +28,8 @@ class ReviewPagedListView extends StatelessWidget {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    // TODO: 클릭 시, 리뷰 상세 확인 가능.
+                    // 클릭 시, 리뷰 상세 뷰로 이동.
+                    viewmodel.navigateReviewDetailView(context, item.reviewId!);
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -63,25 +64,25 @@ class ReviewPagedListView extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10.0),
                             child: Container(
-                                padding: const EdgeInsets.all(8.0), // 내부 여백 설정
-                                width: double.infinity,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(
-                                      8), // 이미지에 직접 둥글기 적용
-                                  child: CachedNetworkImage(
-                                    imageUrl: item.reviewImage!,
-                                    fit: BoxFit.cover,
-                                    progressIndicatorBuilder:
-                                        (context, url, progress) =>
-                                            const Center(
-                                      child: SpinKitRing(
-                                        color: orchid, // 원하는 색상
-                                        size: 30.0, // 크기 설정
-                                        lineWidth: 5.0,
-                                      ),
+                              padding: const EdgeInsets.all(8.0), // 내부 여백 설정
+                              width: double.infinity,
+                              child: ClipRRect(
+                                borderRadius:
+                                    BorderRadius.circular(8), // 이미지에 직접 둥글기 적용
+                                child: CachedNetworkImage(
+                                  imageUrl: item.reviewImage!,
+                                  fit: BoxFit.cover,
+                                  progressIndicatorBuilder:
+                                      (context, url, progress) => const Center(
+                                    child: SpinKitRing(
+                                      color: orchid, // 원하는 색상
+                                      size: 30.0, // 크기 설정
+                                      lineWidth: 5.0,
                                     ),
                                   ),
-                                )),
+                                ),
+                              ),
+                            ),
                           ),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 10.0),

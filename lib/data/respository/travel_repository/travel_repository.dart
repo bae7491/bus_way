@@ -4,6 +4,7 @@ import 'package:bus_way/data/model/travel_model/near_travel_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_blog_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_common_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_image_info_model.dart';
+import 'package:bus_way/data/model/travel_model/travel_review_detail_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_review_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_review_summary_model.dart';
 import 'package:image_picker/image_picker.dart';
@@ -109,5 +110,12 @@ class TravelRepository {
     final travelReviewInfoList = await travelLocalDatasource
         .getTravelReviewInfo(pageNo, pageSize, contentId, sortIndex);
     return travelReviewInfoList;
+  }
+
+  // 선택 관광지 상세 후기 조회
+  Future<TravelReviewDetailModel> getTravelReviewDetail(String reviewId) async {
+    final travelReviewDetailList =
+        await travelLocalDatasource.getTravelReviewDetail(reviewId);
+    return travelReviewDetailList;
   }
 }

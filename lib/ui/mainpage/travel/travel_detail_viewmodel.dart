@@ -5,6 +5,7 @@ import 'package:bus_way/data/model/travel_model/travel_image_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_review_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_review_summary_model.dart';
 import 'package:bus_way/data/respository/travel_repository/travel_repository.dart';
+import 'package:bus_way/ui/mainpage/travel/travel_review_detail/travel_review_detail_view.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_write_review/travel_write_review_view.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
@@ -150,7 +151,7 @@ class TravelDetailViewModel with ChangeNotifier {
   }
 
   // 관광지 상세 페이지 이동 시, 최초 1회에 한해서 호출
-  void loadTravelInfo(
+  Future<void> loadTravelInfo(
       String contentId, String contentTypeId, String title) async {
     _isLoading = true;
     notifyListeners();
@@ -435,6 +436,16 @@ class TravelDetailViewModel with ChangeNotifier {
       _errorMessage = e.toString();
       notifyListeners();
     }
+  }
+
+  // 후기 클릭 시, 후기 상세 페이지로 이동
+  Future<void> navigateReviewDetailView(
+      BuildContext context, String reviewId) async {
+    await Navigator.of(context).push(
+      NavigatorAnimation(
+        destination: TravelReviewDetailView(reviewId: reviewId),
+      ).createRoute(SlideDirection.bottomToTop),
+    );
   }
 
   // 네이버 블로그 뷰 클릭 시, 외부로 이동

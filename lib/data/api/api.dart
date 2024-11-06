@@ -59,6 +59,10 @@ class API {
 
   // 관광지 리뷰 조회
   static const getTravelReviewInfo = '$hostConnectReview/get_travel_review.php';
+
+  // 선택 관광지 상세 후기 조회
+  static const getTravelReviewDetail =
+      '$hostConnectReview/get_travel_review_detail.php';
   // ==================
 
   // ================= 공공 데이터 =================
