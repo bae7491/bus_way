@@ -180,7 +180,7 @@ class TravelLocalDatasource with ChangeNotifier {
     return false;
   }
 
-  // 5. 관광지 리뷰 업로드 DB 요청
+  // 4. 관광지 리뷰 업로드 DB 요청
   Future<void> uploadTravelReview(
       double rating, String content, String contentId,
       [XFile? imageFile]) async {
@@ -242,7 +242,7 @@ class TravelLocalDatasource with ChangeNotifier {
     }
   }
 
-  // 6. 관광지 리뷰 총 개수, 평점 평균 조회
+  // 5. 관광지 리뷰 총 개수, 평점 평균 조회
   Future<TravelReviewSummaryModel> getTravelReviewSummary(
       String contentId) async {
     try {
@@ -289,6 +289,63 @@ class TravelLocalDatasource with ChangeNotifier {
       } else {
         statusCode = ApiResponseStatus.unknownError;
       }
+      throw getMessageForStatusCode(
+          statusCode ?? ApiResponseStatus.unknownError);
+    } catch (e) {
+      statusCode = ApiResponseStatus.unknownError;
+      throw getMessageForStatusCode(
+          statusCode ?? ApiResponseStatus.unknownError);
+    }
+  }
+
+  // 6. 관광지 리뷰 조회
+  Future<List<TravelReviewInfoModel>> getTravelReviewInfo(
+      int pageNo, int pageSize, String contentId, String sortIndex) async {
+    try {
+      // 기기에 저장한 email 정보 불러오기
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final email = prefs.getString('loginEmail');
+
+      var result = await http.post(
+        Uri.parse(API.getTravelReviewInfo),
+        headers: {
+          'Content-Type':
+              'application/x-www-form-urlencoded', // 적절한 Content-Type 설정
+        },
+        body: {
+          'server_url': API.hostConnect,
+          'email': email,
+          'content_id': contentId,
+          'pageNo': pageNo.toString(),
+          'pageSize': pageSize.toString(),
+          'sort': sortIndex,
+        },
+      ).timeout(
+        const Duration(minutes: 1), // 타임아웃을 1분으로 설정
+        onTimeout: () {
+          return http.Response(
+              'Error: Request Timeout', 408); // 408은 타임아웃 상태 코드
+        },
+      );
+
+      if (result.statusCode == 200) {
+        final reviewResult = jsonDecode(result.body);
+
+        if (reviewResult['success'] == true) {
+          return TravelReviewInfoModel.fromJsonList(reviewResult);
+        }
+      } else if (result.statusCode == 400) {
+        statusCode = ApiResponseStatus.badRequest;
+      } else if (result.statusCode == 401) {
+        statusCode = ApiResponseStatus.unauthorized;
+      } else if (result.statusCode == 408) {
+        statusCode = ApiResponseStatus.requestTimeout;
+      } else if (result.statusCode == 500) {
+        statusCode = ApiResponseStatus.serverError;
+      } else {
+        statusCode = ApiResponseStatus.unknownError;
+      }
+
       throw getMessageForStatusCode(
           statusCode ?? ApiResponseStatus.unknownError);
     } catch (e) {

@@ -2,9 +2,10 @@ import 'package:bus_way/data/api/api.dart';
 import 'package:bus_way/data/model/travel_model/travel_blog_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_common_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_image_info_model.dart';
+import 'package:bus_way/data/model/travel_model/travel_review_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_review_summary_model.dart';
 import 'package:bus_way/data/respository/travel_repository/travel_repository.dart';
-import 'package:bus_way/ui/mainpage/travel/travel_review/travel_review_view.dart';
+import 'package:bus_way/ui/mainpage/travel/travel_write_review/travel_write_review_view.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -16,12 +17,16 @@ class TravelDetailViewModel with ChangeNotifier {
 
   final PagingController<int, TravelImageInfoModel> _imagePageController =
       PagingController(firstPageKey: 1); // 관광지 이미지 pageController
+  final PagingController<int, TravelReviewInfoModel> _reviewPageController =
+      PagingController(firstPageKey: 1); // 관광지 후기 pageController
   final PagingController<int, TravelBlogInfoModel> _blogPageController =
       PagingController(firstPageKey: 1); // 관광지 블로그 pageController
   static const _pageSize = 20;
   String? _travelImageTotalCount; // 관광지 이미지 API 호출 총 개수
+  String? _travelReviewTotalCount; // 관광지 후기 API 호출 총 개수
   String? _travelBlogTotalCount; // 관광지 블로그 API 호출 총 개수
   List<TravelImageInfoModel>? _travelImageInfoList; // 관광지 이미지 정보 리스트
+  List<TravelReviewInfoModel>? _travelReviewInfoList; // 관광지 후기 정보 리스트
   List<TravelBlogInfoModel>? _travelBlogInfoList; // 관광지 블로그 리뷰 리스트
   TravelCommonInfoModel? _travelCommonInfoList; // 관광지 공통 정보 리스트
   dynamic _travelDetailInfoList; // 관광지 소개 정보 리스트
@@ -30,18 +35,24 @@ class TravelDetailViewModel with ChangeNotifier {
   final Set<Marker> _marker = {};
   bool _isLoading = false;
   String? _errorMessage;
-  int _reviewCurrentIndex = 0;
-  int _travelBlogSortIndex = 0;
+  int _reviewCurrentIndex = 0; // 후기 세그먼트 인덱스
+  int _travelReviewSortIndex = 0; // 후기 정렬 인덱스
+  int _travelBlogSortIndex = 0; // 네이버 블로그 정렬 인덱스
   bool _isTravelFollow = false; // 관광지 팔로우 상태
   bool _isFollowProcessing = false;
 
   PagingController<int, TravelImageInfoModel> get imagePageController =>
       _imagePageController;
+  PagingController<int, TravelReviewInfoModel> get reviewPageController =>
+      _reviewPageController;
   PagingController<int, TravelBlogInfoModel> get blogPageController =>
       _blogPageController;
   String? get travelImageTotalCount => _travelImageTotalCount;
+  String? get travelReviewTotalCount => _travelReviewTotalCount;
   String? get travelBlogTotalCount => _travelBlogTotalCount;
   List<TravelImageInfoModel>? get travelImageInfoList => _travelImageInfoList;
+  List<TravelReviewInfoModel>? get travelReviewInfoList =>
+      _travelReviewInfoList;
   List<TravelBlogInfoModel>? get travelBlogInfoList => _travelBlogInfoList;
   TravelCommonInfoModel? get travelCommonInfoList => _travelCommonInfoList;
   TravelReviewSummaryModel? get travelReviewInfo => _travelReviewInfo;
@@ -51,6 +62,7 @@ class TravelDetailViewModel with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   int get reviewCurrentIndex => _reviewCurrentIndex;
+  int get travelReviewSortIndex => _travelReviewSortIndex;
   int get travelBlogSortIndex => _travelBlogSortIndex;
   bool get isTravelFollow => _isTravelFollow;
   bool get isFollowProcessing => _isFollowProcessing;
@@ -58,6 +70,8 @@ class TravelDetailViewModel with ChangeNotifier {
   @override
   void dispose() {
     _imagePageController.dispose();
+    _reviewPageController.dispose();
+    _blogPageController.dispose();
     _mapController?.dispose();
     super.dispose();
   }
@@ -149,9 +163,9 @@ class TravelDetailViewModel with ChangeNotifier {
         getTravelDetailInfo(contentId, contentTypeId),
         // 관광지 이미지 정보 API 호출
         loadTravelImageInfo(contentId),
-        // TODO: 관광지 후기 API 호출
-
         // 관광지 리뷰 총 개수, 평점 평균 조회 API 호출
+        getTravelReviewSummary(contentId),
+        // 관광지 후기 API 호출
         getTravelReview(contentId),
         // 관광지 블로그 정보 API 호출
         loadTravelBlogInfo(title),
@@ -173,10 +187,75 @@ class TravelDetailViewModel with ChangeNotifier {
     );
   }
 
-  // TODO: 관광지 후기 API 호출
+  // 관광지 블로그 정보 조회 API 불러오기
+  Future<void> loadTravelBlogInfo(String title) async {
+    _blogPageController.addPageRequestListener(
+      (pageKey) {
+        getTravelBlogInfo(pageKey, title);
+      },
+    );
+  }
+
+  // 관광지 후기 API 호출
+  Future<void> getTravelReview(String contentId) async {
+    try {
+      _reviewPageController.addPageRequestListener(
+        (pageKey) async {
+          final travelReviewResponse =
+              await travelRepository.getTravelReviewInfo(
+            pageKey,
+            _pageSize,
+            contentId,
+            selectedReviewSortText,
+          );
+
+          // 후기 글이 없는 (0개)의 경우
+          if (travelReviewResponse.isEmpty) {
+            _reviewPageController.appendLastPage([]);
+            return;
+          }
+
+          // API로 호출한 데이터의 총 개수
+          _travelReviewTotalCount = travelReviewResponse.first.reviewTotalCount;
+
+          // 새로 받아온 페이지 데이터
+          _travelReviewInfoList = travelReviewResponse;
+
+          // 빈 리스트인 경우 마지막 페이지로 처리
+          if (_travelReviewInfoList!.isEmpty &&
+              _travelReviewInfoList!.isEmpty) {
+            _reviewPageController.appendLastPage([]); // 마지막 페이지로 처리
+            return;
+          }
+
+          // 현재까지 불러온 데이터의 개수
+          final int totalFetchedItems = pageKey * _pageSize;
+
+          // totalFetchedItems와 totalCount를 비교하여 마지막 페이지 여부를 결정
+          final isLastPage =
+              totalFetchedItems >= int.parse(_travelReviewTotalCount!);
+
+          // 마지막 페이지이면, 무한 스크롤 종료 / else, 무한 스크롤로 페이지 늘리기
+          if (isLastPage) {
+            _reviewPageController
+                .appendLastPage(_travelReviewInfoList!); // 중복 추가 없이 새로운 데이터 추가
+          } else {
+            final nextPageKey = pageKey + 1;
+            _reviewPageController.appendPage(
+                _travelReviewInfoList!, nextPageKey); // 다음 페이지로 넘어가도록 설정
+          }
+        },
+      );
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+    } finally {
+      notifyListeners();
+    }
+  }
 
   // 관광지 리뷰 총 개수, 평점 평균 조회
-  Future<void> getTravelReview(String contentId) async {
+  Future<void> getTravelReviewSummary(String contentId) async {
     try {
       _travelReviewInfo = await travelRepository.getTravelReviewSummary(
         contentId,
@@ -187,15 +266,6 @@ class TravelDetailViewModel with ChangeNotifier {
     } finally {
       notifyListeners();
     }
-  }
-
-  // 관광지 블로그 정보 조회 API 불러오기
-  Future<void> loadTravelBlogInfo(String title) async {
-    _blogPageController.addPageRequestListener(
-      (pageKey) {
-        getTravelBlogInfo(pageKey, title);
-      },
-    );
   }
 
   // 관광지 공통 정보 조회 API 호출
@@ -294,7 +364,7 @@ class TravelDetailViewModel with ChangeNotifier {
     }
   }
 
-  // 리뷰 세그먼트 인덱스 번호 변경
+  // 리뷰 세그먼트 인덱스 번호 변경 (0: 후기 / 1: 블로그 이동)
   void checkReviewSegmentIndex(int index) {
     _reviewCurrentIndex = index;
     notifyListeners();
@@ -309,7 +379,13 @@ class TravelDetailViewModel with ChangeNotifier {
       ).createRoute(SlideDirection.bottomToTop),
     );
 
-    await getTravelReview(contentId);
+    // 후기 총 개수 및 평점 평균 갱신
+    await getTravelReviewSummary(contentId);
+    // 후기 리스트 갱신
+    // 프레임 빌드 후 리스트 갱신
+    Future.sync(
+      () => _reviewPageController.refresh(),
+    );
   }
 
   // 네이버 블로그 리뷰 API 호출
@@ -319,7 +395,7 @@ class TravelDetailViewModel with ChangeNotifier {
         pageKey,
         _pageSize,
         title,
-        selectedSortText,
+        selectedBlogSortText,
       );
 
       // 블로그 글이 없는 (0개) 갱우
@@ -371,7 +447,26 @@ class TravelDetailViewModel with ChangeNotifier {
     }
   }
 
-  String get selectedSortText {
+  // 후기 정렬 문자열 변경
+  String get selectedReviewSortText {
+    return _travelReviewSortIndex == 0 ? 'rate' : 'date';
+  }
+
+  // 후기 정렬 방식 변경
+  void toggleTravelReviewSort(int value) {
+    _travelReviewSortIndex = value;
+    _travelReviewInfoList!.clear();
+
+    // 프레임 빌드 후 리스트 갱신
+    Future.sync(
+      () => _reviewPageController.refresh(),
+    );
+
+    notifyListeners();
+  }
+
+  // 네이버 블로그 정렬 문자열 변경
+  String get selectedBlogSortText {
     return _travelBlogSortIndex == 0 ? 'sim' : 'date';
   }
 
@@ -379,7 +474,12 @@ class TravelDetailViewModel with ChangeNotifier {
   void toggleTravelBlogSort(int value) {
     _travelBlogSortIndex = value;
     _travelBlogInfoList!.clear();
-    _blogPageController.refresh();
+
+    // 프레임 빌드 후 리스트 갱신
+    Future.sync(
+      () => _blogPageController.refresh(),
+    );
+
     notifyListeners();
   }
 }

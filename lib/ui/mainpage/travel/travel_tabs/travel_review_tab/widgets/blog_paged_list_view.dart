@@ -21,82 +21,77 @@ class BlogPagedListView extends StatelessWidget {
       child: PagedListView<int, TravelBlogInfoModel>(
         pagingController: viewmodel.blogPageController,
         builderDelegate: PagedChildBuilderDelegate(
-          itemBuilder: (context, item, index) => Padding(
-            padding: const EdgeInsets.symmetric(
-                // horizontal: 15.0,
-                ),
-            child: Column(
-              children: [
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      viewmodel.launchBlogUrl(item.blogUrl!);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          customHtmlWidget(context, item.blogTitle!),
-                          if (item.blogDescription != null &&
-                              item.blogDescription != '')
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10.0),
-                              child: Container(
-                                padding: const EdgeInsets.all(8.0), // 내부 여백 설정
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.grey), // 테두리 색상 및 굵기 설정
-                                  borderRadius:
-                                      BorderRadius.circular(8.0), // 모서리 둥글게 설정
-                                  color: Colors.transparent, // 배경색 설정
-                                ),
-                                child: customHtmlWidget(
-                                    context, item.blogDescription!),
-                              ),
-                            ),
+          itemBuilder: (context, item, index) => Column(
+            children: [
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    viewmodel.launchBlogUrl(item.blogUrl!);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        customHtmlWidget(context, item.blogTitle!),
+                        if (item.blogDescription != null &&
+                            item.blogDescription != '')
                           Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Row(
-                              children: [
-                                Text(
-                                  DateFormat("yyyy.MM.dd").format(
-                                    DateTime.parse(item.blogPostDate!),
-                                  ),
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Container(
+                              padding: const EdgeInsets.all(8.0), // 내부 여백 설정
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.grey), // 테두리 색상 및 굵기 설정
+                                borderRadius:
+                                    BorderRadius.circular(8.0), // 모서리 둥글게 설정
+                                color: Colors.transparent, // 배경색 설정
+                              ),
+                              width: double.infinity,
+                              child: customHtmlWidget(
+                                  context, item.blogDescription!),
+                            ),
+                          ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Row(
+                            children: [
+                              Text(
+                                DateFormat("yyyy.MM.dd").format(
+                                  DateTime.parse(item.blogPostDate!),
+                                ),
+                                style: const TextStyle(
+                                  fontSize: 10.0,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              const Icon(
+                                Icons.circle,
+                                size: 3.0,
+                                color: Colors.grey,
+                              ),
+                              const SizedBox(width: 5),
+                              Expanded(
+                                child: Text(
+                                  item.blogName!,
                                   style: const TextStyle(
                                     fontSize: 10.0,
                                     color: Colors.grey,
                                   ),
                                 ),
-                                const SizedBox(width: 5),
-                                const Icon(
-                                  Icons.circle,
-                                  size: 3.0,
-                                  color: Colors.grey,
-                                ),
-                                const SizedBox(width: 5),
-                                Expanded(
-                                  child: Text(
-                                    item.blogName!,
-                                    style: const TextStyle(
-                                      fontSize: 10.0,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                const Divider(),
-              ],
-            ),
+              ),
+              const Divider(),
+            ],
           ),
           noItemsFoundIndicatorBuilder: (context) => const Center(
             child: Column(

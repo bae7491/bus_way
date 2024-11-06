@@ -4,6 +4,7 @@ import 'package:bus_way/data/model/travel_model/near_travel_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_blog_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_common_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_image_info_model.dart';
+import 'package:bus_way/data/model/travel_model/travel_review_info_model.dart';
 import 'package:bus_way/data/model/travel_model/travel_review_summary_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
@@ -97,8 +98,16 @@ class TravelRepository {
   // 관광지 리뷰 총 개수, 평점 평균 조회
   Future<TravelReviewSummaryModel> getTravelReviewSummary(
       String contentId) async {
-    final travelReviewInfo =
+    final travelReviewSummary =
         await travelLocalDatasource.getTravelReviewSummary(contentId);
-    return travelReviewInfo;
+    return travelReviewSummary;
+  }
+
+  // 관광지 리뷰 조회
+  Future<List<TravelReviewInfoModel>> getTravelReviewInfo(
+      int pageNo, int pageSize, String contentId, String sortIndex) async {
+    final travelReviewInfoList = await travelLocalDatasource
+        .getTravelReviewInfo(pageNo, pageSize, contentId, sortIndex);
+    return travelReviewInfoList;
   }
 }
