@@ -65,6 +65,13 @@ class API {
       '$hostConnectReview/get_travel_review_detail.php';
   // ==================
 
+  // ================== 마이페이지 DB 요청 API
+  static const hostConnectMyPage = '$hostConnect/mypage';
+
+  // 로그인 회원 정보 조회
+  static const getUserInfo = '$hostConnectMyPage/get_user_info.php';
+  // ==================
+
   // ================= 공공 데이터 =================
   // 공공 데이터 전역 URL
   static const publicDataUrl = 'apis.data.go.kr';

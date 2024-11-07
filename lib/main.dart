@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
         ),
         // 마이페이지
         ChangeNotifierProvider(
-          create: (_) => MypageViewmodel(),
+          create: (_) => MypageViewModel(),
         ),
       ],
       child: MaterialApp(
