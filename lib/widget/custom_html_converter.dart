@@ -11,7 +11,7 @@ Widget customHtmlWidget(BuildContext context, String htmlData,
       if (context.mounted) {
         final isOpenHtmlLink = await showCustomAlertDialog(
               context,
-              '링크로 이동하시겠습니까?',
+              '해당 링크로 이동하시겠습니까?',
             ) ??
             false;
         if (url != null && viewmodel != null && isOpenHtmlLink) {

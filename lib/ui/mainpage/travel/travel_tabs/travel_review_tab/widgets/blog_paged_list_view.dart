@@ -1,6 +1,7 @@
 import 'package:bus_way/data/model/travel_model/travel_blog_info_model.dart';
 import 'package:bus_way/theme/colors.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_detail_viewmodel.dart';
+import 'package:bus_way/widget/custom_alert_dialog.dart';
 import 'package:bus_way/widget/custom_html_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -26,8 +27,15 @@ class BlogPagedListView extends StatelessWidget {
               Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () {
-                    viewmodel.launchBlogUrl(item.blogUrl!);
+                  onTap: () async {
+                    final isOpenHtmlLink = await showCustomAlertDialog(
+                          context,
+                          '해당 블로그로 이동하시겠습니까?',
+                        ) ??
+                        false;
+                    if (item.blogUrl != null && isOpenHtmlLink) {
+                      viewmodel.launchExternalUrl(item.blogUrl!);
+                    }
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
