@@ -16,6 +16,7 @@ class MainMapViewModel with ChangeNotifier {
   List<NearBusStopModel>? _busStopModel;
   List<BusArriveInfoModel>? _busStopInfoModel;
   LatLng _center = LatLng(35.1797, 129.0746); // 초기 좌표를 부산 시청으로 설정
+  LatLng? _myLocation;
   bool _isLoading = false;
   bool _isRefreshLoading = false;
   bool _isBottomSheetVisible = false;
@@ -34,6 +35,7 @@ class MainMapViewModel with ChangeNotifier {
   List<NearBusStopModel>? get busStopList => _busStopModel;
   List<BusArriveInfoModel>? get busStopInfoModel => _busStopInfoModel;
   LatLng get center => _center;
+  LatLng? get myLocation => _myLocation;
   bool get isLoading => _isLoading;
   bool get isRefreshLoading => _isRefreshLoading;
   bool get isBottomSheetVisible => _isBottomSheetVisible;
@@ -79,17 +81,19 @@ class MainMapViewModel with ChangeNotifier {
     try {
       _busStopModel = await busRepository.getNearBusStop(center);
 
-      // 본인 위치 마커
-      _markers.add(Marker(
-        markerId: 'myLocation',
-        latLng: _center,
-        width: 30,
-        height: 30,
-        offsetX: 15,
-        offsetY: 30,
-        markerImageSrc: API.myLocationImage,
-        zIndex: 1,
-      ));
+      if (myLocation != null) {
+        // 본인 위치 마커
+        _markers.add(Marker(
+          markerId: 'myLocation',
+          latLng: _myLocation!,
+          width: 30,
+          height: 30,
+          offsetX: 15,
+          offsetY: 30,
+          markerImageSrc: API.myLocationImage,
+          zIndex: 1,
+        ));
+      }
 
       if (_busStopModel != null) {
         // 각 버스 정류장 데이터를 기반으로 마커 추가
@@ -215,19 +219,22 @@ class MainMapViewModel with ChangeNotifier {
 
     if (savedLat != null && savedLng != null) {
       // 로컬에 저장된 좌표가 있다면 그 좌표로 설정
-      _center = LatLng(savedLat, savedLng);
+      _myLocation = LatLng(savedLat, savedLng);
       _isLocationReady = true;
     } else if (context.mounted) {
       // 저장된 좌표가 없으면 현재 위치 불러오기
       await getLocation(context);
     }
 
-    if (context.mounted) {
+    if (_myLocation != null && context.mounted) {
       // 본인 주변 500m 이내 정류소 불러오기
-      await getNearBusStop(_center).then((_) {
+      await getNearBusStop(_myLocation!).then((_) {
         _isLoading = false;
         notifyListeners();
       });
+    } else {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -291,15 +298,15 @@ class MainMapViewModel with ChangeNotifier {
         permission == LocationPermission.always) {
       // 현재 좌표 불러오기
       await Geolocator.getCurrentPosition().then((value) {
-        _center = LatLng(value.latitude, value.longitude);
+        _myLocation = LatLng(value.latitude, value.longitude);
         _isLocationReady = true;
         saveLocation(value.latitude, value.longitude); // SharedPreferences에 저장
         notifyListeners();
       });
       if (context.mounted) {
         // 본인 주변 500m 이내 정류소 불러오기
-        await getNearBusStop(_center).then((_) {
-          moveCameraToCurrentLocation(); // 카메라를 이동
+        await getNearBusStop(_myLocation!).then((_) {
+          moveCameraToMyLocation(); // 카메라를 이동
         });
       }
     }
@@ -351,6 +358,15 @@ class MainMapViewModel with ChangeNotifier {
   // 좌표가 설정된 후 카메라 이동
   void moveCameraToCurrentLocation() {
     _mapController!.panTo(_center);
+    _isLocationReady = false;
+  }
+
+  // 현재 좌표로 설정된 후 카메라 이동
+  void moveCameraToMyLocation() {
+    if (_myLocation != null) {
+      _mapController!.panTo(_myLocation!);
+    }
+
     _isLocationReady = false;
   }
 
