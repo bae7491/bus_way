@@ -44,7 +44,8 @@ class ReviewPagedListView extends StatelessWidget {
                               Text(
                                 item.nickName!,
                                 style: const TextStyle(
-                                  fontSize: 12.0,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                               RatingBarIndicator(
