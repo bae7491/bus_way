@@ -227,7 +227,8 @@ class MainMapViewModel with ChangeNotifier {
     }
 
     if (_myLocation != null && context.mounted) {
-      // 본인 주변 500m 이내 정류소 불러오기
+      // 본인 좌표 이동 후, 좌표 주변 500m 이내 정류소 불러오기
+      moveCameraToMyLocation();
       await getNearBusStop(_myLocation!).then((_) {
         _isLoading = false;
         notifyListeners();
