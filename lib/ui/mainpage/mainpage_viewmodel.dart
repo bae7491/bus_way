@@ -10,7 +10,7 @@ class MainPageViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  updateCurrentPage(int index) {
+  void updateCurrentPage(int index) {
     _index = index;
     notifyListeners();
   }

@@ -1,6 +1,7 @@
 import 'package:bus_way/theme/colors.dart';
 import 'package:bus_way/ui/mainpage/main_map/main_map_bus_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
+import 'package:bus_way/ui/mainpage/mypage/mypage_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_detail_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_tabs/travel_detail_tab.dart';
 import 'package:bus_way/widget/custom_snackbar.dart';
@@ -167,6 +168,13 @@ class TravelDetailView extends StatelessWidget {
               onTap: (int index) {
                 final mainMapViewModel =
                     Provider.of<MainMapViewModel>(context, listen: false);
+                final myPageViewModel =
+                    Provider.of<MypageViewModel>(context, listen: false);
+
+                if (index == 1) {
+                  // MypageView 탭이 선택되면 새로고침
+                  myPageViewModel.loadUserInfo();
+                }
 
                 if (index == 1 && mainMapViewModel.isBottomSheetVisible) {
                   Navigator.of(context).pop(); // 바텀 시트 닫기

@@ -3,6 +3,7 @@ import 'package:bus_way/ui/mainpage/main_map/main_map_view.dart';
 import 'package:bus_way/ui/mainpage/main_map/main_map_bus_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mypage/mypage_view.dart';
+import 'package:bus_way/ui/mainpage/mypage/mypage_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -39,8 +40,15 @@ class MainView extends StatelessWidget {
             onTap: (int index) {
               final mainMapViewModel =
                   Provider.of<MainMapViewModel>(context, listen: false);
+              final myPageViewModel =
+                  Provider.of<MypageViewModel>(context, listen: false);
 
-              if (mainMapViewModel.isLoading == false) {
+              if (index == 1) {
+                // MypageView 탭이 선택되면 새로고침
+                myPageViewModel.loadUserInfo();
+              }
+
+              if (!mainMapViewModel.isLoading) {
                 mainPageViewModel.updateCurrentPage(index);
               }
             },
