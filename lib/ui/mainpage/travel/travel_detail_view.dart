@@ -177,8 +177,8 @@ class TravelDetailView extends StatelessWidget {
                 }
 
                 if (index == 1 && mainMapViewModel.isBottomSheetVisible) {
-                  mainMapViewModel.hideBottomSheet(); // 상태 업데이트
                   Navigator.of(context).pop(); // 바텀 시트 닫기
+                  mainMapViewModel.hideBottomSheet(); // 상태 업데이트
                 }
 
                 if (!mainMapViewModel.isLoading) {

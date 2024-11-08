@@ -154,6 +154,8 @@ class TravelReviewDetailView extends StatelessWidget {
                                 ),
                                 if (reviewDetailData.reviewImage != null)
                                   Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         "3. 관광지에서 찍은 사진이예요.",
