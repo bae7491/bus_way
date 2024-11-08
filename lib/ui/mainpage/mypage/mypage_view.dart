@@ -13,7 +13,6 @@ class MypageView extends StatelessWidget {
     return Consumer<MypageViewModel>(
       builder: (context, myPageViewModel, child) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          print('mypage_view');
           if (myPageViewModel.errorMessage != null) {
             ScaffoldMessenger.of(context).showSnackBar(
               CustomSnackbar(
