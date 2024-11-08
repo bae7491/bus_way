@@ -177,13 +177,13 @@ class TravelDetailView extends StatelessWidget {
                 }
 
                 if (index == 1 && mainMapViewModel.isBottomSheetVisible) {
-                  Navigator.of(context).pop(); // 바텀 시트 닫기
                   mainMapViewModel.hideBottomSheet(); // 상태 업데이트
+                  Navigator.of(context).pop(); // 바텀 시트 닫기
                 }
 
                 if (!mainMapViewModel.isLoading) {
                   mainPageViewModel.updateCurrentPage(index);
-                  // Navigator.of(context).pop(); // 네비게이션 바에서 선택 시 이전 화면으로 이동
+                  Navigator.of(context).pop(); // 네비게이션 바에서 선택 시 이전 화면으로 이동
                 }
               },
               items: const <BottomNavigationBarItem>[
