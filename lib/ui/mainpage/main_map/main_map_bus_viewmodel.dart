@@ -364,7 +364,7 @@ class MainMapViewModel with ChangeNotifier {
 
   // 현재 좌표로 설정된 후 카메라 이동
   void moveCameraToMyLocation() {
-    if (_myLocation != null) {
+    if (_myLocation != null && _mapController != null) {
       _mapController!.panTo(_myLocation!);
     }
 
