@@ -70,6 +70,13 @@ class API {
 
   // 로그인 회원 정보 조회
   static const getUserInfo = '$hostConnectMyPage/get_user_info.php';
+
+  // 회원의 관광지 팔로우 & 후기 총 개수 조회
+  static const getFollowReviewCount =
+      '$hostConnectMyPage/get_follow_review_summary.php';
+
+  // 회원의 관광지 팔로우 목록 조회
+  static const getFollowList = '$hostConnectMyPage/get_follow_list.php';
   // ==================
 
   // ================= 공공 데이터 =================

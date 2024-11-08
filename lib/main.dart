@@ -3,6 +3,7 @@ import 'package:bus_way/ui/auth/reset_password/reset_password_viewmodel.dart';
 import 'package:bus_way/ui/auth/verify_email/verify_email_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/main_map/main_map_travel_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/main_map/main_map_bus_viewmodel.dart';
+import 'package:bus_way/ui/mainpage/mainpage_view.dart';
 import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mypage/mypage_viewmodel.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -68,6 +69,10 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
           fontFamily: 'SCDream',
         ),
+        routes: {
+          '/mainView': (context) => const MainView(),
+        },
+        initialRoute: '/',
       ),
     );
   }

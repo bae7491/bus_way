@@ -183,7 +183,7 @@ class TravelDetailView extends StatelessWidget {
 
                 if (!mainMapViewModel.isLoading) {
                   mainPageViewModel.updateCurrentPage(index);
-                  Navigator.of(context).pop(); // 네비게이션 바에서 선택 시 이전 화면으로 이동
+                  // Navigator.of(context).pop(); // 네비게이션 바에서 선택 시 이전 화면으로 이동
                 }
               },
               items: const <BottomNavigationBarItem>[

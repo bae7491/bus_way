@@ -1,4 +1,5 @@
 import 'package:bus_way/data/model/mypage_model/mypagae_user_model.dart';
+import 'package:bus_way/data/model/mypage_model/user_follow_review_summary_model.dart';
 import 'package:bus_way/data/respository/auth_repository/login_auth_repository.dart';
 import 'package:bus_way/data/respository/mypage_repository/mypage_repository.dart';
 import 'package:bus_way/ui/auth/login/login_view.dart';
@@ -13,10 +14,12 @@ class MypageViewModel with ChangeNotifier {
   LoginAuthRepository loginAuthRepository = LoginAuthRepository();
   MypageRepository mypageRepository = MypageRepository();
 
+  UserFollowReviewSummaryModel? _followReviewSummary;
   MypagaeUserModel? _userInfo;
   bool _isLoading = false;
   String? _errorMessage;
 
+  UserFollowReviewSummaryModel? get followReviewSummary => _followReviewSummary;
   MypagaeUserModel? get userInfo => _userInfo;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
@@ -24,6 +27,19 @@ class MypageViewModel with ChangeNotifier {
   // 에러 메시지 초기화
   void clearErrorMessage() async {
     _errorMessage = null;
+    notifyListeners();
+  }
+
+  Future<void> loadUserInfo() async {
+    _isLoading = true;
+    notifyListeners();
+
+    Future.wait([
+      getUserInfo(),
+      getFollowReviewCount(),
+    ]);
+
+    _isLoading = false;
     notifyListeners();
   }
 
@@ -43,8 +59,18 @@ class MypageViewModel with ChangeNotifier {
     }
   }
 
+  // 회원의 관광지 팔로우 & 후기 총 개수 조회
+  Future<void> getFollowReviewCount() async {
+    try {
+      _followReviewSummary = await mypageRepository.getFollowReviewCount();
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+    }
+  }
+
   // 유저의 관광지 팔로우 목록 뷰로 이동
-  void navigateFollowList(BuildContext context) {
+  void navigateFollowList(BuildContext context, String followTotalCount) {
     Navigator.of(context).push(
       const NavigatorAnimation(
         destination: FollowListView(),
