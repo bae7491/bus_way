@@ -23,6 +23,8 @@ class TravelImageTab extends StatelessWidget {
       onRefresh: () => Future.sync(
         () => viewmodel.imagePageController.refresh(),
       ),
+      backgroundColor: Colors.white,
+      color: orchid,
       child: PagedListView<int, TravelImageInfoModel>(
         pagingController: viewmodel.imagePageController,
         builderDelegate: PagedChildBuilderDelegate(

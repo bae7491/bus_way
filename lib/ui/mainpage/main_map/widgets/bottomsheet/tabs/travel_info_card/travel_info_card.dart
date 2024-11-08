@@ -22,6 +22,8 @@ class TravelInfoCard extends StatelessWidget {
         onRefresh: () => Future.sync(
           () => travelViewModel.pageController.refresh(),
         ),
+        backgroundColor: Colors.white,
+        color: orchid,
         child: PagedListView<int, NearTravelInfoModel>(
           pagingController: travelViewModel.pageController,
           builderDelegate: PagedChildBuilderDelegate(

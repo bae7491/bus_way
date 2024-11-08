@@ -66,6 +66,8 @@ class FollowListView extends StatelessWidget {
                     onRefresh: () => Future.sync(() {
                       followListViewModel.followPageController.refresh();
                     }),
+                    backgroundColor: Colors.white,
+                    color: orchid,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

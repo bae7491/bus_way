@@ -1,3 +1,4 @@
+import 'package:bus_way/theme/colors.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_detail_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_tabs/travel_review_tab/widgets/blog_list_sort_option_view.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_tabs/travel_review_tab/widgets/blog_paged_list_view.dart';
@@ -9,6 +10,8 @@ Widget travelBlogListView(TravelDetailViewModel viewmodel, String title) {
     onRefresh: () => Future.sync(
       () => viewmodel.blogPageController.refresh(),
     ),
+    backgroundColor: Colors.white,
+    color: orchid,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

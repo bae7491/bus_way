@@ -13,6 +13,8 @@ Widget travelReviewListView(
     onRefresh: () => Future.sync(
       () => viewmodel.reviewPageController.refresh(),
     ),
+    backgroundColor: Colors.white,
+    color: orchid,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

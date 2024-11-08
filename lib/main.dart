@@ -69,10 +69,6 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
           fontFamily: 'SCDream',
         ),
-        routes: {
-          '/mainView': (context) => const MainView(),
-        },
-        initialRoute: '/',
       ),
     );
   }
