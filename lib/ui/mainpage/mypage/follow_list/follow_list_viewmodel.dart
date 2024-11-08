@@ -1,9 +1,7 @@
 import 'package:bus_way/data/model/mypage_model/user_follow_model.dart';
 import 'package:bus_way/data/respository/mypage_repository/mypage_repository.dart';
 import 'package:bus_way/data/respository/travel_repository/travel_repository.dart';
-import 'package:bus_way/ui/mainpage/travel/travel_detail_view.dart';
 import 'package:bus_way/widget/custom_alert_dialog.dart';
-import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
