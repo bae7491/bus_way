@@ -6,6 +6,7 @@ import 'package:bus_way/ui/auth/login/login_view.dart';
 import 'package:bus_way/ui/auth/login/login_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mypage/follow_list/follow_list_view.dart';
 import 'package:bus_way/ui/mainpage/mypage/review_list/review_list_view.dart';
+import 'package:bus_way/widget/custom_alert_dialog.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -85,6 +86,16 @@ class MypageViewModel with ChangeNotifier {
         destination: ReviewListView(),
       ).createRoute(SlideDirection.bottomToTop),
     );
+  }
+
+  // 로그아웃 확인 팝업
+  Future<void> checkSignOut(BuildContext context) async {
+    final isSignOut =
+        await showCustomAlertDialog(context, '로그아웃 하시겠습니까?') ?? false;
+
+    if (isSignOut && context.mounted) {
+      await signOut(context);
+    }
   }
 
   // 로그아웃

@@ -232,7 +232,7 @@ class MypageView extends StatelessWidget {
                             ),
                             ListTile(
                               onTap: () {
-                                myPageViewModel.signOut(context);
+                                myPageViewModel.checkSignOut(context);
                               },
                               title: const Text(
                                 '로그아웃',
