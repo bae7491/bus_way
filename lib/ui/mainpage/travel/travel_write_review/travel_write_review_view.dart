@@ -14,9 +14,11 @@ class TravelReviewView extends StatelessWidget {
   const TravelReviewView({
     super.key,
     required this.contentId,
+    required this.title,
   });
 
   final String contentId;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -279,7 +281,7 @@ class TravelReviewView extends StatelessWidget {
                         child: CustomContinueButton(
                           onPressed: () {
                             travelReviewViewModel.checkTravelReview(
-                                context, contentId);
+                                context, contentId, title);
                           },
                           color: travelReviewViewModel.isReviewActiveBtn
                               ? orchid

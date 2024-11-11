@@ -65,7 +65,7 @@ class TravelReviewTab extends StatelessWidget {
             index: viewmodel.reviewCurrentIndex,
             children: [
               // 후기 뷰
-              travelReviewListView(context, viewmodel, contentId),
+              travelReviewListView(context, viewmodel, title, contentId),
 
               // 블로그 뷰
               travelBlogListView(viewmodel, title),

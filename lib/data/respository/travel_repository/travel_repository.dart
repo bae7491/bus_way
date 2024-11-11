@@ -90,10 +90,10 @@ class TravelRepository {
 
   // 관광지 리뷰 업로드 DB 요청
   Future<void> uploadTravelReview(
-      double rating, String content, String contentId,
+      double rating, String content, String contentId, String title,
       [XFile? imageFile]) async {
     await travelLocalDatasource.uploadTravelReview(
-        rating, content, contentId, imageFile);
+        rating, content, contentId, title, imageFile);
   }
 
   // 관광지 리뷰 총 개수, 평점 평균 조회

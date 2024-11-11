@@ -73,11 +73,11 @@ class TravelWriteReviewViewModel with ChangeNotifier {
   }
 
   // 후기 작성 필수 값(별점, 리뷰 글)이 작성되었는지 확인 후 리뷰 업로드
-  void checkTravelReview(BuildContext context, String contentId) {
+  void checkTravelReview(BuildContext context, String contentId, String title) {
     if (reviewController.text.isNotEmpty) {
       // 리뷰 작성 textFormField의 Focus 제거
       reviewFocusNode.unfocus();
-      checkRegisterReivew(context, contentId);
+      checkRegisterReivew(context, contentId, title);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const CustomSnackbar(
@@ -89,7 +89,7 @@ class TravelWriteReviewViewModel with ChangeNotifier {
 
   // 후기 작성 등록 확인 팝업
   Future<void> checkRegisterReivew(
-      BuildContext context, String contentId) async {
+      BuildContext context, String contentId, String title) async {
     final isRegisterReview = await showCustomAlertDialog(
           context,
           '작성한 후기를 등록하시겠습니까?',
@@ -97,25 +97,26 @@ class TravelWriteReviewViewModel with ChangeNotifier {
         false;
 
     if (isRegisterReview && context.mounted) {
-      await uploadTravelReview(context, contentId);
+      await uploadTravelReview(context, contentId, title);
     }
   }
 
   // 작성 리뷰 업로드
   Future<void> uploadTravelReview(
-      BuildContext context, String contentId) async {
+      BuildContext context, String contentId, String title) async {
     try {
       _isLoading = true;
       notifyListeners();
 
       if (reviewImage != null) {
         await travelRepository.uploadTravelReview(
-            _rating, reviewController.text, contentId, reviewImage!);
+            _rating, reviewController.text, contentId, title, reviewImage!);
       } else {
         await travelRepository.uploadTravelReview(
           _rating,
           reviewController.text,
           contentId,
+          title,
         );
       }
       if (context.mounted) {

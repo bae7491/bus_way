@@ -183,7 +183,7 @@ class TravelLocalDatasource with ChangeNotifier {
 
   // 4. 관광지 리뷰 업로드 DB 요청
   Future<void> uploadTravelReview(
-      double rating, String content, String contentId,
+      double rating, String content, String contentId, String title,
       [XFile? imageFile]) async {
     bool isSuccess = false;
     try {
@@ -198,6 +198,7 @@ class TravelLocalDatasource with ChangeNotifier {
 
       request.fields['email'] = email;
       request.fields['content_id'] = contentId;
+      request.fields['title'] = title;
       request.fields['review_rate'] = rating.toString();
       request.fields['review_content'] = content;
       if (imageFile != null) {

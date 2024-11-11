@@ -205,7 +205,9 @@ class MypageView extends StatelessWidget {
                           physics: const NeverScrollableScrollPhysics(),
                           children: [
                             ListTile(
-                              onTap: () {},
+                              onTap: () {
+                                // TODO: 내정보 수정 연결 코드 추가.
+                              },
                               title: const Text(
                                 '내정보 수정',
                                 style: TextStyle(
@@ -218,7 +220,9 @@ class MypageView extends StatelessWidget {
                               thickness: 2,
                             ),
                             ListTile(
-                              onTap: () {},
+                              onTap: () {
+                                // TODO: 계정 탈퇴 연결 코드 추가.
+                              },
                               title: const Text(
                                 '계정 탈퇴',
                                 style: TextStyle(

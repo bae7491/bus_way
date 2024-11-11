@@ -77,6 +77,12 @@ class API {
 
   // 회원의 관광지 팔로우 목록 조회
   static const getFollowList = '$hostConnectMyPage/get_follow_list.php';
+
+  // 회원의 관광지 후기 목록 조회
+  static const getReviewList = '$hostConnectMyPage/get_review_list.php';
+
+  // 회원의 관광지 후기 삭제
+  static const deleteReview = '$hostConnectMyPage/delete_review.php';
   // ==================
 
   // ================= 공공 데이터 =================

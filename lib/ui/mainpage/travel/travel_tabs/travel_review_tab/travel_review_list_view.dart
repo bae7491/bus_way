@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 
-Widget travelReviewListView(
-    BuildContext context, TravelDetailViewModel viewmodel, String contentId) {
+Widget travelReviewListView(BuildContext context,
+    TravelDetailViewModel viewmodel, String title, String contentId) {
   final reviewInfo = viewmodel.travelReviewInfo;
   return RefreshIndicator(
     onRefresh: () => Future.sync(
@@ -80,7 +80,7 @@ Widget travelReviewListView(
                         ElevatedButton(
                           onPressed: () async {
                             await viewmodel.writeReviewNavigate(
-                                context, contentId);
+                                context, contentId, title);
                             await viewmodel.getTravelReviewSummary(contentId);
                           },
                           style: ElevatedButton.styleFrom(

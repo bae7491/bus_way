@@ -373,10 +373,10 @@ class TravelDetailViewModel with ChangeNotifier {
 
   // 후기 작성 이동
   Future<void> writeReviewNavigate(
-      BuildContext context, String contentId) async {
+      BuildContext context, String contentId, String title) async {
     await Navigator.of(context).push(
       NavigatorAnimation(
-        destination: TravelReviewView(contentId: contentId),
+        destination: TravelReviewView(contentId: contentId, title: title),
       ).createRoute(SlideDirection.bottomToTop),
     );
 
