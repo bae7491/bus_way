@@ -19,7 +19,7 @@ class TravelReviewDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<TravelReviewDetailViewModel>(
       create: (_) =>
-          TravelReviewDetailViewModel()..laodTravelReviewdetail(reviewId),
+          TravelReviewDetailViewModel()..loadTravelReviewdetail(reviewId),
       child: Consumer<TravelReviewDetailViewModel>(
         builder: (context, viewmodel, child) {
           final reviewDetailData = viewmodel.travelReviewDetailList;
