@@ -21,7 +21,7 @@ class TravelReviewDetailViewModel with ChangeNotifier {
   }
 
   // 선택 관광지의 후기 상세 정보 불러오기
-  Future<void> laodTravelReviewdetail(String reviewId) async {
+  Future<void> loadTravelReviewdetail(String reviewId) async {
     _isLoading = true;
     notifyListeners();
 
