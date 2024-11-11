@@ -1,6 +1,6 @@
 import 'package:bus_way/theme/colors.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_detail_viewmodel.dart';
-import 'package:bus_way/ui/mainpage/travel/travel_tabs/travel_review_tab/widgets/review_list_sort_optin_view.dart';
+import 'package:bus_way/ui/mainpage/travel/travel_tabs/travel_review_tab/widgets/review_list_sort_option_view.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_tabs/travel_review_tab/widgets/review_paged_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
