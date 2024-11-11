@@ -15,14 +15,12 @@ class TravelWriteReviewViewModel with ChangeNotifier {
   String? _errorMessage;
   bool _isReviewActiveBtn = false;
   double _rating = 3.0; // 기본 레이팅 값
-  bool _isAlertClosed = false;
   XFile? _reviewImage;
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   bool get isReviewActiveBtn => _isReviewActiveBtn;
   double get rating => _rating;
-  bool get isAlertClosed => _isAlertClosed;
   XFile? get reviewImage => _reviewImage;
 
   @override
