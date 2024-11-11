@@ -38,12 +38,6 @@ class TravelWriteReviewViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // AlertDialog 뒤로가기 상태 체크
-  void checkCloseAlertDialog(bool isAlertClosed) {
-    _isAlertClosed = isAlertClosed;
-    notifyListeners();
-  }
-
   // RatingBar에서 호출할 메서드
   void updateRating(double newRating) {
     _rating = newRating;
