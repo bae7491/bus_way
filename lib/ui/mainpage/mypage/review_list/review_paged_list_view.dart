@@ -19,8 +19,8 @@ Widget reviewPagedListView(ReviewListViewModel viewmodel) {
               color: Colors.transparent,
               child: InkWell(
                 onTap: () {
-                  // TODO: 클릭 시, 리뷰 상세 뷰로 이동.
-                  // viewmodel.navigateReviewDetailView(context, item.reviewId!);
+                  // 클릭 시, 리뷰 상세 뷰로 이동.
+                  viewmodel.navigateReviewDetaliView(context, item.reviewId!);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),

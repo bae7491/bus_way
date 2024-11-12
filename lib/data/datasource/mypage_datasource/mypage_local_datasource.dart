@@ -298,7 +298,7 @@ class MypageLocalDatasource with ChangeNotifier {
       if (originalImagePath != null) {
         request.fields['original_image_path'] = originalImagePath;
       }
-      if (imageFile != null) {
+      if (imageFile != null && !imageFile.path.startsWith('http')) {
         request.files.add(
           await http.MultipartFile.fromPath(
             'image',
@@ -332,6 +332,7 @@ class MypageLocalDatasource with ChangeNotifier {
       throw getMessageForStatusCode(
           statusCode ?? ApiResponseStatus.unknownError);
     } catch (e) {
+      print('e.toString(): ${e.toString()}');
       statusCode = ApiResponseStatus.unknownError;
       throw getMessageForStatusCode(
           statusCode ?? ApiResponseStatus.unknownError);

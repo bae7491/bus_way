@@ -19,6 +19,7 @@ class ReviewModifyViewModel with ChangeNotifier {
   double _rating = 3.0;
   bool _isReviewActiveBtn = false;
   XFile? _reviewImage;
+  String? _originalImage;
   String? _originalImagePath;
 
   TravelReviewDetailModel? get reviewDetailList => _reviewDetailList;
@@ -27,6 +28,7 @@ class ReviewModifyViewModel with ChangeNotifier {
   double get rating => _rating;
   bool get isReviewActiveBtn => _isReviewActiveBtn;
   XFile? get reviewImage => _reviewImage;
+  String? get originalImage => _originalImage;
   String? get originalImagePath => _originalImagePath;
 
   ReviewModifyViewModel(String reviewId) {
@@ -92,11 +94,12 @@ class ReviewModifyViewModel with ChangeNotifier {
 
       if (_reviewDetailList!.reviewImage != null &&
           _reviewDetailList!.reviewImage!.isNotEmpty) {
-        _reviewImage = XFile(_reviewDetailList!.reviewImagePath!);
+        _originalImage = _reviewDetailList!.reviewImage;
       }
 
       if (_reviewDetailList!.reviewImagePath != null &&
           _reviewDetailList!.reviewImagePath!.isNotEmpty) {
+        _reviewImage = XFile(_reviewDetailList!.reviewImagePath!);
         _originalImagePath = _reviewDetailList!.reviewImage!;
       }
     } catch (e) {
@@ -116,6 +119,8 @@ class ReviewModifyViewModel with ChangeNotifier {
           '수정한 후기를 등록하시겠습니까?',
         ) ??
         false;
+
+    reviewFocusNode.unfocus();
 
     if (isRegisterReview && context.mounted) {
       await uploadModifyReview(context, reviewId, contentId, title);

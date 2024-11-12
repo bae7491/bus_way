@@ -41,7 +41,7 @@ class TravelReviewDetailView extends StatelessWidget {
               surfaceTintColor: Colors.white,
               centerTitle: true,
               title: const Text(
-                'BusWay',
+                '상세 후기',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 24,
@@ -71,25 +71,12 @@ class TravelReviewDetailView extends StatelessWidget {
                       child: Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 20.0,
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 20.0,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Center(
-                                  child: Text(
-                                    "상세 후기",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 24,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20.0,
-                                ),
                                 const Text(
                                   "1. 관광지에 대한 별점이예요.",
                                   style: TextStyle(

@@ -1,6 +1,7 @@
 import 'package:bus_way/data/model/mypage_model/user_review_model.dart';
 import 'package:bus_way/data/respository/mypage_repository/mypage_repository.dart';
 import 'package:bus_way/ui/mainpage/mypage/review_modify/review_modify_view.dart';
+import 'package:bus_way/ui/mainpage/travel/travel_review_detail/travel_review_detail_view.dart';
 import 'package:bus_way/widget/custom_alert_dialog.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
@@ -115,10 +116,21 @@ class ReviewListViewModel with ChangeNotifier {
     }
   }
 
+  // 관광지 후기 상세 페이지로 이동
+  Future<void> navigateReviewDetaliView(
+      BuildContext context, String reviewId) async {
+    await Navigator.of(context).push(
+      NavigatorAnimation(
+        destination: TravelReviewDetailView(reviewId: reviewId),
+      ).createRoute(SlideDirection.bottomToTop),
+    );
+  }
+
   // 관광지 후기 수정 페이지 이동
   Future<void> navigateModifyReview(BuildContext context, String reviewId,
       String contentId, String title) async {
-    await Navigator.of(context).push(
+    await Navigator.of(context)
+        .push(
       NavigatorAnimation(
         destination: ReviewModifyView(
           reviewId: reviewId,
@@ -126,10 +138,11 @@ class ReviewListViewModel with ChangeNotifier {
           title: title,
         ),
       ).createRoute(SlideDirection.bottomToTop),
-    );
-
-    // 수정 후, 후기 목록 페이지 다시 불러오기
-    await loadReviewList();
+    )
+        .then((_) {
+      // 수정 후, 후기 목록 페이지 다시 불러오기
+      loadReviewList();
+    });
   }
 
   // 관광지 후기 삭제 확인 팝업
