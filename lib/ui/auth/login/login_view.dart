@@ -26,7 +26,7 @@ class LoginView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          // const SizedBox(height: 50),
+                          const SizedBox(height: 10),
                           Center(
                             child: Image.asset(
                               'assets/images/main_icon.png',
@@ -34,7 +34,7 @@ class LoginView extends StatelessWidget {
                               height: 150,
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
                           const Text(
                             '이메일',
                             style: TextStyle(
