@@ -230,7 +230,6 @@ class MypageLocalDatasource with ChangeNotifier {
   // 5. 회원의 관광지 후기 삭제
   Future<void> deleteReview(String reviewId, [String? reviewImage]) async {
     try {
-      print('reviewImage: $reviewImage');
       var result = await http.post(
         Uri.parse(API.deleteReview),
         headers: {
@@ -281,7 +280,6 @@ class MypageLocalDatasource with ChangeNotifier {
       String contentId, String title,
       [String? originalImagePath, XFile? imageFile]) async {
     try {
-      print('original_image_path: $originalImagePath');
       // 기기에 저장된 email 정보 불러오기
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final email = prefs.getString('loginEmail') ?? "";
