@@ -83,6 +83,9 @@ class API {
 
   // 회원의 관광지 후기 삭제
   static const deleteReview = '$hostConnectMyPage/delete_review.php';
+
+  // 회원의 관광지 후기 수정
+  static const modifyReview = '$hostConnectMyPage/modify_review.php';
   // ==================
 
   // ================= 공공 데이터 =================

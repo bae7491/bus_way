@@ -3,6 +3,7 @@ import 'package:bus_way/data/model/mypage_model/mypagae_user_model.dart';
 import 'package:bus_way/data/model/mypage_model/user_follow_model.dart';
 import 'package:bus_way/data/model/mypage_model/user_follow_review_summary_model.dart';
 import 'package:bus_way/data/model/mypage_model/user_review_model.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MypageRepository {
   final MypageLocalDatasource mypageLocalDatasource = MypageLocalDatasource();
@@ -36,7 +37,15 @@ class MypageRepository {
   }
 
   // 회원의 관광지 후기 삭제
-  Future<void> deleteReivew(String reviewId, String reviewImage) async {
+  Future<void> deleteReview(String reviewId, [String? reviewImage]) async {
     await mypageLocalDatasource.deleteReview(reviewId, reviewImage);
+  }
+
+  // 회원의 관광지 후기 수정
+  Future<void> modifyReview(String reviewId, double rating, String content,
+      String contentId, String title,
+      [String? originalImagePath, XFile? imageFile]) async {
+    await mypageLocalDatasource.modifyReview(reviewId, rating, content,
+        contentId, title, originalImagePath, imageFile);
   }
 }

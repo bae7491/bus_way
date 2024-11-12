@@ -8,6 +8,7 @@ class UserReviewModel {
   String? title; // 관광지 이름
   String? reviewRate; // 후기 평점
   String? reviewContent; // 후기 내용
+  String? reviewImagePath; // 후기 이미지 경로
   String? reviewImage; // 후기 이미지
   String? reviewModifiedDate; // 글 최신 날짜 (수정 날짜 기준)
 
@@ -20,6 +21,7 @@ class UserReviewModel {
     this.title,
     this.reviewRate,
     this.reviewContent,
+    this.reviewImagePath,
     this.reviewImage,
     this.reviewModifiedDate,
   });
@@ -33,6 +35,7 @@ class UserReviewModel {
       title: json['title'] as String?,
       reviewRate: json['review_rate'] as String?,
       reviewContent: json['review_content'] as String?,
+      reviewImagePath: json['review_image_path'] as String?,
       reviewImage: json['review_image'] as String?,
       reviewModifiedDate: json['modified_date'] as String?,
     );

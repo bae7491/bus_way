@@ -8,6 +8,7 @@ import 'package:bus_way/data/model/mypage_model/user_follow_review_summary_model
 import 'package:bus_way/data/model/mypage_model/user_review_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MypageLocalDatasource with ChangeNotifier {
@@ -227,8 +228,9 @@ class MypageLocalDatasource with ChangeNotifier {
   }
 
   // 5. 회원의 관광지 후기 삭제
-  Future<void> deleteReview(String reviewId, String reviewImage) async {
+  Future<void> deleteReview(String reviewId, [String? reviewImage]) async {
     try {
+      print('reviewImage: $reviewImage');
       var result = await http.post(
         Uri.parse(API.deleteReview),
         headers: {
@@ -236,9 +238,8 @@ class MypageLocalDatasource with ChangeNotifier {
               'application/x-www-form-urlencoded', // 적절한 Content-Type 설정
         },
         body: {
-          'server_url': API.hostConnect,
           'review_id': reviewId,
-          'review_image': reviewImage,
+          'review_image': reviewImage ?? '',
         },
       ).timeout(
         const Duration(minutes: 1), // 타임아웃을 1분으로 설정
@@ -252,6 +253,70 @@ class MypageLocalDatasource with ChangeNotifier {
         final deleteReviewResult = jsonDecode(result.body);
 
         if (deleteReviewResult['success'] == true) {
+          return;
+        }
+      } else if (result.statusCode == 400) {
+        statusCode = ApiResponseStatus.badRequest;
+      } else if (result.statusCode == 401) {
+        statusCode = ApiResponseStatus.unauthorized;
+      } else if (result.statusCode == 408) {
+        statusCode = ApiResponseStatus.requestTimeout;
+      } else if (result.statusCode == 500) {
+        statusCode = ApiResponseStatus.serverError;
+      } else {
+        statusCode = ApiResponseStatus.unknownError;
+      }
+
+      throw getMessageForStatusCode(
+          statusCode ?? ApiResponseStatus.unknownError);
+    } catch (e) {
+      statusCode = ApiResponseStatus.unknownError;
+      throw getMessageForStatusCode(
+          statusCode ?? ApiResponseStatus.unknownError);
+    }
+  }
+
+  // 6. 회원의 관광지 후기 수정
+  Future<void> modifyReview(String reviewId, double rating, String content,
+      String contentId, String title,
+      [String? originalImagePath, XFile? imageFile]) async {
+    try {
+      print('original_image_path: $originalImagePath');
+      // 기기에 저장된 email 정보 불러오기
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final email = prefs.getString('loginEmail') ?? "";
+
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(API.modifyReview),
+      );
+
+      request.fields['review_id'] = reviewId;
+      request.fields['email'] = email;
+      request.fields['content_id'] = contentId;
+      request.fields['title'] = title;
+      request.fields['review_rate'] = rating.toString();
+      request.fields['review_content'] = content;
+      if (originalImagePath != null) {
+        request.fields['original_image_path'] = originalImagePath;
+      }
+      if (imageFile != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'image',
+            imageFile.path,
+          ),
+        );
+      }
+
+      var result = await request.send();
+
+      if (result.statusCode == 200) {
+        // 응답을 문자열로 변환한 후 JSON 파싱
+        var responseBody = await result.stream.bytesToString();
+        var modifyReviewResult = jsonDecode(responseBody);
+
+        if (modifyReviewResult['success'] == true) {
           return;
         }
       } else if (result.statusCode == 400) {

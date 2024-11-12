@@ -1,23 +1,26 @@
 import 'dart:io';
 
 import 'package:bus_way/theme/colors.dart';
-import 'package:bus_way/ui/mainpage/travel/travel_write_review/travel_write_review_viewmodel.dart';
+import 'package:bus_way/ui/mainpage/mypage/review_modify/review_modify_viewmodel.dart';
 import 'package:bus_way/widget/custom_alert_dialog.dart';
 import 'package:bus_way/widget/custom_continue_button.dart';
 import 'package:bus_way/widget/custom_snackbar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-class TravelReviewView extends StatelessWidget {
-  const TravelReviewView({
+class ReviewModifyView extends StatelessWidget {
+  const ReviewModifyView({
     super.key,
+    required this.reviewId,
     required this.contentId,
     required this.title,
   });
 
+  final String reviewId;
   final String contentId;
   final String title;
 
@@ -27,18 +30,18 @@ class TravelReviewView extends StatelessWidget {
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-      child: ChangeNotifierProvider<TravelWriteReviewViewModel>(
-        create: (_) => TravelWriteReviewViewModel(),
-        child: Consumer<TravelWriteReviewViewModel>(
-          builder: (context, travelReviewViewModel, child) {
+      child: ChangeNotifierProvider<ReviewModifyViewModel>(
+        create: (_) => ReviewModifyViewModel(reviewId),
+        child: Consumer<ReviewModifyViewModel>(
+          builder: (context, reviewModifyViewModel, child) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (travelReviewViewModel.errorMessage != null) {
+              if (reviewModifyViewModel.errorMessage != null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   CustomSnackbar(
-                    content: Text(travelReviewViewModel.errorMessage!),
+                    content: Text(reviewModifyViewModel.errorMessage!),
                   ),
                 );
-                travelReviewViewModel.clearErrorMessage();
+                reviewModifyViewModel.clearErrorMessage();
               }
             });
 
@@ -47,10 +50,10 @@ class TravelReviewView extends StatelessWidget {
               onPopInvokedWithResult: (didPop, result) async {
                 if (!didPop) {
                   final shouldPop = await showCustomAlertDialog(
-                          context, '후기 작성을 취소하시겠습니까?') ??
+                          context, '후기 수정을 취소하시겠습니까?') ??
                       false;
 
-                  travelReviewViewModel.reviewFocusNode.unfocus();
+                  reviewModifyViewModel.reviewFocusNode.unfocus();
 
                   if (shouldPop && context.mounted) {
                     Navigator.of(context, rootNavigator: true).pop();
@@ -63,7 +66,7 @@ class TravelReviewView extends StatelessWidget {
                   surfaceTintColor: Colors.white,
                   centerTitle: true,
                   title: const Text(
-                    '후기 작성',
+                    '후기 수정',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 24,
@@ -71,7 +74,7 @@ class TravelReviewView extends StatelessWidget {
                     ),
                   ),
                 ),
-                body: travelReviewViewModel.isLoading
+                body: reviewModifyViewModel.isLoading
                     ? const Stack(
                         children: [
                           Positioned.fill(
@@ -94,7 +97,8 @@ class TravelReviewView extends StatelessWidget {
                             Expanded(
                               child: SingleChildScrollView(
                                 child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 20.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 20.0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -102,7 +106,7 @@ class TravelReviewView extends StatelessWidget {
                                       const Row(
                                         children: [
                                           Text(
-                                            "1. 별점을 남겨주세요.",
+                                            "1. 별점을 수정해주세요.",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
@@ -130,7 +134,7 @@ class TravelReviewView extends StatelessWidget {
                                       Center(
                                         child: RatingBar.builder(
                                           initialRating:
-                                              travelReviewViewModel.rating,
+                                              reviewModifyViewModel.rating,
                                           direction: Axis.horizontal,
                                           allowHalfRating: false,
                                           tapOnlyMode: true,
@@ -143,7 +147,7 @@ class TravelReviewView extends StatelessWidget {
                                             color: Colors.amber,
                                           ),
                                           onRatingUpdate: (rating) {
-                                            travelReviewViewModel
+                                            reviewModifyViewModel
                                                 .updateRating(rating);
                                           },
                                         ),
@@ -154,7 +158,7 @@ class TravelReviewView extends StatelessWidget {
                                       const Row(
                                         children: [
                                           Text(
-                                            "2. 리뷰를 작성해주세요.",
+                                            "2. 리뷰를 수정해주세요.",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
@@ -180,7 +184,7 @@ class TravelReviewView extends StatelessWidget {
                                       ),
                                       TextFormField(
                                         onChanged: (value) {
-                                          travelReviewViewModel
+                                          reviewModifyViewModel
                                               .updateReviewBtn();
                                         },
                                         decoration: const InputDecoration(
@@ -200,9 +204,9 @@ class TravelReviewView extends StatelessWidget {
                                                 color: orchid, width: 2),
                                           ),
                                         ),
-                                        controller: travelReviewViewModel
+                                        controller: reviewModifyViewModel
                                             .reviewController,
-                                        focusNode: travelReviewViewModel
+                                        focusNode: reviewModifyViewModel
                                             .reviewFocusNode,
                                         maxLength: 100,
                                         maxLines: 6,
@@ -226,7 +230,7 @@ class TravelReviewView extends StatelessWidget {
                                         aspectRatio: 1,
                                         child: MaterialButton(
                                           onPressed: () {
-                                            travelReviewViewModel
+                                            reviewModifyViewModel
                                                 .getReviewImage(
                                                     ImageSource.gallery);
                                           },
@@ -239,19 +243,42 @@ class TravelReviewView extends StatelessWidget {
                                               Radius.circular(10),
                                             ),
                                           ),
-                                          child: travelReviewViewModel
+                                          child: reviewModifyViewModel
                                                       .reviewImage !=
                                                   null
                                               ? Stack(
                                                   children: [
                                                     Center(
-                                                      child: Image.file(
-                                                        File(
-                                                            travelReviewViewModel
-                                                                .reviewImage!
-                                                                .path),
-                                                        fit: BoxFit.cover,
-                                                      ),
+                                                      child: reviewModifyViewModel
+                                                              .reviewImage!.path
+                                                              .startsWith(
+                                                                  'http')
+                                                          ? CachedNetworkImage(
+                                                              imageUrl:
+                                                                  reviewModifyViewModel
+                                                                      .reviewImage!
+                                                                      .path,
+                                                              progressIndicatorBuilder:
+                                                                  (context, url,
+                                                                          progress) =>
+                                                                      const Center(
+                                                                child:
+                                                                    SpinKitRing(
+                                                                  color:
+                                                                      orchid, // 원하는 색상
+                                                                  size:
+                                                                      30.0, // 크기 설정
+                                                                  lineWidth:
+                                                                      5.0,
+                                                                ),
+                                                              ),
+                                                            )
+                                                          : Image.file(
+                                                              File(reviewModifyViewModel
+                                                                  .reviewImage!
+                                                                  .path),
+                                                              fit: BoxFit.cover,
+                                                            ),
                                                     ),
                                                     Positioned(
                                                       right: 0,
@@ -262,7 +289,7 @@ class TravelReviewView extends StatelessWidget {
                                                           color: Colors.red,
                                                         ),
                                                         onPressed: () {
-                                                          travelReviewViewModel
+                                                          reviewModifyViewModel
                                                               .removeReviewImage();
                                                         },
                                                       ),
@@ -293,13 +320,13 @@ class TravelReviewView extends StatelessWidget {
                                   const EdgeInsets.symmetric(vertical: 22.0),
                               child: CustomContinueButton(
                                 onPressed: () {
-                                  travelReviewViewModel.checkTravelReview(
-                                      context, contentId, title);
+                                  reviewModifyViewModel.checkModifyReivew(
+                                      context, reviewId, contentId, title);
                                 },
-                                color: travelReviewViewModel.isReviewActiveBtn
+                                color: reviewModifyViewModel.isReviewActiveBtn
                                     ? orchid
                                     : Colors.grey,
-                                text: '후기 등록',
+                                text: '후기 수정',
                               ),
                             ),
                           ],

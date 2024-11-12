@@ -3,12 +3,14 @@ class TravelReviewDetailModel {
   String? reviewId; // 후기 ID
   String? reviewRate; // 후기 평점
   String? reviewContent; // 후기 내용
+  String? reviewImagePath;
   String? reviewImage; // 후기 이미지
 
   TravelReviewDetailModel({
     this.reviewId,
     this.reviewRate,
     this.reviewContent,
+    this.reviewImagePath,
     this.reviewImage,
   });
 
@@ -17,6 +19,7 @@ class TravelReviewDetailModel {
       reviewId: json['review_id'] as String?,
       reviewRate: json['review_rate'] as String?,
       reviewContent: json['review_content'] as String?,
+      reviewImagePath: json['review_image_path'] as String?,
       reviewImage: json['review_image'] as String?,
     );
   }

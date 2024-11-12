@@ -7,6 +7,7 @@ class TravelReviewInfoModel {
   String? contentId; // 관광지 ID
   String? reviewRate; // 후기 평점
   String? reviewContent; // 후기 내용
+  String? reviewImagePath; // 후기 이미지 경로
   String? reviewImage; // 후기 이미지
   String? reviewModifiedDate; // 후기 수정 날짜 (최신 날짜)
 
@@ -17,6 +18,7 @@ class TravelReviewInfoModel {
     this.contentId,
     this.reviewRate,
     this.reviewContent,
+    this.reviewImagePath,
     this.reviewImage,
     this.reviewModifiedDate,
   });
@@ -29,6 +31,7 @@ class TravelReviewInfoModel {
       contentId: json['content_id'] as String?,
       reviewRate: json['review_rate'] as String?,
       reviewContent: json['review_content'] as String?,
+      reviewImagePath: json['review_image_path'] as String?,
       reviewImage: json['review_image'] as String?,
       reviewModifiedDate: json['modified_date'] as String?,
     );

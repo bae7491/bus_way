@@ -152,7 +152,7 @@ class TravelReviewDetailView extends StatelessWidget {
                                 const SizedBox(
                                   height: 20.0,
                                 ),
-                                if (reviewDetailData.reviewImage != null)
+                                if (reviewDetailData.reviewImagePath != null)
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -173,7 +173,7 @@ class TravelReviewDetailView extends StatelessWidget {
                                             8), // 이미지에 직접 둥글기 적용
                                         child: CachedNetworkImage(
                                           imageUrl:
-                                              reviewDetailData.reviewImage!,
+                                              reviewDetailData.reviewImagePath!,
                                           fit: BoxFit.cover,
                                           progressIndicatorBuilder:
                                               (context, url, progress) =>

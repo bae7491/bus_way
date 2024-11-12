@@ -1,6 +1,8 @@
 import 'package:bus_way/data/model/mypage_model/user_review_model.dart';
 import 'package:bus_way/data/respository/mypage_repository/mypage_repository.dart';
+import 'package:bus_way/ui/mainpage/mypage/review_modify/review_modify_view.dart';
 import 'package:bus_way/widget/custom_alert_dialog.dart';
+import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -113,14 +115,31 @@ class ReviewListViewModel with ChangeNotifier {
     }
   }
 
-  // TODO: 관광지 후기 수정
+  // 관광지 후기 수정 페이지 이동
+  Future<void> navigateModifyReview(BuildContext context, String reviewId,
+      String contentId, String title) async {
+    await Navigator.of(context).push(
+      NavigatorAnimation(
+        destination: ReviewModifyView(
+          reviewId: reviewId,
+          contentId: contentId,
+          title: title,
+        ),
+      ).createRoute(SlideDirection.bottomToTop),
+    );
 
-  // TODO: 관광지 후기 삭제
+    // 수정 후, 후기 목록 페이지 다시 불러오기
+    await loadReviewList();
+  }
+
   // 관광지 후기 삭제 확인 팝업
   Future<void> checkDeleteReview(
       BuildContext context, UserReviewModel item) async {
-    final isDeleteReview =
-        await showCustomAlertDialog(context, '선택하신 후기를 삭제하시겠습니까?') ?? false;
+    final isDeleteReview = await showCustomAlertDialog(
+          context,
+          '선택하신 후기를 삭제하시겠습니까?',
+        ) ??
+        false;
 
     if (isDeleteReview && context.mounted) {
       await deleteReview(context, item);
@@ -133,10 +152,15 @@ class ReviewListViewModel with ChangeNotifier {
       _isLoading = true;
       notifyListeners();
 
-      await mypageRepository.deleteReivew(
-        item.reviewId!,
-        item.reviewImage!,
-      );
+      if (item.reviewImage != null && item.reviewImage!.isNotEmpty) {
+        await mypageRepository.deleteReview(
+          item.reviewId!,
+          item.reviewImage!,
+        );
+      } else {
+        await mypageRepository.deleteReview(item.reviewId!);
+      }
+      loadReviewList();
     } catch (e) {
       _errorMessage = e.toString();
       notifyListeners();

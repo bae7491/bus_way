@@ -61,7 +61,7 @@ class ReviewPagedListView extends StatelessWidget {
                             ],
                           ),
                         ),
-                        if (item.reviewImage != null)
+                        if (item.reviewImagePath != null)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10.0),
                             child: Container(
@@ -71,7 +71,7 @@ class ReviewPagedListView extends StatelessWidget {
                                 borderRadius:
                                     BorderRadius.circular(8), // 이미지에 직접 둥글기 적용
                                 child: CachedNetworkImage(
-                                  imageUrl: item.reviewImage!,
+                                  imageUrl: item.reviewImagePath!,
                                   fit: BoxFit.cover,
                                   progressIndicatorBuilder:
                                       (context, url, progress) => const Center(
