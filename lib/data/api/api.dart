@@ -31,6 +31,9 @@ class API {
 
   // 비밀번호 변경 DB 요청
   static const updatePassword = '$hostConnectUser/update_password.php';
+
+  // 회원 계정 삭제
+  static const deleteUser = '$hostConnectUser/delete_user.php';
   // ==================
 
   // ================== 관광지 DB 요청 API

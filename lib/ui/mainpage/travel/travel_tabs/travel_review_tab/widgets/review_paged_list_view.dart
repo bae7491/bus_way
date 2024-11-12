@@ -44,7 +44,9 @@ class ReviewPagedListView extends StatelessWidget {
                             children: [
                               Flexible(
                                 child: Text(
-                                  maskNickName(item.nickName!),
+                                  item.nickName != null
+                                      ? maskNickName(item.nickName!)
+                                      : '탈퇴한 회원',
                                   style: const TextStyle(
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.bold,

@@ -88,6 +88,54 @@ class MypageViewModel with ChangeNotifier {
     );
   }
 
+  // 계정 탈퇴 확인 팝업
+  Future<void> checkWithDraw(BuildContext context) async {
+    final isWithDraw =
+        await await showCustomAlertDialog(context, '정말 계정을 탈퇴하시겠습니까?') ?? false;
+
+    if (isWithDraw && context.mounted) {
+      await withDraw(context);
+    }
+  }
+
+  // 계정 탈퇴
+  Future<void> withDraw(BuildContext context) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      Future.wait([
+        // 파이어베이스 계정 탈퇴
+        loginAuthRepository.withDraw(),
+
+        // DB의 계정 탈퇴
+        loginAuthRepository.deleteUser(),
+      ]).then((_) {
+        if (context.mounted) {
+          Navigator.of(context).pushAndRemoveUntil(
+            const NavigatorAnimation(destination: LoginView())
+                .createRoute(SlideDirection.bottomToTop),
+            (route) => false,
+          );
+
+          final loginViewModel =
+              Provider.of<LoginViewModel>(context, listen: false);
+          loginViewModel.autoLoginOff();
+          loginViewModel.emailController.clear();
+          loginViewModel.passwordController.clear();
+          loginViewModel.clearErrorMessage();
+          loginViewModel.clearPasswordVisibility();
+        }
+      });
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   // 로그아웃 확인 팝업
   Future<void> checkSignOut(BuildContext context) async {
     final isSignOut =
@@ -114,6 +162,7 @@ class MypageViewModel with ChangeNotifier {
       loginViewModel.autoLoginOff();
       loginViewModel.emailController.clear();
       loginViewModel.passwordController.clear();
+      loginViewModel.clearErrorMessage();
       loginViewModel.clearPasswordVisibility();
     }
   }

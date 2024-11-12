@@ -40,6 +40,16 @@ class LoginAuthRepository {
         email, phoneNumber, nickName);
   }
 
+  // Firebase 계정 탈퇴
+  Future<void> withDraw() async {
+    await authRemoteDataSource.withDraw();
+  }
+
+  // DB의 계정 탈퇴
+  Future<void> deleteUser() async {
+    await authLocalDatasource.deleteUser();
+  }
+
   // 로그아웃
   Future<void> signOut() async {
     await authRemoteDataSource.signOut();

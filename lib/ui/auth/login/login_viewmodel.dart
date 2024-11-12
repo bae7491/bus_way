@@ -53,6 +53,12 @@ class LoginViewModel with ChangeNotifier {
     super.dispose();
   }
 
+  // 에러 메시지 초기화
+  void clearErrorMessage() async {
+    _errorMessage = null;
+    notifyListeners();
+  }
+
   // 로그인 로직
   Future<void> login(String email, String password) async {
     _isLoading = true;

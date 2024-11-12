@@ -1,4 +1,5 @@
 import 'package:bus_way/ui/auth/login/login_view.dart';
+import 'package:bus_way/ui/auth/login/login_viewmodel.dart';
 import 'package:bus_way/ui/auth/signup/signup_viewmodel.dart';
 import 'package:bus_way/widget/custom_continue_button.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
@@ -46,6 +47,18 @@ class SignUpCompleteView extends StatelessWidget {
                         Navigator.of(context).push(
                             const NavigatorAnimation(destination: LoginView())
                                 .createRoute(SlideDirection.bottomToTop));
+
+                        if (context.mounted) {
+                          final loginViewModel = Provider.of<LoginViewModel>(
+                              context,
+                              listen: false);
+                          loginViewModel.autoLoginOff();
+                          loginViewModel.emailController.clear();
+                          loginViewModel.passwordController.clear();
+                          loginViewModel.clearErrorMessage();
+                          loginViewModel.clearPasswordVisibility();
+                        }
+                        ;
                       },
                       text: '돌아가기'),
                 ),

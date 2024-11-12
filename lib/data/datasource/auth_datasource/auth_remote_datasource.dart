@@ -62,26 +62,35 @@ class AuthRemoteDataSource with ChangeNotifier {
     }
   }
 
-  // 3. 로그아웃 요청
+  // 3. 계정 탈퇴
+  Future<void> withDraw() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('autoLogin', false);
+
+    final user = _firebaseAuth.currentUser;
+    await user!.delete();
+  }
+
+  // 4. 로그아웃 요청
   Future<void> signOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('autoLogin', false);
     await _firebaseAuth.signOut();
   }
 
-  // 4. 자동 로그인 상태 저장
+  // 5. 자동 로그인 상태 저장
   Future<void> setAutoLogin(bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('autoLogin', value);
   }
 
-  // 5. 자동 로그인 상태 가져오기
+  // 6. 자동 로그인 상태 가져오기
   Future<bool> getAutoLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool('autoLogin') ?? false;
   }
 
-  // 6. 비밀번호 재설정 인증 메일 보내기
+  // 7. 비밀번호 재설정 인증 메일 보내기
   Future<void> resetPassword(String email) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
@@ -108,7 +117,7 @@ class AuthRemoteDataSource with ChangeNotifier {
     }
   }
 
-  // 7. 이메일 인증 메일 보내기
+  // 8. 이메일 인증 메일 보내기
   Future<void> verifyEmail() async {
     try {
       await _firebaseAuth.currentUser!.sendEmailVerification();
@@ -118,7 +127,7 @@ class AuthRemoteDataSource with ChangeNotifier {
     }
   }
 
-  // 8. 이메일 인증 정보 확인
+  // 9. 이메일 인증 정보 확인
   Future<bool> checkVerifyEmail() async {
     final user = _firebaseAuth.currentUser;
 
@@ -134,7 +143,7 @@ class AuthRemoteDataSource with ChangeNotifier {
     }
   }
 
-  // 9. 로그인한 이메일 정보 상태 저장
+  // 10. 로그인한 이메일 정보 상태 저장
   Future<void> setEmailInfo(String email) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('loginEmail', email);
