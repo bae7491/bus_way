@@ -1,6 +1,7 @@
 import 'package:bus_way/data/model/travel_model/travel_review_info_model.dart';
 import 'package:bus_way/theme/colors.dart';
 import 'package:bus_way/ui/mainpage/travel/travel_detail_viewmodel.dart';
+import 'package:bus_way/utils/string_util.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -41,11 +42,14 @@ class ReviewPagedListView extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                item.nickName!,
-                                style: const TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
+                              Flexible(
+                                child: Text(
+                                  maskNickName(item.nickName!),
+                                  style: const TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  softWrap: true,
                                 ),
                               ),
                               RatingBarIndicator(
