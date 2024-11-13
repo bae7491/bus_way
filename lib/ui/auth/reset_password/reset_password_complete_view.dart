@@ -31,7 +31,7 @@ class ResetPasswordCompleteView extends StatelessWidget {
                       ),
                       SizedBox(height: 35),
                       Text(
-                        '인증 메일을 보냈어요',
+                        '재설정 메일을 보냈어요',
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
                       ),

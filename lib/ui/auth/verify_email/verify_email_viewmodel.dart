@@ -1,8 +1,10 @@
 import 'package:bus_way/data/respository/auth_repository/login_auth_repository.dart';
 import 'package:bus_way/ui/mainpage/mainpage_view.dart';
+import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
 import 'package:bus_way/widget/custom_snackbar.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class VerifyEmailViewmodel with ChangeNotifier {
   LoginAuthRepository loginAuthRepository = LoginAuthRepository();
@@ -32,6 +34,10 @@ class VerifyEmailViewmodel with ChangeNotifier {
               .createRoute(SlideDirection.bottomToTop),
           (Route<dynamic> route) => false,
         );
+
+        final mainPageViewModel =
+            Provider.of<MainPageViewModel>(context, listen: false);
+        mainPageViewModel.resetIndex();
       }
     } else {
       // 인증 미완료 시,

@@ -37,6 +37,7 @@ class BusDetailInfoView extends StatelessWidget {
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
                 ),
+                softWrap: true,
               ),
               Image.asset(
                 'assets/images/double_arrow.png',

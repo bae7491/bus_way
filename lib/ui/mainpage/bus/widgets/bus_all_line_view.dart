@@ -112,25 +112,27 @@ class BusAllLineView extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                      Padding(
-                        padding: index == 0
-                            ? const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0)
-                                .copyWith(top: 10)
-                            : const EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              busLineInfo[index].busStopName!,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
+                      Expanded(
+                        child: Padding(
+                          padding: index == 0
+                              ? const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0)
+                                  .copyWith(top: 10)
+                              : const EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                busLineInfo[index].busStopName!,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0,
+                                ),
                               ),
-                            ),
-                            Text(busLineInfo[index].busStopNumber!),
-                          ],
+                              Text(busLineInfo[index].busStopNumber!),
+                            ],
+                          ),
                         ),
                       ),
                     ],

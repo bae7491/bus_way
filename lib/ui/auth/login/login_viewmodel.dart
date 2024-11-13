@@ -82,6 +82,8 @@ class LoginViewModel with ChangeNotifier {
       }
     } catch (e) {
       _errorMessage = e.toString().replaceFirst('Exception: ', '');
+      print('login/_errorMessage: $_errorMessage');
+      notifyListeners();
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -159,7 +161,7 @@ class LoginViewModel with ChangeNotifier {
     try {
       if (_firebaseUser != null && _firebaseUser!.emailVerified!) {
         _isLoading = true;
-        _errorMessage = '';
+
         notifyListeners();
 
         // 변경한 비밀번호를 DB에 업데이트

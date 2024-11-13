@@ -253,7 +253,7 @@ class MainMapViewModel with ChangeNotifier {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('GPS가 꺼져 있습니다. 설정에서 GPS를 켜주세요.'),
+            content: const Text('GPS가 꺼져 있습니다.\n설정에서 GPS를 켜주세요.'),
             action: SnackBarAction(
               label: '설정으로 이동',
               onPressed: () {

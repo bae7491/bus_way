@@ -36,29 +36,37 @@ class MainView extends StatelessWidget {
               MypageView(),
             ],
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            onTap: (int index) {
-              final mainMapViewModel =
-                  Provider.of<MainMapViewModel>(context, listen: false);
-              final myPageViewModel =
-                  Provider.of<MypageViewModel>(context, listen: false);
+          bottomNavigationBar: Theme(
+            data: ThemeData(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+            ),
+            child: BottomNavigationBar(
+              onTap: (int index) {
+                final mainMapViewModel =
+                    Provider.of<MainMapViewModel>(context, listen: false);
+                final myPageViewModel =
+                    Provider.of<MypageViewModel>(context, listen: false);
 
-              if (index == 1) {
-                // MypageView 탭이 선택되면 새로고침
-                myPageViewModel.loadUserInfo();
-              }
+                if (index == 1) {
+                  // MypageView 탭이 선택되면 새로고침
+                  myPageViewModel.loadUserInfo();
+                }
 
-              if (!mainMapViewModel.isLoading) {
-                mainPageViewModel.updateCurrentPage(index);
-              }
-            },
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-              BottomNavigationBarItem(icon: Icon(Icons.person), label: 'MY'),
-            ],
-            currentIndex: mainPageViewModel.index,
-            fixedColor: orchid,
-            backgroundColor: Colors.white,
+                if (!mainMapViewModel.isLoading) {
+                  mainPageViewModel.updateCurrentPage(index);
+                }
+              },
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.account_circle_rounded), label: 'MY'),
+              ],
+              currentIndex: mainPageViewModel.index,
+              fixedColor: orchid,
+              backgroundColor: Colors.white,
+              type: BottomNavigationBarType.fixed,
+            ),
           ),
         );
       },

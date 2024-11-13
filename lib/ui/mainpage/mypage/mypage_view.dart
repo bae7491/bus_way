@@ -3,6 +3,7 @@ import 'package:bus_way/ui/mainpage/mypage/mypage_viewmodel.dart';
 import 'package:bus_way/widget/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class MypageView extends StatelessWidget {
@@ -114,8 +115,12 @@ class MypageView extends StatelessWidget {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            myPageViewModel.followReviewSummary!
-                                                .followTotalCount!,
+                                            NumberFormat('###,###,###,###')
+                                                .format(
+                                              int.parse(myPageViewModel
+                                                  .followReviewSummary!
+                                                  .followTotalCount!),
+                                            ),
                                             style: const TextStyle(
                                               fontSize: 24.0,
                                               fontWeight: FontWeight.bold,
@@ -168,8 +173,12 @@ class MypageView extends StatelessWidget {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            myPageViewModel.followReviewSummary!
-                                                .reviewTotalCount!,
+                                            NumberFormat('###,###,###,###')
+                                                .format(
+                                              int.parse(myPageViewModel
+                                                  .followReviewSummary!
+                                                  .reviewTotalCount!),
+                                            ),
                                             style: const TextStyle(
                                               fontSize: 24.0,
                                               fontWeight: FontWeight.bold,
@@ -206,7 +215,7 @@ class MypageView extends StatelessWidget {
                           children: [
                             ListTile(
                               onTap: () {
-                                // TODO: 내정보 수정 연결 코드 추가.
+                                // 내정보 수정 페이지 이동
                                 myPageViewModel.navigateUserModify(context);
                               },
                               title: const Text(

@@ -75,7 +75,7 @@ class BusRemoteDatasource with ChangeNotifier {
                     (item) => NearBusStopModel.fromJson(item))
                 .toList();
           } else {
-            errorMessage = getApiMessageForStatusCode('');
+            errorMessage = "주변 500m 이내에 정류소 데이터가 없습니다. 위치를 변경해 검색해보세요.";
             throw errorMessage;
           }
         } else {
