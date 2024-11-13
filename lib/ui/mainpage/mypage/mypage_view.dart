@@ -207,6 +207,7 @@ class MypageView extends StatelessWidget {
                             ListTile(
                               onTap: () {
                                 // TODO: 내정보 수정 연결 코드 추가.
+                                myPageViewModel.navigateUserModify(context);
                               },
                               title: const Text(
                                 '내정보 수정',
@@ -221,7 +222,6 @@ class MypageView extends StatelessWidget {
                             ),
                             ListTile(
                               onTap: () {
-                                // TODO: 계정 탈퇴 연결 코드 추가.
                                 myPageViewModel.checkWithDraw(context);
                               },
                               title: const Text(

@@ -1,4 +1,4 @@
-import 'package:bus_way/data/model/mypage_model/mypagae_user_model.dart';
+import 'package:bus_way/data/model/mypage_model/mypage_user_model.dart';
 import 'package:bus_way/data/model/mypage_model/user_follow_review_summary_model.dart';
 import 'package:bus_way/data/respository/auth_repository/login_auth_repository.dart';
 import 'package:bus_way/data/respository/mypage_repository/mypage_repository.dart';
@@ -6,6 +6,7 @@ import 'package:bus_way/ui/auth/login/login_view.dart';
 import 'package:bus_way/ui/auth/login/login_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mypage/follow_list/follow_list_view.dart';
 import 'package:bus_way/ui/mainpage/mypage/review_list/review_list_view.dart';
+import 'package:bus_way/ui/mainpage/mypage/user_modify/user_modify_view.dart';
 import 'package:bus_way/widget/custom_alert_dialog.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +17,12 @@ class MypageViewModel with ChangeNotifier {
   MypageRepository mypageRepository = MypageRepository();
 
   UserFollowReviewSummaryModel? _followReviewSummary;
-  MypagaeUserModel? _userInfo;
+  MypageUserModel? _userInfo;
   bool _isLoading = false;
   String? _errorMessage;
 
   UserFollowReviewSummaryModel? get followReviewSummary => _followReviewSummary;
-  MypagaeUserModel? get userInfo => _userInfo;
+  MypageUserModel? get userInfo => _userInfo;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
@@ -84,6 +85,15 @@ class MypageViewModel with ChangeNotifier {
     Navigator.of(context).push(
       const NavigatorAnimation(
         destination: ReviewListView(),
+      ).createRoute(SlideDirection.bottomToTop),
+    );
+  }
+
+  // 유저 정보 수정 뷰로 이동
+  void navigateUserModify(BuildContext context) {
+    Navigator.of(context).push(
+      const NavigatorAnimation(
+        destination: UserModifyView(),
       ).createRoute(SlideDirection.bottomToTop),
     );
   }

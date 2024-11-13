@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:bus_way/data/api/api.dart';
 import 'package:bus_way/data/api/api_enum.dart';
-import 'package:bus_way/data/model/mypage_model/mypagae_user_model.dart';
+import 'package:bus_way/data/model/mypage_model/mypage_user_model.dart';
 import 'package:bus_way/data/model/mypage_model/user_follow_model.dart';
 import 'package:bus_way/data/model/mypage_model/user_follow_review_summary_model.dart';
 import 'package:bus_way/data/model/mypage_model/user_review_model.dart';
@@ -15,7 +15,7 @@ class MypageLocalDatasource with ChangeNotifier {
   ApiResponseStatus? statusCode;
 
   // 1. 로그인 회원 정보 조회
-  Future<MypagaeUserModel> getUserInfo() async {
+  Future<MypageUserModel> getUserInfo() async {
     try {
       // 기기에 저장된 email 정보 불러오기
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -42,9 +42,11 @@ class MypageLocalDatasource with ChangeNotifier {
         final userInfoResult = jsonDecode(result.body);
 
         if (userInfoResult['success'] == true) {
-          return MypagaeUserModel(
+          return MypageUserModel(
             email: userInfoResult['email'],
             nickName: userInfoResult['nickName'],
+            name: userInfoResult['name'],
+            phoneNumber: userInfoResult['phoneNumber'],
           );
         }
       } else if (result.statusCode == 400) {
@@ -315,6 +317,59 @@ class MypageLocalDatasource with ChangeNotifier {
         var modifyReviewResult = jsonDecode(responseBody);
 
         if (modifyReviewResult['success'] == true) {
+          return;
+        }
+      } else if (result.statusCode == 400) {
+        statusCode = ApiResponseStatus.badRequest;
+      } else if (result.statusCode == 401) {
+        statusCode = ApiResponseStatus.unauthorized;
+      } else if (result.statusCode == 408) {
+        statusCode = ApiResponseStatus.requestTimeout;
+      } else if (result.statusCode == 500) {
+        statusCode = ApiResponseStatus.serverError;
+      } else {
+        statusCode = ApiResponseStatus.unknownError;
+      }
+
+      throw getMessageForStatusCode(
+          statusCode ?? ApiResponseStatus.unknownError);
+    } catch (e) {
+      statusCode = ApiResponseStatus.unknownError;
+      throw getMessageForStatusCode(
+          statusCode ?? ApiResponseStatus.unknownError);
+    }
+  }
+
+  // 7. 회원의 내정보 수정
+  Future<void> modifyUserInfo(String phoneNumber, String nickName) async {
+    try {
+      // 기기에 저장된 email 정보 불러오기
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final email = prefs.getString('loginEmail') ?? "";
+
+      var result = await http.post(
+        Uri.parse(API.modifyUserInfo),
+        headers: {
+          'Content-Type':
+              'application/x-www-form-urlencoded', // 적절한 Content-Type 설정
+        },
+        body: {
+          'email': email,
+          'phoneNumber': phoneNumber,
+          'nickName': nickName,
+        },
+      ).timeout(
+        const Duration(minutes: 1), // 타임아웃을 1분으로 설정
+        onTimeout: () {
+          return http.Response(
+              'Error: Request Timeout', 408); // 408은 타임아웃 상태 코드
+        },
+      );
+
+      if (result.statusCode == 200) {
+        final modifyUserInfoResult = jsonDecode(result.body);
+
+        if (modifyUserInfoResult['success'] == true) {
           return;
         }
       } else if (result.statusCode == 400) {

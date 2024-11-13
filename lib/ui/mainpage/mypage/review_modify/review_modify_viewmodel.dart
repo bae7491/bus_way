@@ -2,6 +2,7 @@ import 'package:bus_way/data/model/travel_model/travel_review_detail_model.dart'
 import 'package:bus_way/data/respository/mypage_repository/mypage_repository.dart';
 import 'package:bus_way/data/respository/travel_repository/travel_repository.dart';
 import 'package:bus_way/widget/custom_alert_dialog.dart';
+import 'package:bus_way/widget/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -114,6 +115,13 @@ class ReviewModifyViewModel with ChangeNotifier {
   // 수정 후기 등록 확인 팝업
   Future<void> checkModifyReivew(BuildContext context, String reviewId,
       String contentId, String title) async {
+    if (!_isReviewActiveBtn) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const CustomSnackbar(content: Text('필수 값을 다시 확인해 주세요.')),
+      );
+      return;
+    }
+
     final isRegisterReview = await showCustomAlertDialog(
           context,
           '수정한 후기를 등록하시겠습니까?',
@@ -159,6 +167,7 @@ class ReviewModifyViewModel with ChangeNotifier {
       }
     } catch (e) {
       _errorMessage = e.toString();
+      notifyListeners();
     } finally {
       _isLoading = false;
       notifyListeners();
