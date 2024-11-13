@@ -31,7 +31,7 @@ class UserModifyView extends StatelessWidget {
               onPopInvokedWithResult: (didPop, result) async {
                 if (!didPop) {
                   final shouldPop = await showCustomAlertDialog(
-                          context, '후기 수정을 취소하시겠습니까?') ??
+                          context, '내정보 수정을 취소하시겠습니까?') ??
                       false;
 
                   userModifyViewModel.phoneNumberFocusNode.unfocus();
