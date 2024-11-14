@@ -343,7 +343,62 @@ class MypageLocalDatasource with ChangeNotifier {
     }
   }
 
-  // 7. 회원의 내정보 수정
+  // 7. 회원의 내정보 수정 중복값 검사
+  Future<bool> validateModifyUserUnique(
+      String phoneNumber, String nickName) async {
+    try {
+      // 기기에 저장된 email 정보 불러오기
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final email = prefs.getString('loginEmail') ?? "";
+
+      var result = await http.post(
+        Uri.parse(API.validateModifyUserInfo),
+        headers: {
+          'Content-Type':
+              'application/x-www-form-urlencoded', // 적절한 Content-Type 설정
+        },
+        body: {
+          'email': email,
+          'phoneNumber': phoneNumber,
+          'nickName': nickName,
+        },
+      ).timeout(
+        const Duration(minutes: 1), // 타임아웃을 1분으로 설정
+        onTimeout: () {
+          return http.Response(
+              'Error: Request Timeout', 408); // 408은 타임아웃 상태 코드
+        },
+      );
+
+      // 서버와 연동 여부 확인
+      if (result.statusCode == 200) {
+        var responseBody = jsonDecode(result.body);
+
+        if (responseBody['existUserUnique'] == true) {
+          statusCode = ApiResponseStatus.duplicateUser;
+          return true;
+        } else {
+          return false;
+        }
+      } else if (result.statusCode == 400) {
+        statusCode = ApiResponseStatus.badRequest;
+      } else if (result.statusCode == 401) {
+        statusCode = ApiResponseStatus.unauthorized;
+      } else if (result.statusCode == 408) {
+        statusCode = ApiResponseStatus.requestTimeout;
+      } else if (result.statusCode == 500) {
+        statusCode = ApiResponseStatus.serverError;
+      } else {
+        statusCode = ApiResponseStatus.unknownError;
+      }
+      return false;
+    } catch (e) {
+      statusCode = ApiResponseStatus.unknownError;
+      return false;
+    }
+  }
+
+  // 8. 회원의 내정보 수정
   Future<void> modifyUserInfo(String phoneNumber, String nickName) async {
     try {
       // 기기에 저장된 email 정보 불러오기

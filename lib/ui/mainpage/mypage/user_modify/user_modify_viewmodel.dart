@@ -54,6 +54,12 @@ class UserModifyViewModel with ChangeNotifier {
     super.dispose();
   }
 
+  // 에러 메시지 초기화
+  void clearErrorMessage() async {
+    _errorMessage = null;
+    notifyListeners();
+  }
+
   // 내정보 불러오기
   Future<void> loadUserInfo() async {
     try {
@@ -150,8 +156,31 @@ class UserModifyViewModel with ChangeNotifier {
     phoneNumberFocusNode.unfocus();
     nickNameFocusNode.unfocus();
 
-    if (isModifyUserInfo && context.mounted) {
+    bool isUnique = await validateModifyUserUnique();
+
+    print('isUnique: $isUnique');
+
+    if (!isUnique && isModifyUserInfo && context.mounted) {
       await uploadModifyUserInfo(context);
+    } else {
+      _errorMessage = '이미 사용 중인 전화번호나 별명입니다.\n다른 정보를 입력해주세요.';
+      notifyListeners();
+    }
+  }
+
+  // 내정보 수정 전, 중복값 검사
+  Future<bool> validateModifyUserUnique() async {
+    try {
+      bool isUnique = await mypageRepository.validateModifyUserUnique(
+        phoneNumberController.text,
+        nickNameController.text,
+      );
+
+      return isUnique;
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+      return false;
     }
   }
 

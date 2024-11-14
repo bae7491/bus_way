@@ -49,6 +49,13 @@ class MypageRepository {
         contentId, title, originalImagePath, imageFile);
   }
 
+  // 회원의 내정보 수정 중복값 검사
+  Future<bool> validateModifyUserUnique(
+      String phoneNumber, String nickName) async {
+    return await mypageLocalDatasource.validateModifyUserUnique(
+        phoneNumber, nickName);
+  }
+
   // 회원의 내정보 수정
   Future<void> modifyUserInfo(String phoneNumber, String nickName) async {
     await mypageLocalDatasource.modifyUserInfo(phoneNumber, nickName);

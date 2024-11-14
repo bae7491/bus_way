@@ -90,6 +90,10 @@ class API {
   // 회원의 관광지 후기 수정
   static const modifyReview = '$hostConnectMyPage/modify_review.php';
 
+  // 회원의 내정보 수정 중복값 검사
+  static const validateModifyUserInfo =
+      '$hostConnectMyPage/validate_modify_user_unique.php';
+
   // 회원의 내정보 수정
   static const modifyUserInfo = '$hostConnectMyPage/modify_user_info.php';
   // ==================

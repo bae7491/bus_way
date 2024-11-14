@@ -63,8 +63,6 @@ class AuthLocalDatasource with ChangeNotifier {
   // 중복 체크 값 검사
   Future<bool> checkUserUnique(
       String email, String phoneNumber, String nickName) async {
-    bool isDuplicate = false; // 중복 여부 저장 변수
-
     try {
       var result = await http.post(
         Uri.parse(API.validateUserUnique),
@@ -87,10 +85,9 @@ class AuthLocalDatasource with ChangeNotifier {
 
         if (responseBody['existUserUnique'] == true) {
           statusCode = ApiResponseStatus.duplicateUser;
-          isDuplicate = true;
-        } else {
-          isDuplicate = false;
           return true;
+        } else {
+          return false;
         }
       } else if (result.statusCode == 400) {
         statusCode = ApiResponseStatus.badRequest;
@@ -103,18 +100,11 @@ class AuthLocalDatasource with ChangeNotifier {
       } else {
         statusCode = ApiResponseStatus.unknownError;
       }
+      return false;
     } catch (e) {
       statusCode = ApiResponseStatus.unknownError;
       return false;
-    } finally {
-      // 중복값이 있거나 상태 코드가 에러일 때만 메시지 던짐
-      if (isDuplicate && statusCode != null) {
-        throw getMessageForStatusCode(
-            statusCode ?? ApiResponseStatus.unknownError);
-      }
     }
-
-    return false;
   }
 
   // 비밀번호 업데이트

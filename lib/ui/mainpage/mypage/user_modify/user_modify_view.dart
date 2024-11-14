@@ -3,6 +3,7 @@ import 'package:bus_way/ui/mainpage/mypage/mypage_viewmodel.dart';
 import 'package:bus_way/ui/mainpage/mypage/user_modify/user_modify_viewmodel.dart';
 import 'package:bus_way/widget/custom_alert_dialog.dart';
 import 'package:bus_way/widget/custom_continue_button.dart';
+import 'package:bus_way/widget/custom_snackbar.dart';
 import 'package:bus_way/widget/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -26,6 +27,17 @@ class UserModifyView extends StatelessWidget {
         create: (_) => UserModifyViewModel(),
         child: Consumer<UserModifyViewModel>(
           builder: (context, userModifyViewModel, child) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (userModifyViewModel.errorMessage != null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  CustomSnackbar(
+                    content: Text(userModifyViewModel.errorMessage!),
+                  ),
+                );
+                userModifyViewModel.clearErrorMessage();
+              }
+            });
+
             return PopScope(
               canPop: false,
               onPopInvokedWithResult: (didPop, result) async {

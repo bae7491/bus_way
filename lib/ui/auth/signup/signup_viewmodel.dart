@@ -112,7 +112,7 @@ class SignUpViewModel with ChangeNotifier {
           _signUpUser.email!, _signUpUser.phoneNumber!, _signUpUser.nickName!);
 
       // 중복값이 없었으면,
-      if (isUnique) {
+      if (!isUnique) {
         // Firebase로 회원가입 진행
         final user = await loginAuthRepository.signUpWithEmail(email, password);
         if (user != null) {
@@ -123,9 +123,13 @@ class SignUpViewModel with ChangeNotifier {
           // DB에 값 저장
           await loginAuthRepository.saveUserInfo(_signUpUser);
         }
+      } else {
+        _errorMessage = '중복값이 존재합니다. 다시 확인해주세요.';
+        notifyListeners();
       }
     } catch (e) {
       _errorMessage = e.toString().replaceFirst('Exception: ', '');
+      notifyListeners();
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -304,7 +308,7 @@ class SignUpViewModel with ChangeNotifier {
         phoneNumberError == null &&
         nickNameError == null) {
       _signUpUser.name = name;
-      _signUpUser.phoneNumber = phoneNumber.replaceAll('-', '');
+      _signUpUser.phoneNumber = phoneNumber;
       _signUpUser.nickName = nickName;
 
       nameFocusNode.unfocus();
