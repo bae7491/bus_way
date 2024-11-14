@@ -158,8 +158,6 @@ class UserModifyViewModel with ChangeNotifier {
 
     bool isUnique = await validateModifyUserUnique();
 
-    print('isUnique: $isUnique');
-
     if (!isUnique && isModifyUserInfo && context.mounted) {
       await uploadModifyUserInfo(context);
     } else {

@@ -70,7 +70,11 @@ class AuthLocalDatasource with ChangeNotifier {
           'Content-Type':
               'application/x-www-form-urlencoded', // 적절한 Content-Type 설정
         },
-        body: {'email': email, 'phoneNumber': phoneNumber},
+        body: {
+          'email': email,
+          'phoneNumber': phoneNumber,
+          'nickName': nickName,
+        },
       ).timeout(
         const Duration(minutes: 1), // 타임아웃을 1분으로 설정
         onTimeout: () {
