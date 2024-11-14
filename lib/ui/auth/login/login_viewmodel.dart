@@ -17,6 +17,7 @@ import 'package:bus_way/ui/auth/signup/signup_viewmodel.dart';
 import 'package:bus_way/ui/auth/verify_email/verify_email_view.dart';
 import 'package:bus_way/ui/mainpage/mainpage_view.dart';
 import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
+import 'package:bus_way/ui/mainpage/mypage/mypage_viewmodel.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -180,6 +181,10 @@ class LoginViewModel with ChangeNotifier {
           final mainPageViewModel =
               Provider.of<MainPageViewModel>(context, listen: false);
           mainPageViewModel.resetIndex();
+
+          final myPageViewModel =
+              Provider.of<MypageViewModel>(context, listen: false);
+          myPageViewModel.loadUserInfo();
 
           // 로그인 성공 후 이메일과 비밀번호 초기화
           emailController.clear();

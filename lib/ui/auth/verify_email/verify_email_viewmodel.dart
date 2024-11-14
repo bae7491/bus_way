@@ -1,6 +1,7 @@
 import 'package:bus_way/data/respository/auth_repository/login_auth_repository.dart';
 import 'package:bus_way/ui/mainpage/mainpage_view.dart';
 import 'package:bus_way/ui/mainpage/mainpage_viewmodel.dart';
+import 'package:bus_way/ui/mainpage/mypage/mypage_viewmodel.dart';
 import 'package:bus_way/widget/custom_snackbar.dart';
 import 'package:bus_way/widget/navigator_animation.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,10 @@ class VerifyEmailViewmodel with ChangeNotifier {
         final mainPageViewModel =
             Provider.of<MainPageViewModel>(context, listen: false);
         mainPageViewModel.resetIndex();
+
+        final myPageViewModel =
+            Provider.of<MypageViewModel>(context, listen: false);
+        myPageViewModel.loadUserInfo();
       }
     } else {
       // 인증 미완료 시,
