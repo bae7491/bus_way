@@ -231,7 +231,8 @@ class MypageView extends StatelessWidget {
                             ),
                             ListTile(
                               onTap: () {
-                                myPageViewModel.checkWithDraw(context);
+                                myPageViewModel.checkWithDraw(
+                                    context, myPageViewModel);
                               },
                               title: const Text(
                                 '계정 탈퇴',

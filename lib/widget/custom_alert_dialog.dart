@@ -43,7 +43,7 @@ Future<dynamic> showCustomAlertDialog(
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.black,
               backgroundColor: Colors.white,
-              side: const BorderSide(color: Colors.black),
+              side: const BorderSide(color: Colors.grey),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10),

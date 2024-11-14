@@ -40,6 +40,11 @@ class LoginAuthRepository {
         email, phoneNumber, nickName);
   }
 
+  //  계정 탈퇴를 위한 Firebase 재인증
+  Future<void> reAuthenticate(String password) async {
+    await authRemoteDataSource.reAuthenticate(password);
+  }
+
   // Firebase 계정 탈퇴
   Future<void> withDraw() async {
     await authRemoteDataSource.withDraw();

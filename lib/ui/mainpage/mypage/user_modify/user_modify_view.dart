@@ -149,6 +149,7 @@ class UserModifyView extends StatelessWidget {
                                       fontSize: 24,
                                     ),
                                   ),
+                                  const SizedBox(height: 10),
                                   CustomTextField(
                                     onSubmitted: (value) {
                                       userModifyViewModel

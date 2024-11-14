@@ -62,7 +62,41 @@ class AuthRemoteDataSource with ChangeNotifier {
     }
   }
 
-  // 3. 계정 탈퇴
+  // 3. 계정 탈퇴를 위한 Firebase 재인증
+  Future<void> reAuthenticate(String password) async {
+    try {
+      // 현재 사용자 가져오기
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser == null) {
+        throw Exception("No user is currently signed in.");
+      }
+
+      // 사용자의 이메일 및 비밀번호 인증 정보 가져오기
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: currentUser.email!,
+        password: password,
+      );
+
+      // 재인증
+      await currentUser.reauthenticateWithCredential(credential);
+
+      // 민감한 작업 실행 (예: 계정 삭제)
+      await currentUser.delete();
+    } on FirebaseAuthException catch (e) {
+      String message = '';
+      if (e.code == 'wrong-password') {
+        message = '비밀번호를 다시 확인해 주세요.';
+      } else if (e.code == 'requires-recent-login') {
+        message = '최근 로그인 정보가 필요합니다. 다시 로그인해주세요.';
+      } else {
+        message = '알 수 없는 에러가 발생했습니다.';
+      }
+      throw message;
+    }
+  }
+
+  // 4. 계정 탈퇴
   Future<void> withDraw() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('autoLogin', false);
@@ -71,26 +105,26 @@ class AuthRemoteDataSource with ChangeNotifier {
     await user!.delete();
   }
 
-  // 4. 로그아웃 요청
+  // 5. 로그아웃 요청
   Future<void> signOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('autoLogin', false);
     await _firebaseAuth.signOut();
   }
 
-  // 5. 자동 로그인 상태 저장
+  // 6. 자동 로그인 상태 저장
   Future<void> setAutoLogin(bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('autoLogin', value);
   }
 
-  // 6. 자동 로그인 상태 가져오기
+  // 7. 자동 로그인 상태 가져오기
   Future<bool> getAutoLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool('autoLogin') ?? false;
   }
 
-  // 7. 비밀번호 재설정 인증 메일 보내기
+  // 8. 비밀번호 재설정 인증 메일 보내기
   Future<void> resetPassword(String email) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
@@ -117,7 +151,7 @@ class AuthRemoteDataSource with ChangeNotifier {
     }
   }
 
-  // 8. 이메일 인증 메일 보내기
+  // 9. 이메일 인증 메일 보내기
   Future<void> verifyEmail() async {
     try {
       await _firebaseAuth.currentUser!.sendEmailVerification();
@@ -127,7 +161,7 @@ class AuthRemoteDataSource with ChangeNotifier {
     }
   }
 
-  // 9. 이메일 인증 정보 확인
+  // 10. 이메일 인증 정보 확인
   Future<bool> checkVerifyEmail() async {
     final user = _firebaseAuth.currentUser;
 
@@ -143,7 +177,7 @@ class AuthRemoteDataSource with ChangeNotifier {
     }
   }
 
-  // 10. 로그인한 이메일 정보 상태 저장
+  // 11. 로그인한 이메일 정보 상태 저장
   Future<void> setEmailInfo(String email) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('loginEmail', email);

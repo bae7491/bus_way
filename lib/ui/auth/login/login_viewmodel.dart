@@ -82,7 +82,6 @@ class LoginViewModel with ChangeNotifier {
       }
     } catch (e) {
       _errorMessage = e.toString().replaceFirst('Exception: ', '');
-      print('login/_errorMessage: $_errorMessage');
       notifyListeners();
     } finally {
       _isLoading = false;
