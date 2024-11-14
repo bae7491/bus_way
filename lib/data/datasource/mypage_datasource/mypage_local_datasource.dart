@@ -300,6 +300,9 @@ class MypageLocalDatasource with ChangeNotifier {
       if (originalImagePath != null) {
         request.fields['original_image_path'] = originalImagePath;
       }
+      if (imageFile != null && imageFile.path.startsWith('http')) {
+        request.fields['not_changed'] = 'true';
+      }
       if (imageFile != null && !imageFile.path.startsWith('http')) {
         request.files.add(
           await http.MultipartFile.fromPath(
