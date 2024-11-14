@@ -115,37 +115,43 @@ class FollowListView extends StatelessWidget {
                         ],
                       ),
                     ),
-              bottomNavigationBar: BottomNavigationBar(
-                onTap: (int index) {
-                  final mainMapViewModel =
-                      Provider.of<MainMapViewModel>(context, listen: false);
-                  final myPageViewModel =
-                      Provider.of<MypageViewModel>(context, listen: false);
-
-                  if (index == 1) {
-                    // MypageView 탭이 선택되면 새로고침
-                    myPageViewModel.loadUserInfo();
-                  }
-
-                  if (index == 1 && mainMapViewModel.isBottomSheetVisible) {
-                    Navigator.of(context).pop(); // 바텀 시트 닫기
-                    mainMapViewModel.hideBottomSheet(); // 상태 업데이트
-                  }
-
-                  if (!mainMapViewModel.isLoading) {
-                    mainPageViewModel.updateCurrentPage(index);
-                    Navigator.of(context).pop(); // 네비게이션 바에서 선택 시 이전 화면으로 이동
-                  }
-                },
-                items: const <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.home), label: 'Home'),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.person), label: 'MY'),
-                ],
-                currentIndex: mainPageViewModel.index,
-                fixedColor: orchid,
-                backgroundColor: Colors.white,
+              bottomNavigationBar: Theme(
+                data: ThemeData(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                ),
+                child: BottomNavigationBar(
+                  onTap: (int index) {
+                    final mainMapViewModel =
+                        Provider.of<MainMapViewModel>(context, listen: false);
+                    final myPageViewModel =
+                        Provider.of<MypageViewModel>(context, listen: false);
+                
+                    if (index == 1) {
+                      // MypageView 탭이 선택되면 새로고침
+                      myPageViewModel.loadUserInfo();
+                    }
+                
+                    if (index == 1 && mainMapViewModel.isBottomSheetVisible) {
+                      Navigator.of(context).pop(); // 바텀 시트 닫기
+                      mainMapViewModel.hideBottomSheet(); // 상태 업데이트
+                    }
+                
+                    if (!mainMapViewModel.isLoading) {
+                      mainPageViewModel.updateCurrentPage(index);
+                      Navigator.of(context).pop(); // 네비게이션 바에서 선택 시 이전 화면으로 이동
+                    }
+                  },
+                  items: const <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.home), label: 'Home'),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.person), label: 'MY'),
+                  ],
+                  currentIndex: mainPageViewModel.index,
+                  fixedColor: orchid,
+                  backgroundColor: Colors.white,
+                ),
               ),
             ),
           );
