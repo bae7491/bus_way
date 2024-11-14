@@ -240,7 +240,7 @@ class SignUpViewModel with ChangeNotifier {
     if (name.isEmpty) {
       return '이름을 입력해주세요.';
     } else if (!regExp.hasMatch(name)) {
-      return '이름은 한글로 2~4자 사이로 입력해주세요.';
+      return '이름은 한글로 2~5자 사이로 입력해주세요.';
     } else {
       return null;
     }
